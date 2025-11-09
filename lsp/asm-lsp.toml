@@ -1,0 +1,7 @@
+[default_config]
+assembler = "gas"                # GNU assembler syntax (AT&T compatible)
+instruction_set = "arm64"        # ARMv8-A / AArch64 instruction set
+
+[default_config.opts]
+compiler = "aarch64-linux-gnu-gcc"
+compiler_flags = ["-c", "-Wall", "-O0", "-nostdlib"]
