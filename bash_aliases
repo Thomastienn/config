@@ -4,6 +4,7 @@ alias tmux-warp='WARP_IS_LOCAL_SHELL_SESSION=1 tmux'
 alias ex='explorer.exe'
 alias tw='taskwarrior-tui'
 labtest=/home/thomastien/lab/test_microservices
+alias python='python3'
 
 open_nvim(){
 	if [ "$1" = "y" ]; then
