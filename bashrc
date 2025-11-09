@@ -188,6 +188,7 @@ export VISUAL=nvim
 [ -d "/opt/nvim-linux-x86_64/bin" ] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/bin" ] && . "$HOME/.cargo/bin"
 
 # Only add Windows paths if they exist (WSL)
 [ -d "/mnt/c/Windows" ] && export PATH="$PATH:/mnt/c/Windows:/mnt/c/Windows/System32"
@@ -343,22 +344,22 @@ echo
 
 # System info
 DATE_TIME=$(date '+%A, %B %d, %Y at %I:%M %p')
-echo -e "  ${DIM}Today:${RESET}    ${DATE_TIME}"
+echo -e "  ${GRAY}Today:${RESET}    ${DATE_TIME}"
 
 UPTIME=$(uptime -p | sed 's/up //')
-echo -e "  ${DIM}Uptime:${RESET}   ${UPTIME}"
+echo -e "  ${GRAY}Uptime:${RESET}   ${UPTIME}"
 
 MEMORY=$(free -h | awk 'NR==2{printf "%.1fGB / %.1fGB", $3/1024,$2/1024}')
-echo -e "  ${DIM}Memory:${RESET}   ${MEMORY}"
+echo -e "  ${GRAY}Memory:${RESET}   ${MEMORY}"
 
 DISK=$(df -h $HOME | awk 'NR==2{printf "%s / %s", $3,$2}')
-echo -e "  ${DIM}Storage:${RESET}  ${DISK}"
+echo -e "  ${GRAY}Storage:${RESET}  ${DISK}"
 
 PWD_DISPLAY=$(pwd | sed "s|$HOME|~|")
-echo -e "  ${DIM}Location:${RESET} ${COLOR6}${PWD_DISPLAY}${RESET}"
+echo -e "  ${GRAY}Location:${RESET} ${COLOR6}${PWD_DISPLAY}${RESET}"
 
 LOAD=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//')
-echo -e "  ${DIM}Load:${RESET}     ${LOAD}"
+echo -e "  ${GRAY}Load:${RESET}     ${LOAD}"
 
 echo
 
@@ -371,17 +372,17 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     else
         GIT_STATUS="${COLOR4}${STATUS} changes${RESET}"
     fi
-    echo -e "  ${DIM}Git:${RESET}      ${COLOR2}${BRANCH}${RESET} (${GIT_STATUS})"
+    echo -e "  ${GRAY}Git:${RESET}      ${COLOR2}${BRANCH}${RESET} (${GIT_STATUS})"
 fi
 
 # Network connectivity test
-ping -c 1 8.8.8.8 > /dev/null 2>&1
-if [ $? -eq 0 ]; then
-    NETWORK="${COLOR5}online${RESET}"
-else
-    NETWORK="${COLOR3}offline${RESET}"
-fi
-echo -e "  ${DIM}Network:${RESET}  ${NETWORK}"
+# ping -c 1 8.8.8.8 > /dev/null 2>&1
+# if [ $? -eq 0 ]; then
+#     NETWORK="${COLOR5}online${RESET}"
+# else
+#     NETWORK="${COLOR3}offline${RESET}"
+# fi
+# echo -e "  ${DIM}Network:${RESET}  ${NETWORK}"
 
 echo
 
