@@ -16,7 +16,7 @@ conky.config = {
     use_xft = true,
     font = 'ComicShannsMono Nerd Font:size=8',
     gap_x = 30,
-    gap_y = 80,
+    gap_y = 45,
     minimum_height = 5,
     minimum_width = 280,
     net_avg_samples = 2,
@@ -56,12 +56,17 @@ ${color3}Top Loads${color}
  ${top name 2}${alignr}${top cpu 2}%
  ${top name 3}${alignr}${top cpu 3}%
 
-${color1}FUEL SYSTEM${color}
-${color3}Tank${color} ${memperc}% ${membar 4,150}
+${color1}FUEL TANK${color}
+${if_existing /sys/class/power_supply/BAT0}${color3}Charge${color} ${battery_percent BAT0}%
+${battery_bar 4,150 BAT0}
+${else}${color3}AC Power${color} Connected${endif}
+
+${color1}CARGO CAPACITY${color}
+${color3}Memory${color} ${memperc}% ${membar 4,150}
 ${memgraph 30,260 FF0000 FF3333 -t}
 ${color3}${mem} / ${memmax}${color}
 
-${color1}STORAGE${color}
+${color1}STORAGE COMPARTMENT${color}
 ${color3}${fs_used_perc /}%${color} ${fs_bar 4,150 /}
 ${color3}I/O${color} R:${diskio_read} W:${diskio_write}
 
@@ -81,5 +86,4 @@ ${else}${color4}No Connection${color}${endif}${endif}
 ${color1}TRIP DATA${color}
 ${color3}Runtime${color} $uptime
 ${color3}Tasks${color} ${running_processes}/$processes
-${if_existing /sys/class/power_supply/BAT0}${color3}Batt${color} ${battery_percent BAT0}%${endif}
 ]]
