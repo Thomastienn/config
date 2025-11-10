@@ -1,4 +1,4 @@
-export TERM=xterm-256color
+export TERM=xterm-kitty
 export COLORTERM=truecolor
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
@@ -86,12 +86,22 @@ parse_git_status() {
     fi
 }
 
+# Disable default virtual environment prompt modification
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+
+# Custom function to show venv name
+show_virtual_env() {
+    if [ -n "$VIRTUAL_ENV" ]; then
+        echo "($(basename $VIRTUAL_ENV)) "
+    fi
+}
+
 if [ "$color_prompt" = yes ]; then
 	# Solarized Light compatible prompt
 	# Time: cyan, User: green, Host: blue, Dir: violet, Git: cyan, Git status: orange, Arrow: base01
-	PS1='\[\033[38;5;6m\][\t]\[\033[00m\] \[\033[38;5;2m\]\u\[\033[38;5;11m\]@\[\033[38;5;4m\]\h\[\033[00m\] \[\033[38;5;13m\]\w\[\033[38;5;6m\]$(parse_git_branch)\[\033[38;5;9m\]$(parse_git_status)\[\033[00m\]\n\[\033[38;5;10m\]→ \[\033[00m\]'
+	PS1='\[\033[38;5;14m\]$(show_virtual_env)\[\033[38;5;6m\][\t]\[\033[00m\] \[\033[38;5;2m\]\u\[\033[38;5;11m\]@\[\033[38;5;4m\]\h\[\033[00m\] \[\033[38;5;13m\]\w\[\033[38;5;6m\]$(parse_git_branch)\[\033[38;5;9m\]$(parse_git_status)\[\033[00m\]\n\[\033[38;5;10m\]→ \[\033[00m\]'
 else
-    PS1='[\t] \u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
+    PS1='$(show_virtual_env)[\t] \u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
 fi
 unset color_prompt force_color_prompt
 
@@ -188,12 +198,13 @@ export VISUAL=nvim
 [ -d "/opt/nvim-linux-x86_64/bin" ] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 [ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
-[ -f "$HOME/.cargo/bin" ] && . "$HOME/.cargo/bin"
+[ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # Only add Windows paths if they exist (WSL)
 [ -d "/mnt/c/Windows" ] && export PATH="$PATH:/mnt/c/Windows:/mnt/c/Windows/System32"
 [ -d "/mnt/c/Users/thoma/AppData/Local/Microsoft/WindowsApps" ] && export PATH="$PATH:/mnt/c/Users/thoma/AppData/Local/Microsoft/WindowsApps"
-[ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+
+[ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
 export WARP_ENABLE_WAYLAND=1
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
