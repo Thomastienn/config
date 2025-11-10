@@ -206,6 +206,8 @@ export VISUAL=nvim
 
 [ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
+[ -d "/home/linuxbrew/.linuxbrew/opt/imagemagick/lib/pkgconfig" ] && export PKG_CONFIG_PATH="/home/linuxbrew/.linuxbrew/opt/imagemagick/lib/pkgconfig:$PKG_CONFIG_PATH"
+
 export WARP_ENABLE_WAYLAND=1
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export BROWSER=google-chrome
