@@ -1,0 +1,85 @@
+conky.config = {
+    alignment = 'top_left',
+    background = true,
+    border_width = 1,
+    border_inner_margin = 10,
+    border_outer_margin = 0,
+    cpu_avg_samples = 2,
+    default_color = 'FFFFFF',
+    default_outline_color = 'black',
+    default_shade_color = 'black',
+    double_buffer = true,
+    draw_borders = true,
+    draw_graph_borders = true,
+    draw_outline = false,
+    draw_shades = false,
+    use_xft = true,
+    font = 'ComicShannsMono Nerd Font:size=8',
+    gap_x = 30,
+    gap_y = 80,
+    minimum_height = 5,
+    minimum_width = 280,
+    net_avg_samples = 2,
+    no_buffers = true,
+    out_to_console = false,
+    out_to_stderr = false,
+    extra_newline = false,
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'desktop',
+    own_window_transparent = false,
+    own_window_argb_visual = true,
+    own_window_argb_value = 120,
+    own_window_colour = '000000',
+    stippled_borders = 0,
+    update_interval = 2.0,
+    uppercase = false,
+    use_spacer = 'none',
+    show_graph_scale = false,
+    show_graph_range = false,
+    color1 = 'FF0000',
+    color2 = 'FFFFFF',
+    color3 = 'AAAAAA',
+    color4 = 'FF3333',
+}
+
+conky.text = [[
+${color1}${font ComicShannsMono Nerd Font:bold:size=12}PERFORMANCE${font}${color}
+${color3}──────────────────────────${color}
+
+${color1}POWERTRAIN${color}
+${color3}Rev${color} ${freq_g}GHz ${alignr}${color3}Temp${color} ${hwmon 1 temp 1}C
+${color3}Out${color} ${cpu cpu0}% ${cpubar cpu0 4,150}
+${cpugraph cpu0 30,260 FF0000 FF3333 -t}
+${color3}Top Loads${color}
+ ${top name 1}${alignr}${top cpu 1}%
+ ${top name 2}${alignr}${top cpu 2}%
+ ${top name 3}${alignr}${top cpu 3}%
+
+${color1}FUEL SYSTEM${color}
+${color3}Tank${color} ${memperc}% ${membar 4,150}
+${memgraph 30,260 FF0000 FF3333 -t}
+${color3}${mem} / ${memmax}${color}
+
+${color1}STORAGE${color}
+${color3}${fs_used_perc /}%${color} ${fs_bar 4,150 /}
+${color3}I/O${color} R:${diskio_read} W:${diskio_write}
+
+${color1}TRANSMISSION${color}
+${if_up wlo1}${color3}WiFi${color} ${wireless_link_qual_perc wlo1}%
+${color3}Down${color} ${downspeed wlo1}/s
+${downspeedgraph wlo1 30,260 FF0000 FF3333 -t}
+${color3}Up${color} ${upspeed wlo1}/s
+${upspeedgraph wlo1 30,260 FF0000 FF3333 -t}
+${else}${if_up enp55s0}${color3}Eth${color} Connected
+${color3}Down${color} ${downspeed enp55s0}/s
+${downspeedgraph enp55s0 30,260 FF0000 FF3333 -t}
+${color3}Up${color} ${upspeed enp55s0}/s
+${upspeedgraph enp55s0 30,260 FF0000 FF3333 -t}
+${else}${color4}No Connection${color}${endif}${endif}
+
+${color1}TRIP DATA${color}
+${color3}Runtime${color} $uptime
+${color3}Tasks${color} ${running_processes}/$processes
+${if_existing /sys/class/power_supply/BAT0}${color3}Batt${color} ${battery_percent BAT0}%${endif}
+]]
