@@ -41,3 +41,6 @@ cargo install code-minimap
 # Set up requirements for nvim lsp
 # Java
 sudo apt install openjdk-21-jdk maven -y
+
+# Arm64 if needed
+# sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu qemu-user -y
