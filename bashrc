@@ -97,9 +97,9 @@ show_virtual_env() {
 }
 
 if [ "$color_prompt" = yes ]; then
-	# Solarized Light compatible prompt
-	# Time: cyan, User: green, Host: blue, Dir: violet, Git: cyan, Git status: orange, Arrow: base01
-	PS1='\[\033[38;5;14m\]$(show_virtual_env)\[\033[38;5;6m\][\t]\[\033[00m\] \[\033[38;5;2m\]\u\[\033[38;5;11m\]@\[\033[38;5;4m\]\h\[\033[00m\] \[\033[38;5;13m\]\w\[\033[38;5;6m\]$(parse_git_branch)\[\033[38;5;9m\]$(parse_git_status)\[\033[00m\]\n\[\033[38;5;10m\]→ \[\033[00m\]'
+	# Red theme prompt
+	# Time: coral, User: red, Host: crimson, Dir: salmon, Git: coral, Git status: orange, Arrow: bright red
+	PS1='\[\033[38;5;203m\]$(show_virtual_env)\[\033[38;5;203m\][\t]\[\033[00m\] \[\033[38;5;160m\]\u\[\033[38;5;196m\]@\[\033[38;5;124m\]\h\[\033[00m\] \[\033[38;5;209m\]\w\[\033[38;5;203m\]$(parse_git_branch)\[\033[38;5;202m\]$(parse_git_status)\[\033[00m\]\n\[\033[38;5;196m\]❯ \[\033[00m\]'
 else
     PS1='$(show_virtual_env)[\t] \u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
 fi
@@ -313,19 +313,40 @@ extract() {
 }
 
 # Show enhanced intro with live system info
-# Minimalist Terminal Intro
-# Uses Windows Terminal theme colors
+# Minimalist Terminal Intro - Red Theme
 
-# Windows Terminal standard colors
-COLOR1="\e[34m"      # Blue
-COLOR2="\e[35m"      # Magenta
-COLOR3="\e[31m"      # Red
-COLOR4="\e[33m"      # Yellow
-COLOR5="\e[32m"      # Green
-COLOR6="\e[36m"      # Cyan
-GRAY="\e[90m"        # Bright Black (Gray)
-DIM="\e[2m"          # Dim text
-RESET="\e[0m"
+# ================================================================
+# STARTUP BANNER COLOR DEFINITIONS - RED THEME
+# ================================================================
+
+# Color definitions (Red spectrum palette)
+RESET="\033[0m"
+BOLD="\033[1m"
+DIM="\033[2m"
+
+# Grayscale for text
+DARK_GRAY="\033[38;5;240m"    # Medium gray
+LIGHT_GRAY="\033[38;5;250m"   # Light gray
+WHITE="\033[38;5;255m"        # White
+
+# Red spectrum colors
+DEEP_RED="\033[38;5;160m"     # Deep red (#d70000)
+BRIGHT_RED="\033[38;5;196m"   # Bright red (#ff0000)
+CRIMSON="\033[38;5;124m"      # Crimson (#af0000)
+CORAL="\033[38;5;203m"        # Coral red (#ff5f5f)
+SALMON="\033[38;5;209m"       # Salmon (#ff875f)
+ORANGE="\033[38;5;202m"       # Orange (#ff5f00)
+BURGUNDY="\033[38;5;52m"      # Dark burgundy (#5f0000)
+ROSE="\033[38;5;210m"         # Light rose (#ff8787)
+
+# Color scheme for the banner
+COLOR1=$DEEP_RED          # Primary (header, name)
+COLOR2=$CORAL             # Secondary (labels)
+COLOR3=$ORANGE            # Accent 1 (warnings)
+COLOR4=$SALMON            # Accent 2 (info)
+COLOR5=$CRIMSON           # Accent 3 (success)
+COLOR6=$ROSE              # Accent 4 (paths)
+GRAY=$DARK_GRAY           # Muted text
 
 # Clear terminal with fade effect
 clear
@@ -343,18 +364,18 @@ else
     GREETING="Good Night, Thomas"
 fi
 
-# Minimalist header
-echo -e "${GRAY}─────────────────────────────────────────────────────────────${RESET}"
-echo -e "  ${COLOR1}${GREETING}${RESET}"
-echo -e "${GRAY}─────────────────────────────────────────────────────────────${RESET}"
+# Minimalist header with red theme
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo -e "  ${COLOR1}${BOLD}${GREETING}${RESET}"
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-# ASCII name
-echo -e "${COLOR1}      ████████ ██   ██  ██████  ███    ███  █████  ███████${RESET}"
-echo -e "${COLOR1}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${RESET}"
-echo -e "${COLOR1}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${RESET}"
-echo -e "${COLOR1}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${RESET}"
-echo -e "${COLOR1}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${RESET}"
+# ASCII name with light red
+echo -e "${ROSE}      ████████ ██   ██  ██████  ███    ███  █████  ███████${RESET}"
+echo -e "${ROSE}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${RESET}"
+echo -e "${ROSE}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${RESET}"
+echo -e "${ROSE}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${RESET}"
+echo -e "${ROSE}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${RESET}"
 echo
 
 # System info
@@ -402,8 +423,8 @@ fi
 echo
 
 # Ready indicator
-echo -e "${GRAY}─────────────────────────────────────────────────────────────${RESET}"
-echo -e "  ${COLOR5}Ready${RESET}"
+echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
+echo -e "  ${COLOR1}${BOLD}⚡ System Ready${RESET}"
 echo
 
 # ================================================================
@@ -475,7 +496,7 @@ rmvenv() {
 }
 
 # bat (cat)
-export BAT_THEME="Solarized (light)"
+export BAT_THEME="Monokai Extended"
 
 # zoxide
 eval "$(zoxide init bash)"
