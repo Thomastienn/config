@@ -1,6 +1,8 @@
 # !/bin/bash
 # Copy my-env file to ~/.my-env before run
 # Assume we have github token
+DEFAULT_PACKAGE_MANAGER="apt"
+
 cd ~
 git clone git@github.com:Thomastienn/config.git
 mv ~/config ~/thomas_config
@@ -13,7 +15,15 @@ ln -s ~/thomas_config/bashrc ~/.bashrc
 ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
-# Set up lsp for f in ~/thomas_config/lsp/*.toml; do
+# Set up kitty
+curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
+mkdir -p ~/.config/kitty
+[ -f ~/.config/kitty/kitty.conf ] && rm -f ~/.config/kitty/kitty.conf
+ln -s ~/thomas_config/kitty/kitty.conf ~/.config/kitty/kitty.conf
+ln -s ~/thomas_config/kitty/current-theme.conf ~/.config/kitty/current-theme.conf
+
+# Set up lsp 
+for f in ~/thomas_config/lsp/*.toml; do
     basename=$(basename "$f" .toml)
     mkdir -p ~/.config/"$basename"
     ln -sf "$f" ~/.config/"$basename"/"$(basename "$f")"
@@ -40,7 +50,7 @@ cargo install code-minimap
 
 # Set up requirements for nvim lsp
 # Java
-sudo apt install openjdk-21-jdk maven -y
+sudo ${DEFAULT_PACKAGE_MANAGER} openjdk-21-jdk maven -y
 
 # Arm64 if needed
 # sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu qemu-user -y
