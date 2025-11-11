@@ -3,6 +3,9 @@ export COLORTERM=truecolor
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 
+# Load centralized theme
+source ~/thomas_config/theme.sh
+
 # Tokens ENV
 # Load environment variables from ~/.my_env if it exists
 if [ -f "$HOME/.my-env" ]; then
@@ -97,9 +100,8 @@ show_virtual_env() {
 }
 
 if [ "$color_prompt" = yes ]; then
-	# Red theme prompt
-	# Time: coral, User: red, Host: crimson, Dir: salmon, Git: coral, Git status: orange, Arrow: bright red
-	PS1='\[\033[38;5;203m\]$(show_virtual_env)\[\033[38;5;203m\][\t]\[\033[00m\] \[\033[38;5;160m\]\u\[\033[38;5;196m\]@\[\033[38;5;124m\]\h\[\033[00m\] \[\033[38;5;209m\]\w\[\033[38;5;203m\]$(parse_git_branch)\[\033[38;5;202m\]$(parse_git_status)\[\033[00m\]\n\[\033[38;5;196m\]❯ \[\033[00m\]'
+	# Sky blue theme prompt - use eval to expand THEME_ variables
+	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR1}\][\t]\[${THEME_RESET}\] \[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(parse_git_branch)\[${THEME_COLOR5}\]\$(parse_git_status)\[${THEME_RESET}\]\n\[${THEME_COLOR4}\]❯ \[${THEME_RESET}\]"
 else
     PS1='$(show_virtual_env)[\t] \u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
 fi
@@ -325,28 +327,30 @@ BOLD="\033[1m"
 DIM="\033[2m"
 
 # Grayscale for text
-DARK_GRAY="\033[38;5;240m"    # Medium gray
-LIGHT_GRAY="\033[38;5;250m"   # Light gray
-WHITE="\033[38;5;255m"        # White
+# Use theme colors
+DARK_GRAY="${THEME_GRAY}"
+LIGHT_GRAY="\033[38;5;250m"
+WHITE="\033[38;5;255m"
 
-# Red spectrum colors
-DEEP_RED="\033[38;5;160m"     # Deep red (#d70000)
-BRIGHT_RED="\033[38;5;196m"   # Bright red (#ff0000)
-CRIMSON="\033[38;5;124m"      # Crimson (#af0000)
-CORAL="\033[38;5;203m"        # Coral red (#ff5f5f)
-SALMON="\033[38;5;209m"       # Salmon (#ff875f)
-ORANGE="\033[38;5;202m"       # Orange (#ff5f00)
-BURGUNDY="\033[38;5;52m"      # Dark burgundy (#5f0000)
-ROSE="\033[38;5;210m"         # Light rose (#ff8787)
+# Sky blue spectrum colors (mapped from theme)
+DEEP_BLUE="${THEME_COLOR2}"       # Sky blue
+BRIGHT_BLUE="${THEME_COLOR4}"     # Bright sky blue
+MEDIUM_BLUE="${THEME_COLOR3}"     # Medium sky blue
+LIGHT_BLUE="${THEME_COLOR1}"      # Light sky blue
+PALE_BLUE="${THEME_COLOR6}"       # Pale sky blue
+CYAN_BLUE="${THEME_COLOR5}"       # Cyan blue
+DARK_BLUE="\033[38;5;24m"         # Dark blue
+AZURE="${THEME_COLOR1}"           # Azure
 
 # Color scheme for the banner
-COLOR1=$DEEP_RED          # Primary (header, name)
-COLOR2=$CORAL             # Secondary (labels)
-COLOR3=$ORANGE            # Accent 1 (warnings)
-COLOR4=$SALMON            # Accent 2 (info)
-COLOR5=$CRIMSON           # Accent 3 (success)
-COLOR6=$ROSE              # Accent 4 (paths)
-GRAY=$DARK_GRAY           # Muted text
+COLOR1=$DEEP_BLUE          # Primary (header, name)
+COLOR2=$LIGHT_BLUE         # Secondary (labels)
+COLOR3=$BRIGHT_BLUE        # Accent 1 (warnings)
+COLOR4=$CYAN_BLUE          # Accent 2 (info)
+COLOR5=$MEDIUM_BLUE        # Accent 3 (success)
+COLOR6=$PALE_BLUE          # Accent 4 (paths)
+GRAY=$DARK_GRAY            # Muted text
+ROSE=$AZURE                # ASCII art color
 
 # Clear terminal with fade effect
 clear
@@ -364,13 +368,13 @@ else
     GREETING="Good Night, Thomas"
 fi
 
-# Minimalist header with red theme
+# Minimalist header with sky blue theme
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo -e "  ${COLOR1}${BOLD}${GREETING}${RESET}"
 echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
 
-# ASCII name with light red
+# ASCII name with light sky blue
 echo -e "${ROSE}      ████████ ██   ██  ██████  ███    ███  █████  ███████${RESET}"
 echo -e "${ROSE}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${RESET}"
 echo -e "${ROSE}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${RESET}"
