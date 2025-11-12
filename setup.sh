@@ -39,7 +39,7 @@ cd ~/.config
 git clone git@github.com:Thomastienn/astronvimconfig.git
 mv astronvimconfig nvim
 
-# Set up virtual venv
+# Set up virtual venv (python)
 # Plugins: molten, minimap
 mkvenv neovim
 venv neovim
