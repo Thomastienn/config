@@ -39,7 +39,7 @@ exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enable
 # APPLICATION SHORTCUTS
 # ================================================================
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
-bindsym $mod+b exec brave-browser
+bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
 bindsym $mod+f exec thunar
 
 # Kill focused window (vim-style)
@@ -216,8 +216,8 @@ for_window [class=".*"] border pixel 2
 gaps inner 10
 gaps outer 5
 
-# Force borders on Brave (case-insensitive)
-for_window [class="(?i)brave"] border pixel 2
+# Force borders on Brave - match exact class names
+for_window [class="Brave-browser"] border pixel 2
 
 # Floating windows
 for_window [class="Pavucontrol"] floating enable
