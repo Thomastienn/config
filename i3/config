@@ -216,8 +216,8 @@ for_window [class=".*"] border pixel 2
 gaps inner 10
 gaps outer 5
 
-# Force borders on Brave
-for_window [class="Brave-browser"] border pixel 2
+# Force borders on Brave (case-insensitive)
+for_window [class="(?i)brave"] border pixel 2
 
 # Floating windows
 for_window [class="Pavucontrol"] floating enable

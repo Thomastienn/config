@@ -21,6 +21,11 @@ sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools 
 rm -f ~/.config/i3/config
 mkdir -p ~/.config/i3
 ln -s ~/thomas_config/i3/config ~/.config/i3/config
+# Scaling global
+rm -f ~/.Xresources
+rm -f ~/.xinitrc
+ln -s ~/thomas_config/Xresources ~/.Xresources
+ln -s ~/thomas_config/xinitrc ~/.xinitrc
 
 # Set up picom
 rm -f ~/.config/picom/picom.conf
