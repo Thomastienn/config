@@ -3,9 +3,10 @@
 # Assume we have github token
 DEFAULT_PACKAGE_MANAGER="apt"
 
-cd ~
-git clone git@github.com:Thomastienn/config.git
-mv ~/config ~/thomas_config
+# Install this setup first
+# cd ~
+# git clone git@github.com:Thomastienn/config.git
+# mv ~/config ~/thomas_config
 
 # Set up bash, tmux
 rm -f ~/.bashrc
@@ -14,6 +15,17 @@ rm -f ~/.tmux.conf
 ln -s ~/thomas_config/bashrc ~/.bashrc
 ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
+
+# Set up i3wm
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom -y
+rm -f ~/.config/i3/config
+mkdir -p ~/.config/i3
+ln -s ~/thomas_config/i3/config ~/.config/i3/config
+
+# Set up picom
+rm -f ~/.config/picom/picom.conf
+mkdir -p ~/.config/picom
+ln -s ~/thomas_config/picom/picom.conf ~/.config/picom/picom.conf
 
 # Set up kitty
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
