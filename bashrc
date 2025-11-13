@@ -516,3 +516,5 @@ eval "$(ssh-agent -s)"
 
 # Unbind Ctrl-S and Ctrl-Q to avoid terminal freeze
 stty -ixon
+
+[ -d "$HOME/.virtualenvs/neovim" ] && venv neovim
