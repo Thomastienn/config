@@ -17,7 +17,7 @@ ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
 # Set up i3wm
-sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom -y
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh -y
 rm -f ~/.config/i3/config
 mkdir -p ~/.config/i3
 ln -s ~/thomas_config/i3/config ~/.config/i3/config

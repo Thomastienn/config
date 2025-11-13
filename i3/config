@@ -29,13 +29,16 @@ client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
-exec_always --no-startup-id feh --bg-scale ~/thomas_config/wallpapers/jpanchal_cpu.jpg
-exec_always --no-startup-id picom --config ~/.config/picom/picom.conf
+exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/jpanchal_cpu.jpg
+exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
+exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
+exec_always --no-startup-id xinput set-prop $(xinput list | grep -i "pointer\|touchpad" | grep -oP 'id=\K\d+' | head -1) "libinput Natural Scrolling Enabled" 1
+exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
 
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
-bindsym $mod+Return exec kitty
+bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 bindsym $mod+b exec brave-browser
 bindsym $mod+f exec thunar
 
@@ -207,9 +210,14 @@ bar {
 # WINDOW RULES
 # ================================================================
 # Border settings
+default_border pixel 2
+default_floating_border pixel 2
 for_window [class=".*"] border pixel 2
 gaps inner 10
 gaps outer 5
+
+# Force borders on Brave
+for_window [class="Brave-browser"] border pixel 2
 
 # Floating windows
 for_window [class="Pavucontrol"] floating enable
