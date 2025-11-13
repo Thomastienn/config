@@ -35,19 +35,25 @@ exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop $(xinput list | grep -i "pointer\|touchpad" | grep -oP 'id=\K\d+' | head -1) "libinput Natural Scrolling Enabled" 1
 exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
 
+# Default polybar
+# exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
+# Preconfigured theme
+exec_always --no-startup-id killall -q polybar; bash ~/.config/polybar/launch.sh --hack
+
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
-bindsym $mod+f exec thunar
+bindsym $mod+f exec nemo
+bindsym $mod+Shift+d exec flatpak run com.discordapp.Discord
 
 # Kill focused window (vim-style)
 bindsym $mod+q kill
 bindsym $mod+Shift+q kill
 
 # Application launcher
-bindsym $mod+d exec --no-startup-id dmenu_run -nb "$inactive-bg-color" -nf "$text-color" -sb "$bg-color" -sf "$text-color"
+bindsym $mod+d exec --no-startup-id rofi -show drun
 
 # ================================================================
 # VIM-STYLE NAVIGATION
@@ -187,24 +193,9 @@ bindsym $mod+Shift+r restart
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes, exit i3' 'i3-msg exit'"
 
 # ================================================================
-# STATUS BAR
+# STATUS BAR (Using Polybar)
 # ================================================================
-bar {
-        status_command i3status
-        position top
-        
-        colors {
-                background $inactive-bg-color
-                separator  #666666
-                statusline $text-color
-
-                #                  border              background          text
-                focused_workspace  $bg-color           $bg-color           $text-color
-                active_workspace   $inactive-bg-color  $inactive-bg-color  $inactive-text-color
-                inactive_workspace $inactive-bg-color  $inactive-bg-color  $inactive-text-color
-                urgent_workspace   $urgent-bg-color    $urgent-bg-color    $text-color
-        }
-}
+# Polybar is launched via exec_always in autostart section
 
 # ================================================================
 # WINDOW RULES

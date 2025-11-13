@@ -2,9 +2,9 @@
 # Copy my-env file to ~/.my-env before run
 # Assume we have github token
 DEFAULT_PACKAGE_MANAGER="apt"
+cd ~
 
 # Install this setup first
-# cd ~
 # git clone git@github.com:Thomastienn/config.git
 # mv ~/config ~/thomas_config
 
@@ -17,7 +17,7 @@ ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
 # Set up i3wm
-sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh -y
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar -y
 rm -f ~/.config/i3/config
 mkdir -p ~/.config/i3
 ln -s ~/thomas_config/i3/config ~/.config/i3/config
@@ -26,6 +26,14 @@ rm -f ~/.Xresources
 rm -f ~/.xinitrc
 ln -s ~/thomas_config/Xresources ~/.Xresources
 ln -s ~/thomas_config/xinitrc ~/.xinitrc
+# Polybar
+# Default
+rm -rf ~/.config/polybar
+mkdir -p ~/.config/polybar
+ln -s ~/thomas_config/polybar/config ~/.config/polybar/config
+# Preconfigured
+git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
+cd polybar-themes && chmod +x setup.sh && ./setup.sh && cd -
 
 # Set up picom
 rm -f ~/.config/picom/picom.conf

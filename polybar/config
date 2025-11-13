@@ -1,0 +1,191 @@
+;==========================================================
+;
+;   POLYBAR CONFIGURATION
+;   Sky Blue Theme
+;
+;==========================================================
+
+[colors]
+; Sky Blue Theme Colors (matching theme.sh)
+background = #2E3440
+background-alt = #3B4252
+foreground = #FFFFFF
+foreground-dim = #888888
+primary = #29B6F6
+secondary = #4FC3F7
+alert = #E53935
+accent = #81D4FA
+
+[bar/main]
+width = 100%
+height = 24
+radius = 0
+fixed-center = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 2
+line-color = ${colors.primary}
+
+border-size = 0
+border-color = ${colors.primary}
+
+padding-left = 1
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 1
+
+font-0 = monospace:size=11;2
+font-1 = Font Awesome 5 Free:style=Solid:size=11;2
+font-2 = Font Awesome 5 Brands:size=11;2
+
+modules-left = i3
+modules-center = date
+modules-right = filesystem memory cpu temperature battery
+
+tray-position = right
+tray-padding = 2
+tray-background = ${colors.background}
+
+cursor-click = pointer
+cursor-scroll = ns-resize
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+index-sort = true
+wrapping-scroll = false
+
+; focused = Active workspace on focused monitor
+label-focused = %index%
+label-focused-background = ${colors.primary}
+label-focused-foreground = ${colors.background}
+label-focused-underline = ${colors.secondary}
+label-focused-padding = 2
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %index%
+label-unfocused-padding = 2
+label-unfocused-foreground = ${colors.foreground-dim}
+
+; visible = Active workspace on unfocused monitor
+label-visible = %index%
+label-visible-background = ${colors.background-alt}
+label-visible-padding = 2
+
+; urgent = Workspace with urgency hint set
+label-urgent = %index%
+label-urgent-background = ${colors.alert}
+label-urgent-padding = 2
+
+; mode (resize, etc)
+label-mode-padding = 2
+label-mode-foreground = ${colors.background}
+label-mode-background = ${colors.primary}
+
+[module/date]
+type = internal/date
+interval = 1
+
+date = %Y-%m-%d
+time = %H:%M:%S
+
+format-prefix = " "
+format-prefix-foreground = ${colors.secondary}
+label = %date% %time%
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = AC
+full-at = 98
+
+format-charging = <animation-charging> <label-charging>
+format-charging-foreground = ${colors.secondary}
+label-charging = %percentage%%
+
+format-discharging = <ramp-capacity> <label-discharging>
+label-discharging = %percentage%%
+
+format-full-prefix = " "
+format-full-prefix-foreground = ${colors.secondary}
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-foreground = ${colors.secondary}
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-foreground = ${colors.secondary}
+animation-charging-framerate = 750
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format-prefix = "CPU "
+format-prefix-foreground = ${colors.secondary}
+label = %percentage:2%%
+
+[module/memory]
+type = internal/memory
+interval = 2
+format-prefix = "RAM "
+format-prefix-foreground = ${colors.secondary}
+label = %percentage_used%%
+
+[module/filesystem]
+type = internal/fs
+interval = 25
+
+mount-0 = /
+
+label-mounted = %mountpoint%: %percentage_used%%
+format-mounted-prefix = "DISK "
+format-mounted-prefix-foreground = ${colors.secondary}
+
+[module/pulseaudio]
+type = internal/pulseaudio
+
+format-volume = <ramp-volume> <label-volume>
+label-volume = %percentage%%
+label-volume-foreground = ${colors.foreground}
+
+ramp-volume-0 = 
+ramp-volume-1 = 
+ramp-volume-2 = 
+ramp-volume-foreground = ${colors.secondary}
+
+label-muted = 婢 muted
+label-muted-foreground = ${colors.alert}
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 80
+
+format = <ramp> <label>
+format-warn = <ramp> <label-warn>
+
+label = %temperature-c%
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.alert}
+
+ramp-0 = 
+ramp-1 = 
+ramp-2 = 
+ramp-foreground = ${colors.secondary}
+
+[settings]
+screenchange-reload = true
+
+[global/wm]
+margin-top = 0
+margin-bottom = 0
