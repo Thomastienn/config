@@ -17,7 +17,7 @@ ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
 # Set up i3wm
-sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar -y
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl -y
 rm -f ~/.config/i3/config
 mkdir -p ~/.config/i3
 ln -s ~/thomas_config/i3/config ~/.config/i3/config
@@ -28,14 +28,18 @@ ln -s ~/thomas_config/Xresources ~/.Xresources
 ln -s ~/thomas_config/xinitrc ~/.xinitrc
 ## Polybar
 ### Default
-rm -rf ~/.config/polybar
-mkdir -p ~/.config/polybar
-ln -s ~/thomas_config/polybar/config ~/.config/polybar/config
+# rm -rf ~/.config/polybar
+# mkdir -p ~/.config/polybar
+# ln -s ~/thomas_config/polybar/config ~/.config/polybar/config
 ### Preconfigured
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes && chmod +x setup.sh && ./setup.sh && cd -
+rm ~/.config/polybar/hack
+ln -s ~/thomas_config/polybar/hack ~/.config/polybar/hack
 ## lxappearance
 sudo ${DEFAULT_PACKAGE_MANAGER} install lxappearance -y
+
+# End i3wm
 
 # Install screen brightness
 sudo apt install brightnessctl
