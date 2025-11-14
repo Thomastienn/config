@@ -62,8 +62,9 @@ exec_always --no-startup-id killall -q polybar; bash ~/.config/polybar/launch.sh
 # ================================================================
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
-bindsym $mod+f exec nemo
+bindsym $mod+Shift+f exec nemo
 bindsym $mod+Shift+d exec flatpak run com.discordapp.Discord
+bindsym $mod+Shift+o exec flatpak run com.obsproject.Studio
 
 # Cinnamon
 bindsym $mod+Shift+z exec cinnamon-settings
