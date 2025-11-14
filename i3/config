@@ -22,8 +22,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -d intel_backlight s +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -d intel_backlight s 5%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight s +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight s 5%-
 
 # ================================================================
 # THEME COLORS (Sky Blue)

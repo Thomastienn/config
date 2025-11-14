@@ -4,7 +4,7 @@
 player_status=$(playerctl -a status 2>/dev/null | head -n1)
 
 if [ -z "$player_status" ]; then
-    echo " No player"
+    echo "ﱘ No player"
     exit 0
 fi
 
@@ -16,7 +16,7 @@ artist=$(playerctl metadata artist 2>/dev/null)
 title=$(playerctl metadata title 2>/dev/null)
 
 if [ -z "$artist" ] || [ -z "$title" ]; then
-    echo " No media"
+    echo "ﱘ No media"
     exit 0
 fi
 
@@ -35,6 +35,7 @@ elif [[ "$player" == *"firefox"* ]] || [[ "$player" == *"chrome"* ]]; then
 else
     icon="ﱘ"
 fi
+icon="ﱘ"
 
 # Show play/pause status
 if [ "$player_status" = "Playing" ]; then
