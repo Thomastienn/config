@@ -54,6 +54,7 @@ exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enable
 # Mint
 exec --no-startup-id mintupdate-launcher
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
+exec --no-startup-id touchegg
 
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
