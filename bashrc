@@ -199,7 +199,8 @@ export VISUAL=nvim
 [ -d "$HOME/.local/kitty.app/bin" ] && export PATH="$HOME/.local/kitty.app/bin:$PATH"
 [ -d "/opt/nvim-linux-x86_64/bin" ] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
-[ -f "$HOME/.cargo/env" ] && [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
+[ -d "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
 
 # Only add Windows paths if they exist (WSL)
 [ -d "/mnt/c/Windows" ] && export PATH="$PATH:/mnt/c/Windows:/mnt/c/Windows/System32"
@@ -517,3 +518,4 @@ eval "$(ssh-agent -s)"
 stty -ixon
 
 [ -d "$HOME/.virtualenvs/neovim" ] && venv neovim
+. "$HOME/.cargo/env"
