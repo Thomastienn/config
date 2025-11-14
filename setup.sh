@@ -21,19 +21,27 @@ sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools 
 rm -f ~/.config/i3/config
 mkdir -p ~/.config/i3
 ln -s ~/thomas_config/i3/config ~/.config/i3/config
-# Scaling global
+## Scaling global
 rm -f ~/.Xresources
 rm -f ~/.xinitrc
 ln -s ~/thomas_config/Xresources ~/.Xresources
 ln -s ~/thomas_config/xinitrc ~/.xinitrc
-# Polybar
-# Default
+## Polybar
+### Default
 rm -rf ~/.config/polybar
 mkdir -p ~/.config/polybar
 ln -s ~/thomas_config/polybar/config ~/.config/polybar/config
-# Preconfigured
+### Preconfigured
 git clone --depth=1 https://github.com/adi1090x/polybar-themes.git
 cd polybar-themes && chmod +x setup.sh && ./setup.sh && cd -
+## lxappearance
+sudo ${DEFAULT_PACKAGE_MANAGER} install lxappearance -y
+
+# Install asusctl and supergfxd for Asus laptops
+# curl -sSL https://raw.githubusercontent.com/andreas-glaser/asus-linux-mint/main/install-asus-linux.sh | bash
+
+# Install tlp for battery management (and performance)
+sudo ${DEFAULT_PACKAGE_MANAGER} install tlp tlp-rdw -y
 
 # Set up picom
 rm -f ~/.config/picom/picom.conf

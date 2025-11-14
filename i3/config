@@ -10,6 +10,16 @@ floating_modifier $mod
 focus_follows_mouse no
 
 # ================================================================
+# VOLUME CONTROL
+# ================================================================
+bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
+bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
+
+# Mic mute toggle with visual feedback
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1500 -u low "Microphone" "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Muted 🔇' || echo 'Unmuted 🎤')"
+
+
+# ================================================================
 # THEME COLORS (Sky Blue)
 # ================================================================
 set $bg-color            #29B6F6
@@ -32,7 +42,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color     
 exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/jpanchal_cpu.jpg
 exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
-exec_always --no-startup-id xinput set-prop $(xinput list | grep -i "pointer\|touchpad" | grep -oP 'id=\K\d+' | head -1) "libinput Natural Scrolling Enabled" 1
+exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
 exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
 
 # Default polybar
@@ -47,6 +57,9 @@ bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
 bindsym $mod+f exec nemo
 bindsym $mod+Shift+d exec flatpak run com.discordapp.Discord
+
+# Cinnamon
+bindsym $mod+Shift+z exec cinnamon-settings
 
 # Kill focused window (vim-style)
 bindsym $mod+q kill
