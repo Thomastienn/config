@@ -37,6 +37,9 @@ cd polybar-themes && chmod +x setup.sh && ./setup.sh && cd -
 ## lxappearance
 sudo ${DEFAULT_PACKAGE_MANAGER} install lxappearance -y
 
+# Install screen brightness
+sudo apt install brightnessctl
+
 # Install asusctl and supergfxd for Asus laptops
 # curl -sSL https://raw.githubusercontent.com/andreas-glaser/asus-linux-mint/main/install-asus-linux.sh | bash
 
