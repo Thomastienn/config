@@ -50,7 +50,10 @@ exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/pico
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
 exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
+
+# Mint
 exec --no-startup-id mintupdate-launcher
+exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
@@ -62,7 +65,7 @@ exec_always --no-startup-id killall -q polybar; bash ~/.config/polybar/launch.sh
 # ================================================================
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
-bindsym $mod+Shift+f exec nemo
+bindsym $mod+Shift+m exec nemo
 bindsym $mod+Shift+d exec flatpak run com.discordapp.Discord
 bindsym $mod+Shift+o exec flatpak run com.obsproject.Studio
 
