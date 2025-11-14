@@ -44,6 +44,7 @@ exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/pico
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
 exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
+exec --no-startup-id mintupdate-launcher
 
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
