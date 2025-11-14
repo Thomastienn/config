@@ -22,8 +22,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight set +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight set 5%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -d intel_backlight s +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -d intel_backlight s 5%-
 
 # ================================================================
 # THEME COLORS (Sky Blue)
@@ -211,6 +211,11 @@ bindsym $mod+Shift+r restart
 
 # Exit i3 (vim-style :q)
 bindsym $mod+Shift+e exec "i3-msg exit"
+
+# Shutdown computer
+bindsym $mod+Delete exec "systemctl poweroff"
+# Reboot
+bindsym $mod+Insert exec "systemctl reboot"
 
 # ================================================================
 # STATUS BAR (Using Polybar)
