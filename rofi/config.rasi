@@ -46,22 +46,28 @@ mainbox {
     spacing: 12px;
 }
 
+/* Replace your inputbar section with this: */
+
 inputbar {
     children: [ "prompt", "entry" ];
-    padding: 8px;
-    border-radius: 6px;
-    background-color: @light-dark-background; /* Lighter dark background for input */
+    padding: 16px;
+    border-radius: 8px;
+    spacing: 12px; /* Add spacing between prompt and entry */
 }
 
 prompt {
-    text-color: @accent;
-    padding: 0 8px 0 0;
+    text-color: @sky-blue-light;
+    padding: 4px 12px;
+    border-radius: 4px;
+    background-color: rgba(79, 195, 247, 0.15); /* Subtle sky blue background */
+    font: "ComicShannsMono Nerd Font Bold 16";
 }
 
 entry {
     placeholder: "Search...";
     placeholder-color: @gray;
-    text-color: @white; /* Ensure entry text is white */
+    text-color: @white;
+    padding: 4px 8px;
 }
 
 listview {

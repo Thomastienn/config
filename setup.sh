@@ -7,6 +7,7 @@ cd ~
 # Install this setup first
 # git clone git@github.com:Thomastienn/config.git
 # mv ~/config ~/thomas_config
+# Install font: ComicShannsMono Nerd Font
 
 # Set up bash, tmux
 rm -f ~/.bashrc
