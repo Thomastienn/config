@@ -519,4 +519,7 @@ eval "$(ssh-agent -s)"
 stty -ixon
 
 [ -d "$HOME/.virtualenvs/neovim" ] && venv neovim
-. "$HOME/.cargo/env"
+
+# Ble.sh
+source -- ~/.local/share/blesh/ble.sh
+[[ -f ~/thomas_config/blerc ]] && . ~/thomas_config/blerc 

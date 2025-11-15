@@ -16,6 +16,17 @@ ln -s ~/thomas_config/bashrc ~/.bashrc
 ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
+# UPDATE (in a ble.sh session)
+#> ble-update
+# UPDATE (outside ble.sh sessions)
+#> bash /path/to/ble.sh --update
+# Ble.sh for bash enhancements
+sudo ${DEFAULT_PACKAGE_MANAGER} install gawk
+git clone --recursive --depth 1 --shallow-submodules https://github.com/akinomyoga/ble.sh.git
+make -C ble.sh install PREFIX=~/.local
+ln -s ~/thomas_config/blerc ~/.blerc
+
+
 # Set up i3wm
 sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl conky-all -y
 rm -rf ~/.config/i3
@@ -45,8 +56,8 @@ sudo ${DEFAULT_PACKAGE_MANAGER} install flameshot -y
 # Rofi
 rm -rf ~/.config/rofi
 ln -s ~/thomas_config/rofi ~/.config/rofi
-
 # End i3wm
+
 
 # Install screen brightness
 sudo apt install brightnessctl
