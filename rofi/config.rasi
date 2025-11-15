@@ -1,0 +1,126 @@
+/*
+ * ROFI THEME: SKY BLUE
+ * Based on the centralized theme.sh script
+ */
+
+configuration {
+    font: "ComicShannsMono Nerd Font 16";
+    show-icons: true;
+    terminal: "kitty";
+    drun-display-format: "{name}";
+    display-drun: "Apps";
+    display-window: "Windows";
+    display-run: "Run";
+    modi: "drun,window,run";
+}
+
+* {
+    /* Sky Blue Theme Colors from theme.sh */
+    background-color: #2E3440; /* A slightly darker slate for the base */
+    text-color: #FFFFFF; /* Default text color */
+    
+    /* Theme-specific colors */
+    sky-blue-light: #4FC3F7; /* CONKY_COLOR1 */
+    sky-blue-medium: #29B6F6; /* CONKY_COLOR4 */
+    white: #FFFFFF;
+    gray: #AAAAAA;
+    
+    /* Accents */
+    accent: @sky-blue-light;
+    selected: @sky-blue-medium;
+    dark-background: #2E3440; /* Explicit dark background */
+    light-dark-background: #3B4252; /* Slightly lighter dark background for input */
+}
+
+window {
+    border: 1px; /* Reduced border size */
+    border-color: @sky-blue-light; /* Using the light sky blue for border */
+    border-radius: 8px;
+    padding: 16px;
+    width: 50%;
+    background-color: @dark-background; /* Ensure window background is dark */
+}
+
+mainbox {
+    children: [ "inputbar", "listview" ];
+    spacing: 12px;
+}
+
+inputbar {
+    children: [ "prompt", "entry" ];
+    padding: 8px;
+    border-radius: 6px;
+    background-color: @light-dark-background; /* Lighter dark background for input */
+}
+
+prompt {
+    text-color: @accent;
+    padding: 0 8px 0 0;
+}
+
+entry {
+    placeholder: "Search...";
+    placeholder-color: @gray;
+    text-color: @white; /* Ensure entry text is white */
+}
+
+listview {
+    lines: 8;
+    columns: 1;
+    cycle: true;
+    scrollbar: false;
+}
+
+element {
+    padding: 8px;
+    border-radius: 6px;
+}
+
+element-text {
+    vertical-align: 0.5;
+}
+
+element-icon {
+    size: 24px;
+    padding: 0 10px 0 0;
+}
+
+element.normal.normal {
+    background-color: transparent;
+    text-color: @white; /* Ensure normal text is white */
+}
+
+element.normal.normal,
+element.normal.urgent,
+element.normal.active {
+    background-color: transparent;
+    text-color:       @white;
+}
+
+element.alternate.normal,
+element.alternate.urgent,
+element.alternate.active {
+    background-color: transparent;
+    text-color:       @white;
+}
+
+element.normal.active {
+    background-color: transparent;
+    text-color: @accent; /* Show active state with colored text, not background */
+}
+
+element.selected.normal {
+    background-color: @selected; /* Medium sky blue for selected background */
+    text-color: @white; /* Changed to white for readability */
+    border: 0px; /* Removed bottom border for cleaner look */
+}
+
+element.selected.urgent {
+    background-color: @selected;
+    text-color: @white;
+}
+
+element.selected.active {
+    background-color: @selected;
+    text-color: @white;
+}

@@ -17,10 +17,9 @@ ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 
 # Set up i3wm
-sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl -y
-rm -f ~/.config/i3/config
-mkdir -p ~/.config/i3
-ln -s ~/thomas_config/i3/config ~/.config/i3/config
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl conky-all -y
+rm -rf ~/.config/i3
+ln -s ~/thomas_config/i3 ~/.config/i3
 ## Scaling global
 rm -f ~/.Xresources
 rm -f ~/.xinitrc
@@ -43,6 +42,10 @@ sudo add-apt-repository ppa:touchegg/stable
 sudo ${DEFAULT_PACKAGE_MANAGER} install touchegg -y
 # Screen shot
 sudo ${DEFAULT_PACKAGE_MANAGER} install flameshot -y
+# Rofi
+rm -rf ~/.config/rofi
+ln -s ~/thomas_config/rofi ~/.config/rofi
+
 # End i3wm
 
 # Install screen brightness
@@ -55,16 +58,13 @@ sudo apt install brightnessctl
 sudo ${DEFAULT_PACKAGE_MANAGER} install tlp tlp-rdw -y
 
 # Set up picom
-rm -f ~/.config/picom/picom.conf
-mkdir -p ~/.config/picom
-ln -s ~/thomas_config/picom/picom.conf ~/.config/picom/picom.conf
+rm -rf ~/.config/picom
+ln -s ~/thomas_config/picom ~/.config/picom
 
 # Set up kitty
 curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin
-mkdir -p ~/.config/kitty
-[ -f ~/.config/kitty/kitty.conf ] && rm -f ~/.config/kitty/kitty.conf
-ln -s ~/thomas_config/kitty/kitty.conf ~/.config/kitty/kitty.conf
-ln -s ~/thomas_config/kitty/current-theme.conf ~/.config/kitty/current-theme.conf
+rm -rf ~/.config/kitty
+ln -s ~/thomas_config/kitty ~/.config/kitty
 
 # Set up lsp 
 for f in ~/thomas_config/lsp/*.toml; do
