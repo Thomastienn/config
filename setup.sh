@@ -38,10 +38,11 @@ rm ~/.config/polybar/hack
 ln -s ~/thomas_config/polybar/hack ~/.config/polybar/hack
 ## lxappearance
 sudo ${DEFAULT_PACKAGE_MANAGER} install lxappearance -y
-
 ## Touch egg
 sudo add-apt-repository ppa:touchegg/stable
 sudo ${DEFAULT_PACKAGE_MANAGER} install touchegg -y
+# Screen shot
+sudo ${DEFAULT_PACKAGE_MANAGER} install flameshot -y
 # End i3wm
 
 # Install screen brightness

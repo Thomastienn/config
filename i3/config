@@ -26,6 +26,13 @@ bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight s +5
 bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight s 5%-
 
 # ================================================================
+# SCREENSHOT
+# ================================================================
+bindsym Print exec flameshot full -p /home/thomas/Pictures
+bindsym Shift+Print exec flameshot gui
+bindsym Ctrl+Print exec flameshot screen -c
+
+# ================================================================
 # THEME COLORS (Sky Blue)
 # ================================================================
 set $bg-color            #29B6F6
