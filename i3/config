@@ -86,6 +86,8 @@ bindsym $mod+Shift+q kill
 
 # Application launcher
 bindsym $mod+d exec --no-startup-id rofi -show drun
+bindsym $mod+x exec --no-startup-id rofi -show window
+bindsym $mod+m exec --no-startup-id rofi -show ssh
 
 # ================================================================
 # VIM-STYLE NAVIGATION
