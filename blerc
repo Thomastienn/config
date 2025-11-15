@@ -4,85 +4,82 @@ if [[ -f "$HOME/thomas_config/theme.sh" ]]; then
 fi
 
 # ================================================================
-# BLE.SH THEME CONFIGURATION (SKY BLUE DARK THEME)
+# BLE.SH THEME CONFIGURATION (SOFT SKY BLUE DARK THEME)
 # ================================================================
-# This file uses the colors defined in theme.sh to style ble.sh.
-# Optimized for dark mode with sky blue accents
+# Optimized for dark mode with soft, easy-on-the-eyes sky blue palette
 # ================================================================
-
-# See "ble-face" for a full list of available faces.
 
 # General text and defaults
-ble-face syntax_default="fg=117"       # Sky Blue (THEME_COLOR1)
-ble-face disabled="fg=244"             # Medium Gray
+ble-face syntax_default="fg=117"       # Light sky blue (soft)
+ble-face disabled="fg=240"             # Darker gray
 
 # Command structure
-ble-face syntax_command="fg=87,bold"   # Bright Cyan
-ble-face command_keyword="fg=159,bold" # Bright Blue
-ble-face command_builtin="fg=87"       # Bright Cyan
-ble-face command_builtin_dot="fg=87,bold"
-ble-face command_alias="fg=123"        # Light Blue
-ble-face command_function="fg=87"      # Bright Cyan
-ble-face syntax_function_name="fg=87"
-ble-face argument_option="fg=159"      # Bright Blue
+ble-face syntax_command="fg=75,bold"   # Sky blue (softer than 87)
+ble-face command_keyword="fg=111,bold" # Medium sky blue (softer than 159)
+ble-face command_builtin="fg=75"       # Sky blue
+ble-face command_builtin_dot="fg=81"   # Cyan blue
+ble-face command_alias="fg=123"        # Pale sky blue
+ble-face command_function="fg=81"      # Cyan blue
+ble-face syntax_function_name="fg=81"
+ble-face argument_option="fg=111"      # Medium sky blue
 
 # Variables
-ble-face syntax_varname="fg=123"       # Light Blue
-ble-face varname_array="fg=123,bold"
-ble-face varname_hash="fg=123,bold"
+ble-face syntax_varname="fg=123"       # Pale sky blue
+ble-face varname_array="fg=117,bold"   # Light sky blue
+ble-face varname_hash="fg=117,bold"
 ble-face varname_expr="fg=123,bold"
-ble-face varname_transform="fg=123,bold"
-ble-face varname_export="fg=117,bold"  # Sky Blue
-ble-face varname_readonly="fg=117"
-ble-face varname_number="fg=159"       # Bright Blue
-ble-face varname_empty="fg=244"
-ble-face varname_unset="fg=244"
-ble-face varname_new="fg=86"           # Cyan/Teal
+ble-face varname_transform="fg=123"
+ble-face varname_export="fg=111,bold"  # Medium sky blue
+ble-face varname_readonly="fg=111"
+ble-face varname_number="fg=75"        # Sky blue (softer)
+ble-face varname_empty="fg=240"
+ble-face varname_unset="fg=240"
+ble-face varname_new="fg=81"           # Cyan blue
 
 # Syntax elements
-ble-face syntax_delimiter="fg=49,bold" # Teal
-ble-face syntax_brace="fg=49,bold"
-ble-face syntax_quoted="fg=86"         # Cyan/Teal
-ble-face syntax_quotation="fg=86,bold"
-ble-face syntax_escape="fg=49"
-ble-face syntax_expr="fg=159"          # Bright Blue
-ble-face syntax_glob="fg=86,bold"
-ble-face syntax_tilde="fg=123,bold"    # Light Blue
+ble-face syntax_delimiter="fg=75"      # Sky blue (softer than 49)
+ble-face syntax_brace="fg=75,bold"
+ble-face syntax_quoted="fg=117"        # Light sky blue (softer than 86)
+ble-face syntax_quotation="fg=123"     # Pale sky blue
+ble-face syntax_escape="fg=81"         # Cyan blue (softer)
+ble-face syntax_expr="fg=111"          # Medium sky blue
+ble-face syntax_glob="fg=123,bold"     # Pale sky blue
+ble-face syntax_tilde="fg=117"         # Light sky blue
 ble-face syntax_param_expansion="fg=123"
-ble-face syntax_history_expansion="fg=16,bg=87"  # Black on Bright Cyan
-ble-face syntax_document="fg=86"
-ble-face syntax_document_begin="fg=86,bold"
-ble-face syntax_comment="fg=244"       # Medium Gray
+ble-face syntax_history_expansion="fg=16,bg=75"  # Black on soft sky blue
+ble-face syntax_document="fg=117"
+ble-face syntax_document_begin="fg=123,bold"
+ble-face syntax_comment="fg=240"       # Darker gray
 
 # Errors and warnings
-ble-face syntax_error="fg=231,bg=196,bold"    # White on Red
-ble-face argument_error="fg=231,bg=196"
-ble-face filename_warning="fg=226,underline"  # Yellow
-ble-face filename_orphan="fg=86,underline"
-ble-face command_jobs="fg=87,bold"
+ble-face syntax_error="fg=224,bg=124"        # Soft red (less harsh)
+ble-face argument_error="fg=224,bg=124"
+ble-face filename_warning="fg=222,underline" # Soft yellow
+ble-face filename_orphan="fg=117,underline"
+ble-face command_jobs="fg=75,bold"
 
 # File and directory names
-ble-face filename_directory="fg=159,bold"     # Bright Blue
-ble-face filename_directory_sticky="fg=16,bg=159,bold"
-ble-face filename_executable="fg=86,bold"     # Cyan/Teal
-ble-face filename_link="fg=123,underline"     # Light Blue
-ble-face filename_other="fg=117"              # Sky Blue
-ble-face filename_url="fg=49,underline"       # Teal
+ble-face filename_directory="fg=111,bold"     # Medium sky blue
+ble-face filename_directory_sticky="fg=16,bg=111"
+ble-face filename_executable="fg=81"          # Cyan blue
+ble-face filename_link="fg=123,underline"     # Pale sky blue
+ble-face filename_other="fg=117"              # Light sky blue
+ble-face filename_url="fg=75,underline"       # Sky blue
 
-# Highlighting and UI (optimized for dark themes)
-ble-face region="bg=24,fg=255"                # Dark Blue bg, white text
-ble-face region_insert="bg=25,fg=255"
-ble-face region_match="bg=49,fg=16"           # Teal bg, black text
-ble-face region_target="bg=87,fg=16"          # Bright Cyan bg, black text
-ble-face overwrite_mode="fg=16,bg=226"        # Black on Yellow
-ble-face vbell="bg=87"                        # Bright Cyan
-ble-face vbell_erase="bg=244"
-ble-face vbell_flash="fg=86,reverse"
-ble-face prompt_status_line="fg=16,bg=87"     # Black on Bright Cyan
+# Highlighting and UI (optimized for comfortable viewing)
+ble-face region="bg=24,fg=252"                # Dark blue bg, soft white
+ble-face region_insert="bg=25,fg=252"
+ble-face region_match="bg=32,fg=16"           # Muted teal bg
+ble-face region_target="bg=75,fg=16"          # Sky blue bg
+ble-face overwrite_mode="fg=16,bg=222"        # Soft yellow
+ble-face vbell="bg=75"                        # Sky blue
+ble-face vbell_erase="bg=240"
+ble-face vbell_flash="fg=117,reverse"
+ble-face prompt_status_line="fg=16,bg=75"     # Black on sky blue
 
-# Autocomplete menu (optimized for dark themes)
-ble-face auto_complete="bg=235,fg=117"        # Sky Blue
-ble-face menu_filter_input="bg=24,fg=159"     # Dark Blue bg, Bright Blue text
-ble-face menu_filter_fixed="fg=87,bold"       # Bright Cyan
-ble-face menu_complete_match="fg=159,bold"    # Bright Blue
-ble-face menu_complete_selected="bg=24,fg=159,bold"  # Dark Blue bg, Bright Blue text
+# Autocomplete menu (clear and comfortable)
+ble-face auto_complete="bg=24,fg=252"              # Dark blue bg, soft white text - CLEAR!
+ble-face menu_filter_input="bg=25,fg=252,bold"     # Slightly brighter blue, white text
+ble-face menu_filter_fixed="fg=117,bold"           # Light sky blue
+ble-face menu_complete_match="fg=117,bold"         # Light sky blue for matched text
+ble-face menu_complete_selected="bg=32,fg=252,bold" # Muted teal bg, white text - SELECTED!
