@@ -78,6 +78,10 @@ done
 source ~/.bashrc
 brew bundle install --file=~/thomas_config/Brewfile
 
+# Vibe coding
+npm install -g @google/gemini-cli
+npm install -g @github/copilot
+
 # Set up neovim
 cd ~/.config
 git clone git@github.com:Thomastienn/astronvimconfig.git
