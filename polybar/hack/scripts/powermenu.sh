@@ -8,7 +8,7 @@
 dir="~/.config/polybar/hack/scripts/rofi"
 uptime=$(uptime -p | sed -e 's/up //g')
 
-rofi_command="rofi"
+rofi_command="rofi -i"
 
 # Options
 shutdown=" Shutdown"
