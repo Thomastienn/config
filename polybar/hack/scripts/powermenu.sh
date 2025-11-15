@@ -8,7 +8,7 @@
 dir="~/.config/polybar/hack/scripts/rofi"
 uptime=$(uptime -p | sed -e 's/up //g')
 
-rofi_command="rofi -no-config -theme $dir/powermenu.rasi"
+rofi_command="rofi"
 
 # Options
 shutdown=" Shutdown"
@@ -20,16 +20,14 @@ logout=" Logout"
 # Confirmation
 confirm_exit() {
 	rofi -dmenu\
-        -no-config\
 		-i\
 		-no-fixed-num-lines\
-		-p "Are You Sure? : "\
-		-theme $dir/confirm.rasi
+		-p "Are You Sure? : "
 }
 
 # Message
 msg() {
-	rofi -no-config -theme "$dir/message.rasi" -e "Available Options  -  yes / y / no / n"
+	rofi "$dir/message.rasi" -e "Available Options  -  yes / y / no / n"
 }
 
 # Variable passed to rofi

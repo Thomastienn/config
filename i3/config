@@ -223,13 +223,8 @@ bindsym $mod+Shift+c reload
 # Restart i3 inplace
 bindsym $mod+Shift+r restart
 
-# Exit i3 (vim-style :q)
-bindsym $mod+Shift+e exec "i3-msg exit"
-
-# Shutdown computer
-bindsym $mod+Delete exec "systemctl poweroff"
-# Reboot
-bindsym $mod+Insert exec "systemctl reboot"
+# Power menu
+bindsym $mod+Shift+e exec "~/thomas_config/polybar/hack/scripts/powermenu.sh"
 
 # ================================================================
 # STATUS BAR (Using Polybar)
