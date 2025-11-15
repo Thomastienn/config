@@ -1,0 +1,230 @@
+[global]
+    ### Display ###
+    monitor = 0
+    follow = none
+    
+    ### Geometry ###
+    width = (280, 350)
+    height = 280
+    origin = top-right
+    offset = 20x45
+    scale = 0
+    notification_limit = 5
+    
+    ### Progress bar ###
+    progress_bar = true
+    progress_bar_height = 12
+    progress_bar_frame_width = 1
+    progress_bar_min_width = 250
+    progress_bar_max_width = 320
+    progress_bar_corner_radius = 3
+    
+    ### Icons ###
+    icon_position = left
+    min_icon_size = 48
+    max_icon_size = 56
+    icon_path = /usr/share/icons/Papirus-Dark/48x48/status/:/usr/share/icons/Papirus-Dark/48x48/devices/:/usr/share/icons/Papirus-Dark/48x48/apps/
+    icon_corner_radius = 8
+    
+    ### Text ###
+    font = JetBrainsMono Nerd Font 9
+    line_height = 2
+    markup = full
+    
+    # Default format with aesthetic border
+    format = "<span alpha='45%%' size='small' font_family='monospace'>╭──────────────────╮</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='45%%' size='small' font_family='monospace'>├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small' font_family='monospace'>╰─ %a</span>"
+    
+    alignment = left
+    vertical_alignment = center
+    show_age_threshold = 60
+    ellipsize = middle
+    ignore_newline = no
+    stack_duplicates = true
+    hide_duplicate_count = false
+    show_indicators = yes
+    
+    ### Styling ###
+    separator_height = 2
+    padding = 14
+    horizontal_padding = 16
+    text_icon_padding = 10
+    frame_width = 2
+    gap_size = 8
+    separator_color = frame
+    sort = yes
+    
+    ### Transparency ###
+    transparency = 5
+    corner_radius = 12
+    
+    ### History ###
+    sticky_history = yes
+    history_length = 30
+    
+    ### Behavior ###
+    dmenu = /usr/bin/rofi -dmenu -p dunst:
+    browser = /usr/bin/brave
+    always_run_script = true
+    title = Dunst
+    class = Dunst
+    ignore_dbusclose = false
+    force_xwayland = false
+    force_xinerama = false
+    
+    ### Mouse ###
+    mouse_left_click = do_action, close_current
+    mouse_middle_click = close_all
+    mouse_right_click = close_current
+    
+    ### Idle ###
+    idle_threshold = 120
+
+[experimental]
+    per_monitor_dpi = false
+
+[urgency_low]
+    background = "#161b22"
+    foreground = "#aaaaaa"
+    frame_color = "#29B6F6"
+    highlight = "#29B6F6"
+    timeout = 5
+    icon = dialog-information
+
+[urgency_normal]
+    background = "#0d1117"
+    foreground = "#ffffff"
+    frame_color = "#4FC3F7"
+    highlight = "#4FC3F7"
+    timeout = 8
+    icon = dialog-information
+
+[urgency_critical]
+    background = "#1a2332"
+    foreground = "#ffffff"
+    frame_color = "#4FC3F7"
+    highlight = "#29B6F6"
+    timeout = 0
+    icon = dialog-warning
+
+### APP-SPECIFIC RULES ###
+
+# Kitty Terminal
+[kitty]
+    appname = "kitty"
+    format = "<span alpha='50%%' size='small' font_family='monospace'>┌─[ </span><span size='large' weight='bold'> TERM</span><span alpha='50%%' size='small'> ]─┐</span>\n <span size='large' weight='bold'>%s</span>\n<span alpha='50%%' size='small' font_family='monospace'>├─</span> <span alpha='85%%' font_family='monospace'>%b</span>\n<span alpha='35%%' size='x-small' font_family='monospace'>└───────────╼</span>"
+    background = "#0a0e14"
+    foreground = "#4FC3F7"
+    frame_color = "#29B6F6"
+    icon = utilities-terminal
+    timeout = 7
+
+# Discord
+[discord]
+    appname = "discord"
+    format = "<span size='large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Discord</span>"
+    background = "#1e1e2e"
+    foreground = "#ffffff"
+    frame_color = "#4FC3F7"
+    icon = discord
+    timeout = 6
+    urgency = normal
+
+[discord-dm]
+    appname = "discord"
+    summary = "*Direct Message*"
+    format = "<span size='x-large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n <span alpha='90%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ DM</span>"
+    background = "#1a2332"
+    frame_color = "#29B6F6"
+    urgency = normal
+
+# Brave Browser
+[brave]
+    appname = "Brave*"
+    format = "<span size='large'> </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╟─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╚═ Brave</span>"
+    background = "#0f1419"
+    foreground = "#ffffff"
+    frame_color = "#4FC3F7"
+    icon = brave-browser
+    timeout = 7
+
+[brave-download]
+    appname = "Brave*"
+    summary = "*ownload*"
+    format = "<span size='x-large'>󰇚 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Downloaded</span>"
+    background = "#1a2332"
+    frame_color = "#29B6F6"
+    icon = folder-download
+
+# Volume Control with progress bar
+[volume]
+    appname = "*olume*"
+    format = "<span size='x-large' alpha='80%%'>󰕾</span>\n<span weight='bold' size='x-large' foreground='#4FC3F7'>%p</span>"
+    background = "#0d1117"
+    foreground = "#ffffff"
+    frame_color = "#29B6F6"
+    timeout = 2
+    alignment = center
+    highlight = "#4FC3F7"
+    progress_bar = true
+    progress_bar_height = 20
+    icon_position = off
+
+# Brightness
+[brightness]
+    appname = "brightness"
+    format = "<span size='x-large' alpha='80%%'>󰃟</span>\n<span weight='bold' size='x-large' foreground='#4FC3F7'>%p%%</span>"
+    background = "#0d1117"
+    foreground = "#ffffff"
+    frame_color = "#4FC3F7"
+    timeout = 2
+    alignment = center
+    highlight = "#4FC3F7"
+    progress_bar = true
+    progress_bar_height = 20
+    icon_position = off
+
+# Screenshot
+[screenshot]
+    appname = "*creenshot*"
+    summary = "*creenshot*"
+    format = "<span size='large'>󰹑 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span size='large' weight='bold' foreground='#4FC3F7'>Screenshot</span>\n <span alpha='85%%' font_family='monospace'>%b</span>"
+    background = "#1a2332"
+    frame_color = "#4FC3F7"
+    icon = camera-photo
+    timeout = 4
+
+# Spotify/Music
+[spotify]
+    appname = "*potify*"
+    format = "<span size='large' alpha='80%%'>󰓇 </span> <span alpha='50%%' size='small'>♪ ──── ♪</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='80%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Now Playing</span>"
+    background = "#0f1117"
+    foreground = "#4FC3F7"
+    frame_color = "#29B6F6"
+    icon = spotify
+    timeout = 5
+
+# Battery Warning
+[battery]
+    appname = "*attery*"
+    format = "<span size='large'>󰁺 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Battery</span>"
+    urgency = critical
+    background = "#1a2332"
+    frame_color = "#4FC3F7"
+
+# Network notifications
+[network]
+    appname = "*etwork*"
+    format = "<span size='large'>󰖩 </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╚═</span> <span alpha='85%%'>%b</span>"
+    background = "#0d1117"
+    frame_color = "#29B6F6"
+    icon = network-wireless
+    timeout = 5
+
+# System updates
+[updates]
+    appname = "*pdate*"
+    summary = "*pdate*"
+    format = "<span size='large'>󰚰 </span> <span alpha='50%%' size='small'>╭─────────────╮</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n<span alpha='50%%' size='small'> ├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╰─ Update</span>"
+    background = "#1a2332"
+    frame_color = "#4FC3F7"
+    timeout = 10

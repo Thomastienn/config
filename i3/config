@@ -12,18 +12,18 @@ focus_follows_mouse no
 # ================================================================
 # VOLUME CONTROL
 # ================================================================
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5%
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5%
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 1000 -a "Volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)" -r 1111 "Volume Up 🔊"
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 1000 -a "Volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)" -r 1111 "Volume Down 🔉"
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 1000 -u low "Volume" -r 1111 "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'yes' && echo 'Muted 🔇' || echo 'Unmuted 🔊')"
 
 # Mic mute toggle with visual feedback
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1500 -u low "Microphone" "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted 🔇' || echo 'Mic Unmuted 🎤')"
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1000 -u low "Microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted 🔇' || echo 'Mic Unmuted 🎤')"
 
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight s +5%
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight s 5%-
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight s +5% && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl -c backlight g)" -r 1113 "Brightness Up ☀️"
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight s 5%- && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl -c backlight g)" -r 1113 "Brightness Down 🌙"
 
 # ================================================================
 # SCREENSHOT
@@ -62,6 +62,9 @@ exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enable
 exec --no-startup-id mintupdate-launcher
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id touchegg
+
+# Dunst
+exec --no-startup-id dunst
 
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main

@@ -57,6 +57,10 @@ sudo ${DEFAULT_PACKAGE_MANAGER} install flameshot -y
 # Rofi
 rm -rf ~/.config/rofi
 ln -s ~/thomas_config/rofi ~/.config/rofi
+# Dunst
+sudo ${DEFAULT_PACKAGE_MANAGER} install dunst -y
+rm -rf ~/.config/dunst
+ln -s ~/thomas_config/dunst ~/.config/dunst
 # End i3wm
 
 
