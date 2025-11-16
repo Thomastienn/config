@@ -1,10 +1,14 @@
 #!/usr/bin/env bash
 
-# Toggle between keyboard layouts
+# Get current layout
 current=$(setxkbmap -query | grep layout | awk '{print $2}')
 
-if [[ $current == "us" ]]; then
-    setxkbmap -layout vn
+# Switch to the other layout (NO alt+shift option)
+if [[ $current == *"vn"* ]]; then
+    setxkbmap us
 else
-    setxkbmap -layout us
+    setxkbmap vn
 fi
+
+# Trigger Polybar update
+polybar-msg hook keyboard 1
