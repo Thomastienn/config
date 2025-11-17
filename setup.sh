@@ -9,13 +9,15 @@ cd ~
 # mv ~/config ~/thomas_config
 # Install font: ComicShannsMono Nerd Font
 
-# Set up bash, tmux
+# Set up bash, tmux, profile
 rm -f ~/.bashrc
 rm -f ~/.bash_aliases
 rm -f ~/.tmux.conf
+rm -f ~/.profile
 ln -s ~/thomas_config/bashrc ~/.bashrc
 ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
+ln -s ~/thomas_config/profile ~/.profile
 
 # UPDATE (in a ble.sh session)
 #> ble-update
@@ -61,6 +63,8 @@ ln -s ~/thomas_config/rofi ~/.config/rofi
 sudo ${DEFAULT_PACKAGE_MANAGER} install dunst -y
 rm -rf ~/.config/dunst
 ln -s ~/thomas_config/dunst ~/.config/dunst
+# Keyboard
+sudo ${DEFAULT_PACKAGE_MANAGER} install ibus-unikey -y
 # End i3wm
 
 

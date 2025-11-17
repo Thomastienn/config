@@ -1,4 +1,13 @@
 #!/usr/bin/env bash
-
-layout=$(setxkbmap -query | grep layout | awk '{print $2}')
-echo "  $layout"
+engine=$(ibus engine)
+case $engine in
+    Unikey)
+        echo "  Unikey"
+        ;;
+    *us*)
+        echo "  US"
+        ;;
+    *)
+        echo "   ${engine##*:}"  # Shows last part after colon
+        ;;
+esac

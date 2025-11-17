@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
-# Get current layout
-current=$(setxkbmap -query | grep layout | awk '{print $2}')
+# Get current IBus engine
+current=$(ibus engine)
 
-# Switch to the other layout (NO alt+shift option)
-if [[ $current == *"vn"* ]]; then
-    setxkbmap us
+# Switch between US and Unikey
+if [[ $current == "Unikey" ]]; then
+    ibus engine xkb:us::eng
 else
-    setxkbmap vn
+    ibus engine Unikey
 fi
 
 # Trigger Polybar update

@@ -33,6 +33,11 @@ bindsym Shift+Print exec flameshot gui
 bindsym Ctrl+Print exec flameshot screen -c
 
 # ================================================================
+# KEYBOARD
+# ================================================================
+bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/hack/scripts/keyboard-switch.sh
+
+# ================================================================
 # THEME COLORS (Sky Blue)
 # ================================================================
 set $bg-color            #29B6F6
@@ -62,6 +67,8 @@ exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enable
 exec --no-startup-id mintupdate-launcher
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id touchegg
+exec --no-startup-id ibus-daemon -drx
+exec --no-startup-id ibus engine xkb:us::eng
 
 # Dunst
 exec --no-startup-id dunst
