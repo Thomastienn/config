@@ -1,5 +1,5 @@
 /*
- * ROFI THEME: SKY BLUE
+ * ROFI THEME: TREE (FOREST GREEN & EARTH)
  * Based on the centralized theme.sh script
  */
 
@@ -15,30 +15,33 @@ configuration {
 }
 
 * {
-    /* Sky Blue Theme Colors from theme.sh */
+    /* Tree Theme Colors from theme.sh */
     background-color: #2E3440; /* A slightly darker slate for the base */
     text-color: #FFFFFF; /* Default text color */
     
     /* Theme-specific colors */
-    sky-blue-light: #4FC3F7; /* CONKY_COLOR1 */
-    sky-blue-medium: #29B6F6; /* CONKY_COLOR4 */
+    sage-green: #87AF87; /* CONKY_COLOR1 - Soft sage green */
+    forest-green: #5FAF5F; /* CONKY_GRAPH2 - Medium green */
+    deep-green: #5F8700; /* CONKY_COLOR4 - Deep forest green */
+    earth-brown: #AF8760; /* Warm earthy brown accent */
     white: #FFFFFF;
     gray: #AAAAAA;
     
     /* Accents */
-    accent: @sky-blue-light;
-    selected: @sky-blue-medium;
+    accent: @sage-green;
+    selected: @forest-green;
+    border-accent: @earth-brown;
     dark-background: #2E3440; /* Explicit dark background */
     light-dark-background: #3B4252; /* Slightly lighter dark background for input */
 }
 
 window {
-    border: 1px; /* Reduced border size */
-    border-color: @sky-blue-light; /* Using the light sky blue for border */
+    border: 2px;
+    border-color: @earth-brown; /* Using earthy brown for border */
     border-radius: 8px;
     padding: 16px;
     width: 50%;
-    background-color: @dark-background; /* Ensure window background is dark */
+    background-color: @dark-background;
 }
 
 mainbox {
@@ -46,20 +49,18 @@ mainbox {
     spacing: 12px;
 }
 
-/* Replace your inputbar section with this: */
-
 inputbar {
     children: [ "prompt", "entry" ];
     padding: 16px;
     border-radius: 8px;
-    spacing: 12px; /* Add spacing between prompt and entry */
+    spacing: 12px;
 }
 
 prompt {
-    text-color: @sky-blue-light;
+    text-color: @sage-green;
     padding: 4px 12px;
     border-radius: 4px;
-    background-color: rgba(79, 195, 247, 0.15); /* Subtle sky blue background */
+    background-color: rgba(135, 175, 135, 0.15); /* Subtle sage green background */
     font: "ComicShannsMono Nerd Font Bold 16";
 }
 
@@ -93,32 +94,32 @@ element-icon {
 
 element.normal.normal {
     background-color: transparent;
-    text-color: @white; /* Ensure normal text is white */
+    text-color: @white;
 }
 
 element.normal.normal,
 element.normal.urgent,
 element.normal.active {
     background-color: transparent;
-    text-color:       @white;
+    text-color: @white;
 }
 
 element.alternate.normal,
 element.alternate.urgent,
 element.alternate.active {
     background-color: transparent;
-    text-color:       @white;
+    text-color: @white;
 }
 
 element.normal.active {
     background-color: transparent;
-    text-color: @accent; /* Show active state with colored text, not background */
+    text-color: @accent; /* Show active state with sage green text */
 }
 
 element.selected.normal {
-    background-color: @selected; /* Medium sky blue for selected background */
-    text-color: @white; /* Changed to white for readability */
-    border: 0px; /* Removed bottom border for cleaner look */
+    background-color: @selected; /* Forest green for selected background */
+    text-color: @white;
+    border: 0px;
 }
 
 element.selected.urgent {

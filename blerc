@@ -4,82 +4,83 @@ if [[ -f "$HOME/thomas_config/theme.sh" ]]; then
 fi
 
 # ================================================================
-# BLE.SH THEME CONFIGURATION (SOFT SKY BLUE DARK THEME)
+# BLE.SH THEME CONFIGURATION (SOFT TREE/FOREST THEME)
 # ================================================================
-# Optimized for dark mode with soft, easy-on-the-eyes sky blue palette
+# Optimized for dark mode with soft, easy-on-the-eyes green palette
+# Brown accents for natural contrast
 # ================================================================
 
 # General text and defaults
-ble-face syntax_default="fg=117"       # Light sky blue (soft)
+ble-face syntax_default="fg=108"       # Soft sage green
 ble-face disabled="fg=240"             # Darker gray
 
 # Command structure
-ble-face syntax_command="fg=75,bold"   # Sky blue (softer than 87)
-ble-face command_keyword="fg=111,bold" # Medium sky blue (softer than 159)
-ble-face command_builtin="fg=75"       # Sky blue
-ble-face command_builtin_dot="fg=81"   # Cyan blue
-ble-face command_alias="fg=123"        # Pale sky blue
-ble-face command_function="fg=81"      # Cyan blue
-ble-face syntax_function_name="fg=81"
-ble-face argument_option="fg=111"      # Medium sky blue
+ble-face syntax_command="fg=72,bold"   # Medium forest green
+ble-face command_keyword="fg=107,bold" # Pale olive green
+ble-face command_builtin="fg=72"       # Medium forest green
+ble-face command_builtin_dot="fg=114"  # Light spring green
+ble-face command_alias="fg=65"         # Muted forest green
+ble-face command_function="fg=114"     # Light spring green
+ble-face syntax_function_name="fg=114"
+ble-face argument_option="fg=107"      # Pale olive green
 
 # Variables
-ble-face syntax_varname="fg=123"       # Pale sky blue
-ble-face varname_array="fg=117,bold"   # Light sky blue
-ble-face varname_hash="fg=117,bold"
-ble-face varname_expr="fg=123,bold"
-ble-face varname_transform="fg=123"
-ble-face varname_export="fg=111,bold"  # Medium sky blue
-ble-face varname_readonly="fg=111"
-ble-face varname_number="fg=75"        # Sky blue (softer)
+ble-face syntax_varname="fg=108"       # Soft sage green
+ble-face varname_array="fg=108,bold"   # Soft sage green
+ble-face varname_hash="fg=108,bold"
+ble-face varname_expr="fg=65,bold"     # Muted forest green
+ble-face varname_transform="fg=65"
+ble-face varname_export="fg=107,bold"  # Pale olive green
+ble-face varname_readonly="fg=107"
+ble-face varname_number="fg=72"        # Medium forest green
 ble-face varname_empty="fg=240"
 ble-face varname_unset="fg=240"
-ble-face varname_new="fg=81"           # Cyan blue
+ble-face varname_new="fg=114"          # Light spring green
 
 # Syntax elements
-ble-face syntax_delimiter="fg=75"      # Sky blue (softer than 49)
-ble-face syntax_brace="fg=75,bold"
-ble-face syntax_quoted="fg=117"        # Light sky blue (softer than 86)
-ble-face syntax_quotation="fg=123"     # Pale sky blue
-ble-face syntax_escape="fg=81"         # Cyan blue (softer)
-ble-face syntax_expr="fg=111"          # Medium sky blue
-ble-face syntax_glob="fg=123,bold"     # Pale sky blue
-ble-face syntax_tilde="fg=117"         # Light sky blue
-ble-face syntax_param_expansion="fg=123"
-ble-face syntax_history_expansion="fg=16,bg=75"  # Black on soft sky blue
-ble-face syntax_document="fg=117"
-ble-face syntax_document_begin="fg=123,bold"
+ble-face syntax_delimiter="fg=72"      # Medium forest green
+ble-face syntax_brace="fg=72,bold"
+ble-face syntax_quoted="fg=108"        # Soft sage green
+ble-face syntax_quotation="fg=65"      # Muted forest green
+ble-face syntax_escape="fg=114"        # Light spring green
+ble-face syntax_expr="fg=107"          # Pale olive green
+ble-face syntax_glob="fg=65,bold"      # Muted forest green
+ble-face syntax_tilde="fg=108"         # Soft sage green
+ble-face syntax_param_expansion="fg=65"
+ble-face syntax_history_expansion="fg=16,bg=72"  # Black on forest green
+ble-face syntax_document="fg=108"
+ble-face syntax_document_begin="fg=65,bold"
 ble-face syntax_comment="fg=240"       # Darker gray
 
 # Errors and warnings
 ble-face syntax_error="fg=224,bg=124"        # Soft red (less harsh)
 ble-face argument_error="fg=224,bg=124"
 ble-face filename_warning="fg=222,underline" # Soft yellow
-ble-face filename_orphan="fg=117,underline"
-ble-face command_jobs="fg=75,bold"
+ble-face filename_orphan="fg=108,underline"
+ble-face command_jobs="fg=72,bold"
 
 # File and directory names
-ble-face filename_directory="fg=111,bold"     # Medium sky blue
-ble-face filename_directory_sticky="fg=16,bg=111"
-ble-face filename_executable="fg=81"          # Cyan blue
-ble-face filename_link="fg=123,underline"     # Pale sky blue
-ble-face filename_other="fg=117"              # Light sky blue
-ble-face filename_url="fg=75,underline"       # Sky blue
+ble-face filename_directory="fg=107,bold"     # Pale olive green
+ble-face filename_directory_sticky="fg=16,bg=107"
+ble-face filename_executable="fg=114"          # Light spring green
+ble-face filename_link="fg=65,underline"       # Muted forest green
+ble-face filename_other="fg=108"               # Soft sage green
+ble-face filename_url="fg=72,underline"        # Medium forest green
 
 # Highlighting and UI (optimized for comfortable viewing)
-ble-face region="bg=24,fg=252"                # Dark blue bg, soft white
-ble-face region_insert="bg=25,fg=252"
-ble-face region_match="bg=32,fg=16"           # Muted teal bg
-ble-face region_target="bg=75,fg=16"          # Sky blue bg
+ble-face region="bg=22,fg=252"                # Dark forest green bg, soft white
+ble-face region_insert="bg=23,fg=252"
+ble-face region_match="bg=58,fg=16"           # Muted olive bg
+ble-face region_target="bg=72,fg=16"          # Forest green bg
 ble-face overwrite_mode="fg=16,bg=222"        # Soft yellow
-ble-face vbell="bg=75"                        # Sky blue
+ble-face vbell="bg=72"                        # Medium forest green
 ble-face vbell_erase="bg=240"
-ble-face vbell_flash="fg=117,reverse"
-ble-face prompt_status_line="fg=16,bg=75"     # Black on sky blue
+ble-face vbell_flash="fg=108,reverse"
+ble-face prompt_status_line="fg=16,bg=72"     # Black on forest green
 
 # Autocomplete menu (clear and comfortable)
-ble-face auto_complete="bg=24,fg=252"              # Dark blue bg, soft white text - CLEAR!
-ble-face menu_filter_input="bg=25,fg=252,bold"     # Slightly brighter blue, white text
-ble-face menu_filter_fixed="fg=117,bold"           # Light sky blue
-ble-face menu_complete_match="fg=117,bold"         # Light sky blue for matched text
-ble-face menu_complete_selected="bg=32,fg=252,bold" # Muted teal bg, white text - SELECTED!
+ble-face auto_complete="bg=22,fg=252"              # Dark forest green bg, soft white text - CLEAR!
+ble-face menu_filter_input="bg=23,fg=252,bold"     # Slightly brighter green, white text
+ble-face menu_filter_fixed="fg=108,bold"           # Soft sage green
+ble-face menu_complete_match="fg=108,bold"         # Soft sage green for matched text
+ble-face menu_complete_selected="bg=58,fg=252,bold" # Muted olive bg, white text - SELECTED!

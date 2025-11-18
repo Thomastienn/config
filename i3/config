@@ -40,13 +40,13 @@ bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/hack/scripts/k
 # ================================================================
 # THEME COLORS (Sky Blue)
 # ================================================================
-set $bg-color            #29B6F6
+set $bg-color            #87AF87
 set $inactive-bg-color   #2E3440
 set $text-color          #FFFFFF
 set $inactive-text-color #888888
-set $urgent-bg-color     #E53935
-set $indicator-color     #4FC3F7
-set $border-color        #4FC3F7
+set $urgent-bg-color     #D08770
+set $indicator-color     #5FAF5F
+set $border-color        #5FAF5F
 
 # Window colors         border              background          text                 indicator           child_border
 client.focused          $border-color       $bg-color           $text-color          $indicator-color    $border-color
@@ -57,7 +57,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
-exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/jpanchal_cpu.jpg
+exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/Firewatch.jpeg
 exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
@@ -77,7 +77,7 @@ exec --no-startup-id dunst
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
 # Preconfigured theme
-exec_always --no-startup-id killall -q polybar; bash ~/.config/polybar/launch.sh --hack
+exec_always --no-startup-id killall -q polybar; bash ~/.config/polybar/launch.sh --shapes
 
 # ================================================================
 # APPLICATION SHORTCUTS

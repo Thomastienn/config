@@ -85,24 +85,24 @@
 [urgency_low]
     background = "#161b22"
     foreground = "#aaaaaa"
-    frame_color = "#29B6F6"
-    highlight = "#29B6F6"
+    frame_color = "#5F8700"
+    highlight = "#87AF87"
     timeout = 5
     icon = dialog-information
 
 [urgency_normal]
     background = "#0d1117"
     foreground = "#ffffff"
-    frame_color = "#4FC3F7"
-    highlight = "#4FC3F7"
+    frame_color = "#87AF87"
+    highlight = "#5FAF5F"
     timeout = 8
     icon = dialog-information
 
 [urgency_critical]
     background = "#1a2332"
     foreground = "#ffffff"
-    frame_color = "#4FC3F7"
-    highlight = "#29B6F6"
+    frame_color = "#D08770"
+    highlight = "#AF8760"
     timeout = 0
     icon = dialog-warning
 
@@ -113,8 +113,8 @@
     appname = "kitty"
     format = "<span alpha='50%%' size='small' font_family='monospace'>┌─[ </span><span size='large' weight='bold'> TERM</span><span alpha='50%%' size='small'> ]─┐</span>\n <span size='large' weight='bold'>%s</span>\n<span alpha='50%%' size='small' font_family='monospace'>├─</span> <span alpha='85%%' font_family='monospace'>%b</span>\n<span alpha='35%%' size='x-small' font_family='monospace'>└───────────╼</span>"
     background = "#0a0e14"
-    foreground = "#4FC3F7"
-    frame_color = "#29B6F6"
+    foreground = "#87AF87"
+    frame_color = "#5FAF5F"
     icon = utilities-terminal
     timeout = 7
 
@@ -124,7 +124,7 @@
     format = "<span size='large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Discord</span>"
     background = "#1e1e2e"
     foreground = "#ffffff"
-    frame_color = "#4FC3F7"
+    frame_color = "#87AF87"
     icon = discord
     timeout = 6
     urgency = normal
@@ -132,9 +132,9 @@
 [discord-dm]
     appname = "discord"
     summary = "*Direct Message*"
-    format = "<span size='x-large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n <span alpha='90%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ DM</span>"
+    format = "<span size='x-large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#87AF87'>%s</span>\n <span alpha='90%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ DM</span>"
     background = "#1a2332"
-    frame_color = "#29B6F6"
+    frame_color = "#5FAF5F"
     urgency = normal
 
 # Brave Browser
@@ -143,28 +143,28 @@
     format = "<span size='large'> </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╟─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╚═ Brave</span>"
     background = "#0f1419"
     foreground = "#ffffff"
-    frame_color = "#4FC3F7"
+    frame_color = "#87AF87"
     icon = brave-browser
     timeout = 7
 
 [brave-download]
     appname = "Brave*"
     summary = "*ownload*"
-    format = "<span size='x-large'>󰇚 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Downloaded</span>"
+    format = "<span size='x-large'>󰇚 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#87AF87'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Downloaded</span>"
     background = "#1a2332"
-    frame_color = "#29B6F6"
+    frame_color = "#5FAF5F"
     icon = folder-download
 
 # Volume Control with progress bar
 [volume]
     appname = "*olume*"
-    format = "<span size='x-large' alpha='80%%'>󰕾</span>\n<span weight='bold' size='x-large' foreground='#4FC3F7'>%p</span>"
+    format = "<span size='x-large' alpha='80%%'>󰕾</span>\n<span weight='bold' size='x-large' foreground='#87AF87'>%p</span>"
     background = "#0d1117"
     foreground = "#ffffff"
-    frame_color = "#29B6F6"
+    frame_color = "#5FAF5F"
     timeout = 2
     alignment = center
-    highlight = "#4FC3F7"
+    highlight = "#87AF87"
     progress_bar = true
     progress_bar_height = 20
     icon_position = off
@@ -172,13 +172,13 @@
 # Brightness
 [brightness]
     appname = "brightness"
-    format = "<span size='x-large' alpha='80%%'>󰃟</span>\n<span weight='bold' size='x-large' foreground='#4FC3F7'>%p%%</span>"
+    format = "<span size='x-large' alpha='80%%'>󰃟</span>\n<span weight='bold' size='x-large' foreground='#AF8760'>%p%%</span>"
     background = "#0d1117"
     foreground = "#ffffff"
-    frame_color = "#4FC3F7"
+    frame_color = "#AF8760"
     timeout = 2
     alignment = center
-    highlight = "#4FC3F7"
+    highlight = "#AF8760"
     progress_bar = true
     progress_bar_height = 20
     icon_position = off
@@ -187,9 +187,9 @@
 [screenshot]
     appname = "*creenshot*"
     summary = "*creenshot*"
-    format = "<span size='large'>󰹑 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span size='large' weight='bold' foreground='#4FC3F7'>Screenshot</span>\n <span alpha='85%%' font_family='monospace'>%b</span>"
+    format = "<span size='large'>󰹑 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span size='large' weight='bold' foreground='#87AF87'>Screenshot</span>\n <span alpha='85%%' font_family='monospace'>%b</span>"
     background = "#1a2332"
-    frame_color = "#4FC3F7"
+    frame_color = "#87AF87"
     icon = camera-photo
     timeout = 4
 
@@ -198,8 +198,8 @@
     appname = "*potify*"
     format = "<span size='large' alpha='80%%'>󰓇 </span> <span alpha='50%%' size='small'>♪ ──── ♪</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='80%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Now Playing</span>"
     background = "#0f1117"
-    foreground = "#4FC3F7"
-    frame_color = "#29B6F6"
+    foreground = "#87AF87"
+    frame_color = "#5FAF5F"
     icon = spotify
     timeout = 5
 
@@ -209,14 +209,14 @@
     format = "<span size='large'>󰁺 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Battery</span>"
     urgency = critical
     background = "#1a2332"
-    frame_color = "#4FC3F7"
+    frame_color = "#D08770"
 
 # Network notifications
 [network]
     appname = "*etwork*"
     format = "<span size='large'>󰖩 </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╚═</span> <span alpha='85%%'>%b</span>"
     background = "#0d1117"
-    frame_color = "#29B6F6"
+    frame_color = "#5FAF5F"
     icon = network-wireless
     timeout = 5
 
@@ -224,7 +224,7 @@
 [updates]
     appname = "*pdate*"
     summary = "*pdate*"
-    format = "<span size='large'>󰚰 </span> <span alpha='50%%' size='small'>╭─────────────╮</span>\n <span weight='bold' size='large' foreground='#4FC3F7'>%s</span>\n<span alpha='50%%' size='small'> ├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╰─ Update</span>"
+    format = "<span size='large'>󰚰 </span> <span alpha='50%%' size='small'>╭─────────────╮</span>\n <span weight='bold' size='large' foreground='#87AF87'>%s</span>\n<span alpha='50%%' size='small'> ├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╰─ Update</span>"
     background = "#1a2332"
-    frame_color = "#4FC3F7"
+    frame_color = "#87AF87"
     timeout = 10
