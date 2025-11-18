@@ -77,7 +77,7 @@ exec --no-startup-id dunst
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
 # Preconfigured theme
-exec_always --no-startup-id bash ~/.config/polybar/launch.sh --shapes
+exec --no-startup-id bash ~/.config/polybar/launch.sh --shapes
 
 # ================================================================
 # APPLICATION SHORTCUTS
@@ -232,7 +232,7 @@ bindsym $mod+r mode "resize"
 bindsym $mod+Shift+c reload
 
 # Restart i3 inplace
-bindsym $mod+Shift+r restart
+bindsym $mod+Shift+r exec --no-startup-id "i3-msg restart && polybar-msg cmd restart"
 
 # Power menu
 bindsym $mod+Shift+e exec "~/thomas_config/polybar/hack/scripts/powermenu.sh"
