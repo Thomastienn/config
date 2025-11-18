@@ -69,6 +69,7 @@ exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agen
 exec --no-startup-id touchegg
 exec --no-startup-id ibus-daemon -drx
 exec --no-startup-id ibus engine xkb:us::eng
+exec --no-startup-id xfce4-power-manager
 
 # Dunst
 exec --no-startup-id dunst
