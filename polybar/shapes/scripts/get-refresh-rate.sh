@@ -14,7 +14,7 @@ else
 fi
 
 # Send the IPC message for updates, and hide the command's output
-polybar-msg action refresh-rate send "$OUTPUT" >/dev/null 2>&1
+polybar-msg action refresh-rate send " $OUTPUT" >/dev/null 2>&1
 
 # Echo the value for the initial display
 echo " $OUTPUT"
