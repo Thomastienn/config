@@ -22,8 +22,8 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl -c backlight s +5% && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl -c backlight g)" -r 1113 "Brightness Up ☀️"
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl -c backlight s 5%- && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl -c backlight g)" -r 1113 "Brightness Down 🌙"
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl --device=nvidia_wmi_ec_backlight s +5% && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl --device=nvidia_wmi_ec_backlight g)" -r 1113 "Brightness Up ☀️"
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl --device=nvidia_wmi_ec_backlight s 5%- && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl --device=nvidia_wmi_ec_backlight g)" -r 1113 "Brightness Down 🌙"
 
 # ================================================================
 # SCREENSHOT
