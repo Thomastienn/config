@@ -213,6 +213,8 @@ export VISUAL=nvim
 
 [ -d "$HOME/eww/target/release" ] && export PATH="$HOME/eww/target/release:$PATH"
 
+[ -d "$HOME/typst/" ] && export PATH="$HOME/typst/:$PATH"
+
 export WARP_ENABLE_WAYLAND=1
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export BROWSER=google-chrome
