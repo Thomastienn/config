@@ -113,7 +113,7 @@ sudo ${DEFAULT_PACKAGE_MANAGER} install ripgrep ffmpeg -y
 # Plugins: molten, minimap
 mkvenv neovim
 venv neovim
-pip install pynvim jupyter_client cairosvg plotly kaleido pnglatex pyperclip ipykernel
+pip install pynvim jupyter_client cairosvg plotly kaleido pnglatex pyperclip ipykernel jupytext
 deactivate
 
 cargo install code-minimap
