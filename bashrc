@@ -217,7 +217,7 @@ export VISUAL=nvim
 
 export WARP_ENABLE_WAYLAND=1
 export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
-export BROWSER=google-chrome
+export BROWSER=brave-browser
 
 export NNN_TERMINAL=tmux
 export NNN_PLUG='p:preview-tui'
