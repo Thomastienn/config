@@ -17,7 +17,7 @@ bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 1000 -u low "Volume" -r 1111 "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'yes' && echo 'Muted 🔇' || echo 'Unmuted 🔊')"
 
 # Mic mute toggle with visual feedback
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1000 -u low "Microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted 🔇' || echo 'Mic Unmuted 🎤')"
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1000 -u low "Microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted 🔇' || echo 'Mic Unmuted 🎤')" && polybar-msg action microphone hook 0
 
 # ================================================================
 # BRIGHTNESS CONTROL
