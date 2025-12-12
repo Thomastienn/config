@@ -71,8 +71,8 @@ exec --no-startup-id touchegg
 exec --no-startup-id ibus engine xkb:us::eng
 exec --no-startup-id xfce4-power-manager
 
-# Dunst
-exec --no-startup-id dunst
+# Dunst (Notification)
+# exec --no-startup-id dunst
 
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
