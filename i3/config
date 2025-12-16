@@ -33,6 +33,11 @@ bindsym Shift+Print exec flameshot gui
 bindsym Ctrl+Print exec flameshot screen -c
 
 # ================================================================
+# LOCKSCREEN
+# ================================================================
+# exec --no-startup-id betterlockscreen -w dim
+
+# ================================================================
 # KEYBOARD
 # ================================================================
 bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/shapes/scripts/keyboard-switch.sh

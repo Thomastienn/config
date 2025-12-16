@@ -65,6 +65,15 @@ rm -rf ~/.config/dunst
 ln -s ~/thomas_config/dunst ~/.config/dunst
 # Keyboard
 sudo ${DEFAULT_PACKAGE_MANAGER} install ibus-unikey -y
+# Betterlockscreen
+sudo ${DEFAULT_PACKAGE_MANAGER} install imagemagick -y
+wget https://raw.githubusercontent.com/betterlockscreen/betterlockscreen/main/install.sh -O - -q | sudo bash -s system
+mkdir -p ~/.config/betterlockscreen
+ln -s ~/thomas_config/betterlockscreen/betterlockscreenrc ~/.config/betterlockscreen/betterlockscreenrc
+# xfce power manager
+sudo ${DEFAULT_PACKAGE_MANAGER} install xfce4-power-manager -y
+ln -s ~/thomas_config/xfce/xfce4-session.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml
+sudo ln -s ~/thomas_config/xfce/xflock4 /usr/local/bin/xflock4
 # End i3wm
 
 
