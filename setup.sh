@@ -133,3 +133,6 @@ sudo ${DEFAULT_PACKAGE_MANAGER} openjdk-21-jdk maven -y
 
 # Arm64 if needed
 # sudo apt install gcc-aarch64-linux-gnu g++-aarch64-linux-gnu binutils-aarch64-linux-gnu qemu-user -y
+
+# TODO: Remember to configure the new path in the rc
+ln -s ~/thomas_config/taskrc ~/.taskrc
