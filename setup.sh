@@ -136,3 +136,7 @@ sudo ${DEFAULT_PACKAGE_MANAGER} openjdk-21-jdk maven -y
 
 # TODO: Remember to configure the new path in the rc
 ln -s ~/thomas_config/taskrc ~/.taskrc
+
+# Latex and neovim latex plugin dependencies
+sudo ${DEFAULT_PACKAGE_MANAGER} install zathura zathura-pdf-poppler -y
+sudo ${DEFAULT_PACKAGE_MANAGER} install latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended -y
