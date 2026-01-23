@@ -513,6 +513,7 @@ eval "$(ssh-agent -s)"
 
 [ -f ~/.ssh/id_ed25519 ] && ssh-add ~/.ssh/id_ed25519
 [ -f ~/.ssh/id_ed25519_github ] && ssh-add ~/.ssh/id_ed25519_github
+[ -f ~/.ssh/id_ed25519_gitlab ] && ssh-add ~/.ssh/id_ed25519_gitlab
 
 # taskwarrior display all
 [ -f "$HOME/.taskrc" ] && task
