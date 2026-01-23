@@ -14,10 +14,12 @@ rm -f ~/.bashrc
 rm -f ~/.bash_aliases
 rm -f ~/.tmux.conf
 rm -f ~/.profile
+rm -f ~/.gitconfig
 ln -s ~/thomas_config/bashrc ~/.bashrc
 ln -s ~/thomas_config/bash_aliases ~/.bash_aliases
 ln -s ~/thomas_config/tmux.conf ~/.tmux.conf
 ln -s ~/thomas_config/profile ~/.profile
+ln -s ~/thomas_config/git/gitconfig ~/.gitconfig
 
 # UPDATE (in a ble.sh session)
 #> ble-update

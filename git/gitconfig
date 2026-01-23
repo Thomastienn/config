@@ -1,0 +1,5 @@
+[user]
+	name = Thomastienn
+	email = thomastien123@gmail.com
+[includeIf "gitdir:/home/thomas/ucalgary/SENG_300/**"]
+    path = /home/thomas/thomas_config/git/gitconfig-gitlab
