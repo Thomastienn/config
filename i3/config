@@ -105,6 +105,9 @@ bindsym $mod+d exec --no-startup-id rofi -show drun
 bindsym $mod+x exec --no-startup-id rofi -show window
 bindsym $mod+m exec --no-startup-id rofi -show ssh
 
+# Virtualization
+bindsym $mod+Shift+v exec virt-manager
+
 # ================================================================
 # VIM-STYLE NAVIGATION
 # ================================================================

@@ -142,3 +142,8 @@ ln -s ~/thomas_config/taskrc ~/.taskrc
 # Latex and neovim latex plugin dependencies
 sudo ${DEFAULT_PACKAGE_MANAGER} install zathura zathura-pdf-poppler -y
 sudo ${DEFAULT_PACKAGE_MANAGER} install latexmk texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended -y
+
+# Virtualization
+sudo ${DEFAULT_PACKAGE_MANAGER} install -y qemu-kvm virt-manager virtinst bridge-utils cpu-checker
+sudo systemctl enable --now libvirtd
+sudo usermod -aG libvirt $USER
