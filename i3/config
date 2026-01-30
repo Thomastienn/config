@@ -1,5 +1,5 @@
 # i3 config file (v4)
-# Sky Blue Theme - Vim-style keybinds
+# Obsidian Steel Theme - Vim-style keybinds
 
 # ================================================================
 # GENERAL SETTINGS
@@ -44,15 +44,15 @@ bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/shapes/scripts
 exec --no-startup-id ibus-daemon -drx
 
 # ================================================================
-# THEME COLORS (Sky Blue)
+# THEME COLORS (Obsidian Steel - Eye-Friendly Dark Professional)
 # ================================================================
-set $bg-color            #87AF87
-set $inactive-bg-color   #2E3440
-set $text-color          #FFFFFF
-set $inactive-text-color #888888
-set $urgent-bg-color     #D08770
-set $indicator-color     #5FAF5F
-set $border-color        #5FAF5F
+set $bg-color            #6E8898
+set $inactive-bg-color   #121212
+set $text-color          #C9C9C9
+set $inactive-text-color #5C6370
+set $urgent-bg-color     #B87A5E
+set $indicator-color     #8FA3B0
+set $border-color        #4A5568
 
 # Window colors         border              background          text                 indicator           child_border
 client.focused          $border-color       $bg-color           $text-color          $indicator-color    $border-color
@@ -63,7 +63,7 @@ client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
-exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/Firewatch.jpeg
+exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/Porsche_911.jpeg
 exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
@@ -82,7 +82,7 @@ exec --no-startup-id xfce4-power-manager
 # Default polybar
 # exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
 # Preconfigured theme
-exec --no-startup-id bash ~/.config/polybar/launch.sh --shapes
+exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 
 # ================================================================
 # APPLICATION SHORTCUTS
@@ -239,8 +239,8 @@ bindsym $mod+r mode "resize"
 # Reload configuration (vim-style :source)
 bindsym $mod+Shift+c reload
 
-# Restart i3 inplace
-bindsym $mod+Shift+r exec --no-startup-id "i3-msg restart && polybar-msg cmd restart"
+# Restart i3 inplace (polybar restarts via exec_always)
+bindsym $mod+Shift+r restart
 
 # Power menu
 bindsym $mod+Shift+e exec "~/thomas_config/polybar/shapes/scripts/powermenu.sh"

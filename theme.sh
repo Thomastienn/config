@@ -3,33 +3,33 @@
 # CENTRALIZED THEME CONFIGURATION
 # ================================================================
 # Change these colors to switch the entire theme across all tools
-# Current theme: Tree (Forest Green & Earth Brown)
+# Current theme: Obsidian Steel (Eye-Friendly Dark Professional)
 # ================================================================
 
-# Tree Theme Colors (ANSI/Terminal)
-export THEME_COLOR1="\033[38;5;108m"    # Soft sage green
-export THEME_COLOR2="\033[38;5;72m"     # Medium forest green
-export THEME_COLOR3="\033[38;5;107m"    # Pale olive green
-export THEME_COLOR4="\033[38;5;114m"    # Light spring green
-export THEME_COLOR5="\033[38;5;65m"     # Muted forest green
-export THEME_COLOR6="\033[38;5;137m"    # Warm tan/brown
+# Obsidian Steel Theme Colors (ANSI/Terminal)
+export THEME_COLOR1="\033[38;5;67m"     # Steel blue (#6E8898)
+export THEME_COLOR2="\033[38;5;60m"     # Gunmetal (#4A5568)
+export THEME_COLOR3="\033[38;5;109m"    # Pale steel (#8FA3B0)
+export THEME_COLOR4="\033[38;5;66m"     # Iron (#718096)
+export THEME_COLOR5="\033[38;5;242m"    # Dim gray (#5C6370)
+export THEME_COLOR6="\033[38;5;137m"    # Muted copper (#B87A5E)
 
 # Standard colors
-export THEME_GRAY="\033[38;5;240m"
+export THEME_GRAY="\033[38;5;243m"
 export THEME_RESET="\033[00m"
 export THEME_BOLD="\033[1m"
 
 # Tmux Colors (color names for tmux)
-export TMUX_COLOR_PRIMARY="colour108"        # Soft sage green for primary
-export TMUX_COLOR_ACCENT="colour114"         # Light spring green for accents
-export TMUX_COLOR_SECONDARY="colour72"       # Medium forest green
-export TMUX_COLOR_TERTIARY="colour137"       # Tan/brown for contrast
-export TMUX_COLOR_HIGHLIGHT="colour107"      # Pale olive for highlights
+export TMUX_COLOR_PRIMARY="colour67"         # Steel blue for primary
+export TMUX_COLOR_ACCENT="colour109"         # Pale steel for accents
+export TMUX_COLOR_SECONDARY="colour60"       # Gunmetal
+export TMUX_COLOR_TERTIARY="colour137"       # Muted copper for contrast
+export TMUX_COLOR_HIGHLIGHT="colour66"       # Iron for highlights
 
-# Conky Colors (hex for conky)
-export CONKY_COLOR1="87AF87"    # Soft sage green
-export CONKY_COLOR2="FFFFFF"    # White
-export CONKY_COLOR3="AAAAAA"    # Gray
-export CONKY_COLOR4="5F8700"    # Deep forest green
-export CONKY_GRAPH1="87AF87"    # Graph color 1 (soft sage)
-export CONKY_GRAPH2="5FAF5F"    # Graph color 2 (medium green)
+# Conky Colors (hex for conky - optimized for transparent bg)
+export CONKY_COLOR1="6E8898"    # Steel blue (headers)
+export CONKY_COLOR2="DDDDDD"    # Light gray (values)
+export CONKY_COLOR3="888888"    # Medium gray (labels)
+export CONKY_COLOR4="555555"    # Dark gray (muted)
+export CONKY_GRAPH1="6E8898"    # Graph color 1 (steel blue)
+export CONKY_GRAPH2="8FA3B0"    # Graph color 2 (pale steel)

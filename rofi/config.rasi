@@ -1,133 +1,138 @@
 /*
- * ROFI THEME: TREE (FOREST GREEN & EARTH)
- * Based on the centralized theme.sh script
+ * ROFI THEME: OBSIDIAN STEEL - Minimal Professional
+ * Centered list, maximum readability, no distractions
  */
 
 configuration {
-    font: "ComicShannsMono Nerd Font 16";
+    font: "Iosevka Nerd Font Medium 14";
     show-icons: true;
+    icon-theme: "Papirus-Dark";
     terminal: "kitty";
     drun-display-format: "{name}";
-    display-drun: "Apps";
-    display-window: "Windows";
-    display-run: "Run";
+    display-drun: "";
+    display-window: "";
+    display-run: "";
     modi: "drun,window,run";
+    scroll-method: 0;
+    disable-history: false;
+    sidebar-mode: false;
 }
 
 * {
-    /* Tree Theme Colors from theme.sh */
-    background-color: #2E3440; /* A slightly darker slate for the base */
-    text-color: #FFFFFF; /* Default text color */
+    /* Obsidian Steel Palette */
+    bg: #121212;
+    bg-alt: #1A1A1A;
+    fg: #EEEEEE;
+    fg-dim: #888888;
+    accent: #6E8898;
+    selected-bg: #2A3A48;
+    border-color: #3A3A3A;
     
-    /* Theme-specific colors */
-    sage-green: #87AF87; /* CONKY_COLOR1 - Soft sage green */
-    forest-green: #5FAF5F; /* CONKY_GRAPH2 - Medium green */
-    deep-green: #5F8700; /* CONKY_COLOR4 - Deep forest green */
-    earth-brown: #AF8760; /* Warm earthy brown accent */
-    white: #FFFFFF;
-    gray: #AAAAAA;
-    
-    /* Accents */
-    accent: @sage-green;
-    selected: @forest-green;
-    border-accent: @earth-brown;
-    dark-background: #2E3440; /* Explicit dark background */
-    light-dark-background: #3B4252; /* Slightly lighter dark background for input */
+    background-color: transparent;
+    text-color: @fg;
 }
 
 window {
-    border: 2px;
-    border-color: @earth-brown; /* Using earthy brown for border */
-    border-radius: 8px;
-    padding: 16px;
-    width: 50%;
-    background-color: @dark-background;
+    width: 480px;
+    background-color: @bg;
+    border: 1px solid;
+    border-color: @border-color;
+    border-radius: 4px;
+    padding: 0;
 }
 
 mainbox {
-    children: [ "inputbar", "listview" ];
-    spacing: 12px;
+    children: [ "inputbar", "message", "listview" ];
+    spacing: 0;
+    background-color: @bg;
 }
 
 inputbar {
-    children: [ "prompt", "entry" ];
-    padding: 16px;
-    border-radius: 8px;
-    spacing: 12px;
-}
-
-prompt {
-    text-color: @sage-green;
-    padding: 4px 12px;
-    border-radius: 4px;
-    background-color: rgba(135, 175, 135, 0.15); /* Subtle sage green background */
-    font: "ComicShannsMono Nerd Font Bold 16";
+    children: [ "entry" ];
+    padding: 16px 20px;
+    background-color: @bg-alt;
+    border: 0 0 1px 0;
+    border-color: @border-color;
 }
 
 entry {
     placeholder: "Search...";
-    placeholder-color: @gray;
-    text-color: @white;
-    padding: 4px 8px;
+    placeholder-color: @fg-dim;
+    text-color: @fg;
+    cursor: text;
+    background-color: transparent;
+}
+
+message {
+    padding: 8px 20px;
+    background-color: @bg;
+    border: 0 0 1px 0;
+    border-color: @border-color;
+}
+
+textbox {
+    text-color: @fg-dim;
 }
 
 listview {
-    lines: 8;
+    lines: 10;
     columns: 1;
+    fixed-height: true;
+    fixed-columns: true;
     cycle: true;
     scrollbar: false;
+    padding: 8px 0;
+    background-color: @bg;
 }
 
 element {
-    padding: 8px;
-    border-radius: 6px;
-}
-
-element-text {
-    vertical-align: 0.5;
+    padding: 10px 20px;
+    spacing: 12px;
+    background-color: transparent;
 }
 
 element-icon {
     size: 24px;
-    padding: 0 10px 0 0;
-}
-
-element.normal.normal {
     background-color: transparent;
-    text-color: @white;
+    vertical-align: 0.5;
 }
 
-element.normal.normal,
-element.normal.urgent,
-element.normal.active {
+element normal.normal,
+element alternate.normal {
     background-color: transparent;
-    text-color: @white;
+    text-color: @fg;
 }
 
-element.alternate.normal,
-element.alternate.urgent,
-element.alternate.active {
+element normal.urgent,
+element alternate.urgent {
     background-color: transparent;
-    text-color: @white;
+    text-color: #B87A5E;
 }
 
-element.normal.active {
+element normal.active,
+element alternate.active {
     background-color: transparent;
-    text-color: @accent; /* Show active state with sage green text */
+    text-color: @accent;
 }
 
-element.selected.normal {
-    background-color: @selected; /* Forest green for selected background */
-    text-color: @white;
-    border: 0px;
+element selected.normal {
+    background-color: @selected-bg;
+    text-color: @fg;
 }
 
-element.selected.urgent {
-    background-color: @selected;
-    text-color: @white;
+element selected.urgent {
+    background-color: @selected-bg;
+    text-color: #B87A5E;
 }
 
-element.selected.active {
-    background-color: @selected;
-    text-color: @white;
+element selected.active {
+    background-color: @selected-bg;
+    text-color: @accent;
+}
+
+element-text {
+    background-color: transparent;
+    text-color: inherit;
+    highlight: bold;
+    vertical-align: 0.5;
 }

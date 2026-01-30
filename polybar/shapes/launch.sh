@@ -1,14 +1,26 @@
 #!/usr/bin/env bash
 
-# Add this script to your wm startup file.
+# Polybar launch script - handles i3 reload gracefully
 
 DIR="$HOME/.config/polybar/shapes"
 
-# Terminate already running bar instances
-killall -q polybar
+# Terminate existing polybar with timeout
+if pgrep -x polybar >/dev/null 2>&1; then
+    # Send SIGTERM first
+    pkill -TERM -x polybar 2>/dev/null
+    
+    # Wait up to 2 seconds
+    for _ in {1..20}; do
+        pgrep -x polybar >/dev/null 2>&1 || break
+        sleep 0.1
+    done
+    
+    # Force kill if still running
+    pkill -KILL -x polybar 2>/dev/null
+    sleep 0.2
+fi
 
-# Wait until the processes have been shut down
-while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
+# Launch polybar
+polybar -q main -c "$DIR/config.ini" &
 
-# Launch the bar
-polybar -q main -c "$DIR"/config.ini &
+disown

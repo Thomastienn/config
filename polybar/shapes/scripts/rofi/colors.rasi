@@ -1,10 +1,10 @@
-/* colors */
+/* colors - Obsidian Steel Theme */
 
 * {
   al:    #00000000;
-  bg:    #1F1F1FFF;
-  bg1:   #2E7D32FF;
-  bg2:   #388E3CFF;
-  bg3:   #43A047FF;
-  fg:    #FFFFFFFF;
+  bg:    #121212FF;
+  bg1:   #4A5568FF;
+  bg2:   #5C6370FF;
+  bg3:   #6E8898FF;
+  fg:    #C9C9C9FF;
 }

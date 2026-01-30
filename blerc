@@ -4,83 +4,93 @@ if [[ -f "$HOME/thomas_config/theme.sh" ]]; then
 fi
 
 # ================================================================
-# BLE.SH THEME CONFIGURATION (SOFT TREE/FOREST THEME)
+# BLE.SH THEME CONFIGURATION (OBSIDIAN STEEL)
 # ================================================================
-# Optimized for dark mode with soft, easy-on-the-eyes green palette
-# Brown accents for natural contrast
+# Professional dark theme with steel blue accents
+# Easy on the eyes, high readability
 # ================================================================
+
+# Color reference (256-color):
+# 67  = Steel blue (#6E8898)
+# 109 = Pale steel (#8FA3B0)
+# 60  = Gunmetal (#4A5568)
+# 66  = Iron (#718096)
+# 242 = Dim gray (#5C6370)
+# 137 = Muted copper (#B87A5E)
+# 249 = Silver (#C9C9C9)
+# 252 = Light gray (#EEEEEE)
 
 # General text and defaults
-ble-face syntax_default="fg=108"       # Soft sage green
-ble-face disabled="fg=240"             # Darker gray
+ble-face syntax_default="fg=249"       # Silver gray
+ble-face disabled="fg=242"             # Dim gray
 
 # Command structure
-ble-face syntax_command="fg=72,bold"   # Medium forest green
-ble-face command_keyword="fg=107,bold" # Pale olive green
-ble-face command_builtin="fg=72"       # Medium forest green
-ble-face command_builtin_dot="fg=114"  # Light spring green
-ble-face command_alias="fg=65"         # Muted forest green
-ble-face command_function="fg=114"     # Light spring green
-ble-face syntax_function_name="fg=114"
-ble-face argument_option="fg=107"      # Pale olive green
+ble-face syntax_command="fg=67,bold"   # Steel blue
+ble-face command_keyword="fg=109,bold" # Pale steel
+ble-face command_builtin="fg=67"       # Steel blue
+ble-face command_builtin_dot="fg=109"  # Pale steel
+ble-face command_alias="fg=66"         # Iron
+ble-face command_function="fg=109"     # Pale steel
+ble-face syntax_function_name="fg=109"
+ble-face argument_option="fg=66"       # Iron
 
 # Variables
-ble-face syntax_varname="fg=108"       # Soft sage green
-ble-face varname_array="fg=108,bold"   # Soft sage green
-ble-face varname_hash="fg=108,bold"
-ble-face varname_expr="fg=65,bold"     # Muted forest green
-ble-face varname_transform="fg=65"
-ble-face varname_export="fg=107,bold"  # Pale olive green
-ble-face varname_readonly="fg=107"
-ble-face varname_number="fg=72"        # Medium forest green
-ble-face varname_empty="fg=240"
-ble-face varname_unset="fg=240"
-ble-face varname_new="fg=114"          # Light spring green
+ble-face syntax_varname="fg=109"       # Pale steel
+ble-face varname_array="fg=109,bold"
+ble-face varname_hash="fg=109,bold"
+ble-face varname_expr="fg=66,bold"     # Iron
+ble-face varname_transform="fg=66"
+ble-face varname_export="fg=67,bold"   # Steel blue
+ble-face varname_readonly="fg=67"
+ble-face varname_number="fg=137"       # Muted copper
+ble-face varname_empty="fg=242"
+ble-face varname_unset="fg=242"
+ble-face varname_new="fg=109"          # Pale steel
 
 # Syntax elements
-ble-face syntax_delimiter="fg=72"      # Medium forest green
-ble-face syntax_brace="fg=72,bold"
-ble-face syntax_quoted="fg=108"        # Soft sage green
-ble-face syntax_quotation="fg=65"      # Muted forest green
-ble-face syntax_escape="fg=114"        # Light spring green
-ble-face syntax_expr="fg=107"          # Pale olive green
-ble-face syntax_glob="fg=65,bold"      # Muted forest green
-ble-face syntax_tilde="fg=108"         # Soft sage green
-ble-face syntax_param_expansion="fg=65"
-ble-face syntax_history_expansion="fg=16,bg=72"  # Black on forest green
-ble-face syntax_document="fg=108"
-ble-face syntax_document_begin="fg=65,bold"
-ble-face syntax_comment="fg=240"       # Darker gray
+ble-face syntax_delimiter="fg=66"      # Iron
+ble-face syntax_brace="fg=67,bold"     # Steel blue
+ble-face syntax_quoted="fg=249"        # Silver
+ble-face syntax_quotation="fg=66"      # Iron
+ble-face syntax_escape="fg=137"        # Muted copper
+ble-face syntax_expr="fg=109"          # Pale steel
+ble-face syntax_glob="fg=67,bold"      # Steel blue
+ble-face syntax_tilde="fg=109"         # Pale steel
+ble-face syntax_param_expansion="fg=67"
+ble-face syntax_history_expansion="fg=16,bg=67"  # Black on steel blue
+ble-face syntax_document="fg=249"
+ble-face syntax_document_begin="fg=67,bold"
+ble-face syntax_comment="fg=242"       # Dim gray
 
 # Errors and warnings
-ble-face syntax_error="fg=224,bg=124"        # Soft red (less harsh)
+ble-face syntax_error="fg=224,bg=124"        # Soft red
 ble-face argument_error="fg=224,bg=124"
-ble-face filename_warning="fg=222,underline" # Soft yellow
-ble-face filename_orphan="fg=108,underline"
-ble-face command_jobs="fg=72,bold"
+ble-face filename_warning="fg=137,underline" # Muted copper
+ble-face filename_orphan="fg=242,underline"
+ble-face command_jobs="fg=67,bold"
 
 # File and directory names
-ble-face filename_directory="fg=107,bold"     # Pale olive green
-ble-face filename_directory_sticky="fg=16,bg=107"
-ble-face filename_executable="fg=114"          # Light spring green
-ble-face filename_link="fg=65,underline"       # Muted forest green
-ble-face filename_other="fg=108"               # Soft sage green
-ble-face filename_url="fg=72,underline"        # Medium forest green
+ble-face filename_directory="fg=67,bold"       # Steel blue
+ble-face filename_directory_sticky="fg=16,bg=67"
+ble-face filename_executable="fg=109"          # Pale steel
+ble-face filename_link="fg=66,underline"       # Iron
+ble-face filename_other="fg=249"               # Silver
+ble-face filename_url="fg=67,underline"        # Steel blue
 
-# Highlighting and UI (optimized for comfortable viewing)
-ble-face region="bg=22,fg=252"                # Dark forest green bg, soft white
-ble-face region_insert="bg=23,fg=252"
-ble-face region_match="bg=58,fg=16"           # Muted olive bg
-ble-face region_target="bg=72,fg=16"          # Forest green bg
-ble-face overwrite_mode="fg=16,bg=222"        # Soft yellow
-ble-face vbell="bg=72"                        # Medium forest green
-ble-face vbell_erase="bg=240"
-ble-face vbell_flash="fg=108,reverse"
-ble-face prompt_status_line="fg=16,bg=72"     # Black on forest green
+# Highlighting and UI
+ble-face region="bg=60,fg=252"                # Gunmetal bg, light text
+ble-face region_insert="bg=66,fg=252"         # Iron bg
+ble-face region_match="bg=60,fg=252"          # Gunmetal bg
+ble-face region_target="bg=67,fg=16"          # Steel blue bg
+ble-face overwrite_mode="fg=16,bg=137"        # Muted copper
+ble-face vbell="bg=67"                        # Steel blue
+ble-face vbell_erase="bg=242"
+ble-face vbell_flash="fg=67,reverse"
+ble-face prompt_status_line="fg=252,bg=60"    # Light on gunmetal
 
-# Autocomplete menu (clear and comfortable)
-ble-face auto_complete="bg=22,fg=252"              # Dark forest green bg, soft white text - CLEAR!
-ble-face menu_filter_input="bg=23,fg=252,bold"     # Slightly brighter green, white text
-ble-face menu_filter_fixed="fg=108,bold"           # Soft sage green
-ble-face menu_complete_match="fg=108,bold"         # Soft sage green for matched text
-ble-face menu_complete_selected="bg=58,fg=252,bold" # Muted olive bg, white text - SELECTED!
+# Autocomplete menu
+ble-face auto_complete="bg=236,fg=242"             # Dark bg, dim suggestion
+ble-face menu_filter_input="bg=60,fg=252,bold"     # Gunmetal bg, light text
+ble-face menu_filter_fixed="fg=67,bold"            # Steel blue
+ble-face menu_complete_match="fg=67,bold"          # Steel blue for matched text
+ble-face menu_complete_selected="bg=67,fg=16,bold" # Steel blue bg, dark text
