@@ -23,5 +23,5 @@ date_format="%A, %d %B"
 # Greeter text
 greeter="Welcome back!"
 
-# Path to wallpaper (Firewatch)
-wallpaper=~/thomas_config/wallpapers/Firewatch.jpeg
+# Path to wallpaper
+wallpaper=~/thomas_config/wallpapers/Porsche_911.jpeg

@@ -50,8 +50,8 @@ ble-face varname_new="fg=109"          # Pale steel
 # Syntax elements
 ble-face syntax_delimiter="fg=66"      # Iron
 ble-face syntax_brace="fg=67,bold"     # Steel blue
-ble-face syntax_quoted="fg=249"        # Silver
-ble-face syntax_quotation="fg=66"      # Iron
+ble-face syntax_quoted="fg=249"        # Silver (override green default)
+ble-face syntax_quotation="fg=66"      # Iron (override green default)
 ble-face syntax_escape="fg=137"        # Muted copper
 ble-face syntax_expr="fg=109"          # Pale steel
 ble-face syntax_glob="fg=67,bold"      # Steel blue
@@ -61,6 +61,12 @@ ble-face syntax_history_expansion="fg=16,bg=67"  # Black on steel blue
 ble-face syntax_document="fg=249"
 ble-face syntax_document_begin="fg=67,bold"
 ble-face syntax_comment="fg=242"       # Dim gray
+
+# Commands (override green defaults)
+ble-face command_file="fg=109"         # Pale steel (override green default)
+ble-face command_directory="fg=67,underline"  # Steel blue
+ble-face command_suffix="fg=252,bg=60"        # Light on gunmetal (override green bg)
+ble-face command_suffix_new="fg=252,bg=124"   # Light on red
 
 # Errors and warnings
 ble-face syntax_error="fg=224,bg=124"        # Soft red
@@ -85,8 +91,17 @@ ble-face region_target="bg=67,fg=16"          # Steel blue bg
 ble-face overwrite_mode="fg=16,bg=137"        # Muted copper
 ble-face vbell="bg=67"                        # Steel blue
 ble-face vbell_erase="bg=242"
-ble-face vbell_flash="fg=67,reverse"
+ble-face vbell_flash="fg=67,reverse"          # Steel blue (override green default)
 ble-face prompt_status_line="fg=252,bg=60"    # Light on gunmetal
+
+# Additional file/directory faces (override green defaults)
+ble-face filename_pipe="fg=66,underline,bg=236"      # Iron (override lime default)
+ble-face filename_socket="fg=109,underline,bg=236"   # Pale steel
+ble-face filename_character="fg=249,underline,bg=236"
+ble-face filename_block="fg=137,underline,bg=236"    # Muted copper
+ble-face filename_setuid="fg=16,underline,bg=137"    # Black on copper
+ble-face filename_setgid="fg=16,underline,bg=109"    # Black on pale steel
+ble-face filename_ls_colors="underline"
 
 # Autocomplete menu
 ble-face auto_complete="bg=236,fg=242"             # Dark bg, dim suggestion
@@ -94,3 +109,4 @@ ble-face menu_filter_input="bg=60,fg=252,bold"     # Gunmetal bg, light text
 ble-face menu_filter_fixed="fg=67,bold"            # Steel blue
 ble-face menu_complete_match="fg=67,bold"          # Steel blue for matched text
 ble-face menu_complete_selected="bg=67,fg=16,bold" # Steel blue bg, dark text
+ble-face cmdinfo_cd_cdpath="fg=67,bg=60"           # Steel blue on gunmetal
