@@ -9,9 +9,10 @@ source ~/thomas_config/theme.sh
 
 # Tokens ENV
 # Load environment variables from ~/.my_env if it exists
-if [ -f "$HOME/.my-env" ]; then
-    export $(grep -v '^#' "$HOME/.my-env" | xargs)
-fi
+# Too risky
+# if [ -f "$HOME/.my-env" ]; then
+#     export $(grep -v '^#' "$HOME/.my-env" | xargs)
+# fi
 
 # ~/.bashrc: executed by bash(1) for non-login shells.
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
@@ -509,7 +510,9 @@ export BAT_THEME="Monokai Extended"
 eval "$(zoxide init bash)"
 
 # SSH agent
-eval "$(ssh-agent -s)"
+if [ -z "$SSH_AUTH_SOCK" ]; then
+    eval "$(ssh-agent -s)"
+fi
 
 [ -f ~/.ssh/id_ed25519 ] && ssh-add ~/.ssh/id_ed25519
 [ -f ~/.ssh/id_ed25519_github ] && ssh-add ~/.ssh/id_ed25519_github
