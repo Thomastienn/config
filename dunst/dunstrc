@@ -4,35 +4,35 @@
     follow = none
     
     ### Geometry ###
-    width = (280, 350)
-    height = 280
+    width = (320, 420)
+    height = (0, 220)
     origin = top-right
-    offset = 20x45
+    offset = (20, 50)
     scale = 0
-    notification_limit = 5
+    notification_limit = 4
     
     ### Progress bar ###
     progress_bar = true
-    progress_bar_height = 12
+    progress_bar_height = 10
     progress_bar_frame_width = 1
-    progress_bar_min_width = 250
-    progress_bar_max_width = 320
-    progress_bar_corner_radius = 3
+    progress_bar_min_width = 300
+    progress_bar_max_width = 400
+    progress_bar_corner_radius = 4
     
     ### Icons ###
     icon_position = left
     min_icon_size = 48
-    max_icon_size = 56
+    max_icon_size = 64
     icon_path = /usr/share/icons/Papirus-Dark/48x48/status/:/usr/share/icons/Papirus-Dark/48x48/devices/:/usr/share/icons/Papirus-Dark/48x48/apps/
-    icon_corner_radius = 8
+    icon_corner_radius = 6
     
     ### Text ###
-    font = JetBrainsMono Nerd Font 9
-    line_height = 2
+    font = JetBrainsMono Nerd Font 10
+    line_height = 4
     markup = full
     
-    # Default format with aesthetic border
-    format = "<span alpha='45%%' size='small' font_family='monospace'>╭──────────────────╮</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='45%%' size='small' font_family='monospace'>├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small' font_family='monospace'>╰─ %a</span>"
+    # Clean format - %% escapes the percent sign
+    format = "<span size='small' alpha='70%%'>%a</span>\n<b><span size='large'>%s</span></b>\n%b"
     
     alignment = left
     vertical_alignment = center
@@ -41,21 +41,21 @@
     ignore_newline = no
     stack_duplicates = true
     hide_duplicate_count = false
-    show_indicators = yes
+    show_indicators = no
     
-    ### Styling ###
+    ### Styling - VISIBLE BOX ###
     separator_height = 2
-    padding = 14
-    horizontal_padding = 16
-    text_icon_padding = 10
+    padding = 20
+    horizontal_padding = 22
+    text_icon_padding = 18
     frame_width = 2
     gap_size = 8
     separator_color = frame
     sort = yes
     
-    ### Transparency ###
-    transparency = 5
-    corner_radius = 12
+    ### NO TRANSPARENCY - Solid notifications ###
+    transparency = 0
+    corner_radius = 10
     
     ### History ###
     sticky_history = yes
@@ -82,149 +82,226 @@
 [experimental]
     per_monitor_dpi = false
 
+# ================================================================
+# URGENCY LEVELS - Visible, Eye-Friendly, Obsidian Steel
+# ================================================================
+
 [urgency_low]
-    background = "#121212"
-    foreground = "#9E9E9E"
+    background = "#232A35"
+    foreground = "#A0AEC0"
     frame_color = "#4A5568"
     highlight = "#6E8898"
-    timeout = 5
-    icon = dialog-information
+    timeout = 4
 
 [urgency_normal]
-    background = "#121212"
-    foreground = "#C9C9C9"
+    background = "#232A35"
+    foreground = "#E2E8F0"
     frame_color = "#6E8898"
     highlight = "#8FA3B0"
-    timeout = 8
-    icon = dialog-information
+    timeout = 6
 
 [urgency_critical]
-    background = "#1E1E1E"
-    foreground = "#C9C9C9"
+    background = "#2D2832"
+    foreground = "#F5F0EB"
     frame_color = "#B87A5E"
     highlight = "#B87A5E"
     timeout = 0
-    icon = dialog-warning
 
-### APP-SPECIFIC RULES ###
+# ================================================================
+# APP-SPECIFIC RULES
+# Using Nerd Font glyphs (monochrome, same color as text)
+# Note: %% escapes percent sign in format strings
+# ================================================================
 
-# Kitty Terminal
-[kitty]
-    appname = "kitty"
-    format = "<span alpha='50%%' size='small' font_family='monospace'>┌─[ </span><span size='large' weight='bold'> TERM</span><span alpha='50%%' size='small'> ]─┐</span>\n <span size='large' weight='bold'>%s</span>\n<span alpha='50%%' size='small' font_family='monospace'>├─</span> <span alpha='85%%' font_family='monospace'>%b</span>\n<span alpha='35%%' size='x-small' font_family='monospace'>└───────────╼</span>"
-    background = "#121212"
-    foreground = "#6E8898"
-    frame_color = "#8FA3B0"
-    icon = utilities-terminal
-    timeout = 7
-
-# Discord
-[discord]
-    appname = "discord"
-    format = "<span size='large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Discord</span>"
-    background = "#121212"
-    foreground = "#C9C9C9"
+# Volume Up - 󰝝 glyph (plus)
+[volume-up]
+    appname = "volume"
+    summary = "Volume Up"
+    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝝  %s</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
     frame_color = "#6E8898"
-    icon = discord
-    timeout = 6
-    urgency = normal
-
-[discord-dm]
-    appname = "discord"
-    summary = "*Direct Message*"
-    format = "<span size='x-large'> </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#6E8898'>%s</span>\n <span alpha='90%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ DM</span>"
-    background = "#1E1E1E"
-    frame_color = "#8FA3B0"
-    urgency = normal
-
-# Brave Browser
-[brave]
-    appname = "Brave*"
-    format = "<span size='large'> </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╟─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╚═ Brave</span>"
-    background = "#121212"
-    foreground = "#C9C9C9"
-    frame_color = "#6E8898"
-    icon = brave-browser
-    timeout = 7
-
-[brave-download]
-    appname = "Brave*"
-    summary = "*ownload*"
-    format = "<span size='x-large'>󰇚 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large' foreground='#6E8898'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Downloaded</span>"
-    background = "#1E1E1E"
-    frame_color = "#8FA3B0"
-    icon = folder-download
-
-# Volume Control with progress bar
-[volume]
-    appname = "*olume*"
-    format = "<span size='x-large' alpha='80%%'>󰕾</span>\n<span weight='bold' size='x-large' foreground='#6E8898'>%p</span>"
-    background = "#121212"
-    foreground = "#C9C9C9"
-    frame_color = "#8FA3B0"
     timeout = 2
     alignment = center
     highlight = "#6E8898"
-    progress_bar = true
-    progress_bar_height = 20
     icon_position = off
 
-# Brightness
-[brightness]
-    appname = "brightness"
-    format = "<span size='x-large' alpha='80%%'>󰃟</span>\n<span weight='bold' size='x-large' foreground='#B87A5E'>%p%%</span>"
-    background = "#121212"
-    foreground = "#C9C9C9"
-    frame_color = "#B87A5E"
+# Volume Down - 󰝞 glyph (minus)
+[volume-down]
+    appname = "volume"
+    summary = "Volume Down"
+    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝞  %s</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
     timeout = 2
     alignment = center
-    highlight = "#B87A5E"
-    progress_bar = true
-    progress_bar_height = 20
+    highlight = "#6E8898"
     icon_position = off
 
-# Screenshot
+# Volume Unmuted - 󰕾 glyph (must come before muted rule)
+[volume-unmuted]
+    appname = "volume"
+    summary = "Unmuted"
+    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰕾  Unmuted</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 2
+    alignment = center
+    icon_position = off
+
+# Volume Muted - 󰖁 glyph
+[volume-muted]
+    appname = "volume"
+    summary = "Muted"
+    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰖁  Muted</span></b>"
+    background = "#232A35"
+    foreground = "#A0AEC0"
+    frame_color = "#4A5568"
+    timeout = 2
+    alignment = center
+    icon_position = off
+
+# Brightness Up - 󰃠 glyph (bright sun)
+[brightness-up]
+    appname = "brightness"
+    summary = "Brightness Up"
+    format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃠  %s</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 2
+    alignment = center
+    highlight = "#6E8898"
+    icon_position = off
+
+# Brightness Down - 󰃞 glyph (dim sun)
+[brightness-down]
+    appname = "brightness"
+    summary = "Brightness Down"
+    format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃞  %s</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 2
+    alignment = center
+    highlight = "#6E8898"
+    icon_position = off
+
+# Mic Unmuted - 󰍬 glyph (must come before muted rule)
+[mic-unmuted]
+    appname = "microphone"
+    summary = "*Unmuted*"
+    format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍬  Unmuted</span></b>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 2
+    alignment = center
+    icon_position = off
+
+# Mic Muted - 󰍭 glyph
+[mic-muted]
+    appname = "microphone"
+    summary = "*Muted*"
+    format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍭  Muted</span></b>"
+    background = "#232A35"
+    foreground = "#A0AEC0"
+    frame_color = "#4A5568"
+    timeout = 2
+    alignment = center
+    icon_position = off
+
+# Screenshot - 󰹑 glyph
 [screenshot]
     appname = "*creenshot*"
     summary = "*creenshot*"
-    format = "<span size='large'>󰹑 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span size='large' weight='bold' foreground='#6E8898'>Screenshot</span>\n <span alpha='85%%' font_family='monospace'>%b</span>"
-    background = "#1E1E1E"
-    frame_color = "#6E8898"
-    icon = camera-photo
-    timeout = 4
+    format = "<span size='small' alpha='70%%'>SCREENSHOT</span>\n<b><span size='large'>󰹑  Captured</span></b>\n<span font_family='monospace' size='small'>%b</span>"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#8FA3B0"
+    timeout = 3
+    icon_position = off
 
-# Spotify/Music
+# Spotify/Music - 󰎆 glyph
 [spotify]
     appname = "*potify*"
-    format = "<span size='large' alpha='80%%'>󰓇 </span> <span alpha='50%%' size='small'>♪ ──── ♪</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='80%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Now Playing</span>"
-    background = "#121212"
-    foreground = "#6E8898"
-    frame_color = "#8FA3B0"
-    icon = spotify
-    timeout = 5
+    format = "<span size='small' alpha='70%%'>󰎆  NOW PLAYING</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 4
+    icon_position = off
 
-# Battery Warning
+# Battery Warning - 󰁺 glyph
 [battery]
     appname = "*attery*"
-    format = "<span size='large'>󰁺 </span> <span alpha='50%%' size='small'>━━━━━━━━━━</span>\n <span weight='bold' size='large'>%s</span>\n <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> └─ Battery</span>"
+    format = "<span size='small' alpha='70%%'>󰁺  BATTERY</span>\n<b><span size='large'>%s</span></b>\n%b"
     urgency = critical
-    background = "#1E1E1E"
+    background = "#2D2832"
+    foreground = "#F5F0EB"
     frame_color = "#B87A5E"
+    icon_position = off
 
-# Network notifications
+# Network - 󰖩 glyph
 [network]
     appname = "*etwork*"
-    format = "<span size='large'>󰖩 </span> <span alpha='50%%' size='small'>╔════════════╗</span>\n <span weight='bold' size='large'>%s</span>\n<span alpha='50%%' size='small'> ╚═</span> <span alpha='85%%'>%b</span>"
-    background = "#121212"
+    format = "<span size='small' alpha='70%%'>󰖩  NETWORK</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
     frame_color = "#8FA3B0"
-    icon = network-wireless
-    timeout = 5
+    timeout = 4
+    icon_position = off
 
-# System updates
+# Discord - 󰙯 glyph
+[discord]
+    appname = "discord"
+    format = "<span size='small' alpha='70%%'>󰙯  DISCORD</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 5
+    icon_position = off
+
+# Terminal - 󰆍 glyph
+[kitty]
+    appname = "kitty"
+    format = "<span size='small' alpha='70%%'>󰆍  TERMINAL</span>\n<b><span size='large'>%s</span></b>\n<span font_family='monospace'>%b</span>"
+    background = "#232A35"
+    foreground = "#8FA3B0"
+    frame_color = "#6E8898"
+    timeout = 5
+    icon_position = off
+
+# Brave Browser - 󰖟 glyph
+[brave]
+    appname = "Brave*"
+    format = "<span size='small' alpha='70%%'>󰖟  BROWSER</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#6E8898"
+    timeout = 5
+    icon_position = off
+
+# Downloads - 󰇚 glyph
+[brave-download]
+    appname = "Brave*"
+    summary = "*ownload*"
+    format = "<span size='small' alpha='70%%'>󰇚  DOWNLOAD</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
+    frame_color = "#8FA3B0"
+    timeout = 4
+    icon_position = off
+
+# System Updates - 󰚰 glyph
 [updates]
     appname = "*pdate*"
     summary = "*pdate*"
-    format = "<span size='large'>󰚰 </span> <span alpha='50%%' size='small'>╭─────────────╮</span>\n <span weight='bold' size='large' foreground='#6E8898'>%s</span>\n<span alpha='50%%' size='small'> ├─</span> <span alpha='85%%'>%b</span>\n<span alpha='35%%' size='x-small'> ╰─ Update</span>"
-    background = "#1E1E1E"
+    format = "<span size='small' alpha='70%%'>󰚰  SYSTEM</span>\n<b><span size='large'>%s</span></b>\n%b"
+    background = "#232A35"
+    foreground = "#E2E8F0"
     frame_color = "#6E8898"
-    timeout = 10
+    timeout = 8
+    icon_position = off

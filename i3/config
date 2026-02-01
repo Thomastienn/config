@@ -12,18 +12,18 @@ focus_follows_mouse no
 # ================================================================
 # VOLUME CONTROL
 # ================================================================
-bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 1000 -a "Volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)" -r 1111 "Volume Up 🔊"
-bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 1000 -a "Volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1)" -r 1111 "Volume Down 🔉"
-bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && notify-send -t 1000 -u low "Volume" -r 1111 "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'yes' && echo 'Muted 🔇' || echo 'Unmuted 🔊')"
+bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 1000 -a "volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1 | tr -d '%')" -r 1111 "Volume Up"
+bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 1000 -a "volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1 | tr -d '%')" -r 1111 "Volume Down"
+bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && sleep 0.1 && notify-send -t 1000 -a "volume" -r 1111 "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'yes' && echo 'Muted' || echo 'Unmuted')"
 
 # Mic mute toggle with visual feedback
-bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && notify-send -t 1000 -u low "Microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted 🔇' || echo 'Mic Unmuted 🎤')" && polybar-msg action microphone hook 0
+bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && sleep 0.1 && notify-send -t 1000 -a "microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted' || echo 'Mic Unmuted')" && polybar-msg action microphone hook 0
 
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
-bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl --device=nvidia_wmi_ec_backlight s +5% && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl --device=nvidia_wmi_ec_backlight g)" -r 1113 "Brightness Up ☀️"
-bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl --device=nvidia_wmi_ec_backlight s 5%- && notify-send -t 1000 -a "Brightness" -h "int:value:$(brightnessctl --device=nvidia_wmi_ec_backlight g)" -r 1113 "Brightness Down 🌙"
+bindsym XF86MonBrightnessUp exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh up
+bindsym XF86MonBrightnessDown exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh down
 
 # ================================================================
 # SCREENSHOT
