@@ -85,7 +85,7 @@ parse_git_status() {
     if git rev-parse --git-dir > /dev/null 2>&1; then
         local status=$(git status --porcelain 2>/dev/null | wc -l)
         if [ $status -gt 0 ]; then
-            echo " ⚡$status"
+            echo " 🗲︎ $status"
         fi
     fi
 }
