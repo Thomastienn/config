@@ -514,9 +514,9 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
     eval "$(ssh-agent -s)"
 fi
 
-[ -f ~/.ssh/id_ed25519 ] && ssh-add ~/.ssh/id_ed25519
-[ -f ~/.ssh/id_ed25519_github ] && ssh-add ~/.ssh/id_ed25519_github
-[ -f ~/.ssh/id_ed25519_gitlab ] && ssh-add ~/.ssh/id_ed25519_gitlab
+[ -f "$HOME/.ssh/id_ed25519" ] && ssh-add ~/.ssh/id_ed25519
+[ -f "$HOME/.ssh/id_ed25519_github" ] && ssh-add ~/.ssh/id_ed25519_github
+[ -f "$HOME/.ssh/id_ed25519_gitlab" ] && ssh-add ~/.ssh/id_ed25519_gitlab
 
 # taskwarrior display all
 [ -f "$HOME/.taskrc" ] && task
@@ -528,4 +528,12 @@ stty -ixon
 
 # Ble.sh
 source -- ~/.local/share/blesh/ble.sh
-[[ -f ~/thomas_config/blerc ]] && . ~/thomas_config/blerc 
+[[ -f "$HOME/thomas_config/blerc" ]] && . ~/thomas_config/blerc 
+
+# Has to be at the end
+export SDKMAN_DIR="/home/thomas/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "/home/thomas/.sdkman/bin/sdkman-init.sh"
+
+[[ -d "$HOME/CodeBase/grindstone/" ]] && alias grind="~/CodeBase/grindstone/main.py"
+
+[[ -d "$HOME/go" ]] && export PATH="$PATH:$HOME/go/bin"
