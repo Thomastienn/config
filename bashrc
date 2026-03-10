@@ -5,7 +5,7 @@ export LC_ALL=C.UTF-8
 export TERMINAL=kitty
 
 set -o vi
-bind "jj":vi-movement-mode
+bind -m vi-insert '"jj": vi-movement-mode'
 
 # Load centralized theme
 source ~/thomas_config/theme.sh
@@ -540,3 +540,4 @@ export SDKMAN_DIR="/home/thomas/.sdkman"
 [[ -d "$HOME/CodeBase/grindstone/" ]] && alias grind="~/CodeBase/grindstone/main.py"
 
 [[ -d "$HOME/go" ]] && export PATH="$PATH:$HOME/go/bin"
+[ -f "$HOME/.deno/env" ] && source "$HOME/.deno/env"
