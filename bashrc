@@ -4,8 +4,6 @@ export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
 export TERMINAL=kitty
 
-set -o vi
-bind -m vi-insert '"jj": vi-movement-mode'
 
 # Load centralized theme
 source ~/thomas_config/theme.sh
@@ -530,8 +528,18 @@ stty -ixon
 [ -d "$HOME/.virtualenvs/neovim" ] && venv neovim
 
 # Ble.sh
-source -- ~/.local/share/blesh/ble.sh
-[[ -f "$HOME/thomas_config/blerc" ]] && . ~/thomas_config/blerc 
+if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
+    source -- ~/.local/share/blesh/ble.sh
+    . ~/thomas_config/blerc
+    bleopt default_keymap=vi
+    ble-bind -m vi_imap -f 'j j' vi_imap/normal-mode
+    ble-bind -m vi_imap -T j 200
+else
+    set -o vi
+    bind 'set keyseq-timeout 200'
+    bind -m vi-insert '"jj": vi-movement-mode'
+fi
+
 
 # Has to be at the end
 export SDKMAN_DIR="/home/thomas/.sdkman"
