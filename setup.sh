@@ -76,6 +76,7 @@ ln -s ~/thomas_config/betterlockscreen/betterlockscreenrc ~/.config/betterlocksc
 sudo ${DEFAULT_PACKAGE_MANAGER} install xfce4-power-manager -y
 ln -s ~/thomas_config/xfce/xfce4-session.xml ~/.config/xfce4/xfconf/xfce-perchannel-xml/xfce4-session.xml
 sudo ln -s ~/thomas_config/xfce/xflock4 /usr/local/bin/xflock4
+sudo ${DEFAULT_PACKAGE_MANAGER} install xautolock -y
 # End i3wm
 
 

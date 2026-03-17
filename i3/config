@@ -74,7 +74,8 @@ exec --no-startup-id mintupdate-launcher
 exec --no-startup-id /usr/lib/policykit-1-gnome/polkit-gnome-authentication-agent-1
 exec --no-startup-id touchegg
 exec --no-startup-id ibus engine xkb:us::eng
-exec --no-startup-id xfce4-power-manager
+# exec --no-startup-id xfce4-power-manager
+exec --no-startup-id xautolock -time 15 -locker "i3lock && systemctl suspend" -detectsleep
 
 # Dunst (Notification)
 # exec --no-startup-id dunst
