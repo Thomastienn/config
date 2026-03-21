@@ -549,3 +549,9 @@ export SDKMAN_DIR="/home/thomas/.sdkman"
 
 [[ -d "$HOME/go" ]] && export PATH="$PATH:$HOME/go/bin"
 [ -f "$HOME/.deno/env" ] && source "$HOME/.deno/env"
+
+# terminal-wakatime setup
+if [ -d "$HOME/.wakatime" ]; then
+    export PATH="$HOME/.wakatime:$PATH"
+    eval "$(terminal-wakatime init)"
+fi
