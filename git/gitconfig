@@ -3,3 +3,6 @@
 	email = thomastien123@gmail.com
 [includeIf "gitdir:/home/thomas/ucalgary/SENG_300/**"]
     path = /home/thomas/thomas_config/git/gitconfig-gitlab
+[alias]
+	lg = log --pretty=format:'%h %an: %s %C(dim)%ar%Creset'
+	summary = !git log --all --no-merges --numstat --format=\"AUTHOR:%aN\" | awk '\n  /^AUTHOR:/ {\n    author = substr($0, 8)\n    commits[author]++\n    next\n  }\n  NF==3 && $1~/^[0-9]/ {\n    added[author] += $1\n    removed[author] += $2\n  }\n  END {\n    for (a in commits)\n      printf \"%-30s commits: %d  +%d  -%d\\n\", a, commits[a], added[a], removed[a]\n  }\n' | sort -t: -k2 -rn
