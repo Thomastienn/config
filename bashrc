@@ -555,3 +555,4 @@ if [ -d "$HOME/.wakatime" ]; then
     export PATH="$HOME/.wakatime:$PATH"
     eval "$(terminal-wakatime init)"
 fi
+export QT_QPA_PLATFORMTHEME=gtk3
