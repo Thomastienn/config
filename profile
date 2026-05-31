@@ -31,3 +31,7 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 . "$HOME/.cargo/env"
 . "/home/thomas/.deno/env"
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/thomas/.local/bin:$PATH"

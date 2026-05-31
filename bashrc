@@ -556,3 +556,8 @@ if [ -d "$HOME/.wakatime" ]; then
     eval "$(terminal-wakatime init)"
 fi
 export QT_QPA_PLATFORMTHEME=gtk3
+
+# Added by codebase-memory-mcp install
+export PATH="/home/thomas/.local/bin:$PATH"
+
+eval "$(thefuck --alias)"

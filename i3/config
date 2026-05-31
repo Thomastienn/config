@@ -115,6 +115,9 @@ bindsym $mod+m exec --no-startup-id rofi -show ssh
 # Virtualization
 bindsym $mod+Shift+v exec virt-manager
 
+# Zooming
+bindsym $mod+z exec --no-startup-id ~/tools/boomer/boomer
+
 # ================================================================
 # VIM-STYLE NAVIGATION
 # ================================================================
