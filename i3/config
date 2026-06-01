@@ -91,6 +91,9 @@ exec --no-startup-id xautolock \
 # Preconfigured theme
 exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 
+# ActivityWatch
+exec --no-startup-id ~/Downloads/activitywatch/aw-qt
+
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
