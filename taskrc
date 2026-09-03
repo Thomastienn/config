@@ -24,4 +24,6 @@ include solarized-dark-256.theme
 #include solarized-light-256.theme
 #include no-color.theme
 
-report.next.sort=urgency-,due+
+report.next.sort=due+
+report.next.columns=id,entry.age,due.relative,due,description,urgency
+report.next.labels=ID,Age,Due,Date,Description,Urg

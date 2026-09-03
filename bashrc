@@ -561,3 +561,4 @@ export QT_QPA_PLATFORMTHEME=gtk3
 export PATH="/home/thomas/.local/bin:$PATH"
 
 eval "$(thefuck --alias)"
+. "$HOME/.rokit/env"

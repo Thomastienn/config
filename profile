@@ -35,3 +35,4 @@ fi
 
 # Added by Antigravity CLI installer
 export PATH="/home/thomas/.local/bin:$PATH"
+. "$HOME/.rokit/env"

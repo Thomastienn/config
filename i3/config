@@ -76,12 +76,18 @@ exec --no-startup-id touchegg
 exec --no-startup-id ibus engine xkb:us::eng
 # exec --no-startup-id xfce4-power-manager
 # exec --no-startup-id xautolock -time 10 -locker "betterlockscreen --lock blur && systemctl suspend" -detectsleep
-exec --no-startup-id xautolock \
-  -time 10 \
-  -locker "betterlockscreen --lock blur" \
-  -killtime 15 \
-  -killer "systemctl suspend" \
-  -detectsleep
+# exec --no-startup-id xautolock \
+#   -time 10 \
+#   -locker "betterlockscreen --lock blur" \
+#   -killtime 15 \
+#   -killer "systemctl suspend" \
+#   -detectsleep
+
+exec --no-startup-id xidlehook \
+  --not-when-audio \
+  --not-when-fullscreen \
+  --timer 600 'betterlockscreen --lock blur' '' \
+  --timer 900 'systemctl suspend' ''
 
 # Dunst (Notification)
 # exec --no-startup-id dunst
