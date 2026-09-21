@@ -562,3 +562,5 @@ export PATH="/home/thomas/.local/bin:$PATH"
 
 eval "$(thefuck --alias)"
 . "$HOME/.rokit/env"
+
+[ -f "/home/thomas/.ghcup/env" ] && . "/home/thomas/.ghcup/env" # ghcup-env

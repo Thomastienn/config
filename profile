@@ -36,3 +36,5 @@ fi
 # Added by Antigravity CLI installer
 export PATH="/home/thomas/.local/bin:$PATH"
 . "$HOME/.rokit/env"
+
+[ -f "/home/thomas/.ghcup/env" ] && . "/home/thomas/.ghcup/env" # ghcup-env
