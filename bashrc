@@ -520,7 +520,7 @@ fi
 [ -f "$HOME/.ssh/id_ed25519_gitlab" ] && ssh-add ~/.ssh/id_ed25519_gitlab
 
 # taskwarrior display all
-[ -f "$HOME/.taskrc" ] && task
+[ -f "$HOME/.taskrc" ] && task calendar && task
 
 # Unbind Ctrl-S and Ctrl-Q to avoid terminal freeze
 stty -ixon
