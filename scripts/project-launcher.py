@@ -1,12 +1,54 @@
 #!/usr/bin/env python3
-"""Open a remembered directory in a new normal tmux window."""
+"""Open a remembered directory in workspace 1's existing tmux terminal."""
 
 import html
+import json
 from pathlib import Path
 import subprocess
 
 TMUX = "/home/linuxbrew/.linuxbrew/bin/tmux"
-KITTY = str(Path.home() / ".local/kitty.app/bin/kitty")
+
+
+def kitty_windows(node, workspace=None):
+    if node.get("type") == "workspace":
+        workspace = node.get("num")
+    if workspace == 1 and node.get("window_properties", {}).get("class") == "kitty":
+        yield node
+    for child in node.get("nodes", []) + node.get("floating_nodes", []):
+        yield from kitty_windows(child, workspace)
+
+
+def main_terminal():
+    tree = subprocess.run(["i3-msg", "-t", "get_tree"], capture_output=True, text=True, check=True)
+    terminals = {}
+    for node in kitty_windows(json.loads(tree.stdout)):
+        prop = subprocess.run(["xprop", "-id", str(node["window"]), "_NET_WM_PID"],
+                              capture_output=True, text=True)
+        try:
+            terminals[int(prop.stdout.rsplit("=", 1)[-1].strip())] = node["id"]
+        except ValueError:
+            continue
+    clients = subprocess.run([TMUX, "list-clients", "-F", "#{client_pid}\t#{session_id}"],
+                             capture_output=True, text=True)
+    matches = set()
+    for line in clients.stdout.splitlines():
+        pid_text, session = line.split()
+        pid = int(pid_text)
+        seen = set()
+        while pid > 1 and pid not in seen:
+            if pid in terminals:
+                matches.add((terminals[pid], session))
+                break
+            seen.add(pid)
+            try:
+                status = Path(f"/proc/{pid}/status").read_text()
+                pid = int(next(row for row in status.splitlines() if row.startswith("PPid:")).split()[1])
+            except (OSError, StopIteration, ValueError):
+                break
+    if len(matches) != 1:
+        raise RuntimeError("Could not identify one main tmux terminal on workspace 1. "
+                           "Keep one Kitty attached to your main session there.")
+    return matches.pop()
 
 
 def main():
@@ -30,18 +72,12 @@ def main():
     folder = paths[int(choice.stdout.strip())]
     if not folder.is_dir():
         raise RuntimeError(f"Folder no longer exists: {folder}")
-    sessions = subprocess.run([TMUX, "list-sessions", "-F", "#{session_activity}\t#{session_id}"],
-                              capture_output=True, text=True)
-    if sessions.returncode == 0 and sessions.stdout.strip():
-        session = max((int(line.split()[0]), line.split()[1])
-                      for line in sessions.stdout.splitlines())[1]
-        subprocess.run([TMUX, "new-window", "-t", session, "-c", str(folder)], check=True)
-    else:
-        created = subprocess.run([TMUX, "new-session", "-d", "-s", "main", "-c", str(folder),
-                                  "-P", "-F", "#{session_id}"],
-                                 capture_output=True, text=True, check=True)
-        session = created.stdout.strip()
-    subprocess.Popen([KITTY, TMUX, "attach-session", "-t", session], start_new_session=True)
+    container, session = main_terminal()
+    subprocess.run([TMUX, "new-window", "-t", session, "-c", str(folder)], check=True)
+    focus = subprocess.run(["i3-msg", f"[con_id={container}] focus"],
+                           capture_output=True, text=True, check=True)
+    if not all(result.get("success") for result in json.loads(focus.stdout)):
+        raise RuntimeError("Tmux window created, but could not focus the main terminal.")
 
 
 if __name__ == "__main__":

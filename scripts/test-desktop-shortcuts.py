@@ -61,6 +61,13 @@ with tempfile.TemporaryDirectory() as directory:
     folder = Path(directory) / "project with spaces; literal"
     folder.mkdir()
     calls = []
+    main_tree = {"type": "workspace", "num": 1, "nodes": [
+        {"id": 42, "window": 100, "window_properties": {"class": "kitty"}}
+    ]}
+
+    def process_status(path, *args, **kwargs):
+        parents = {201: 202, 202: 200, 301: 300, 300: 1}
+        return f"PPid:\t{parents.get(int(path.parts[2]), 1)}\n"
 
     def launcher_run(args, **kwargs):
         calls.append(args)
@@ -68,15 +75,42 @@ with tempfile.TemporaryDirectory() as directory:
             return reply(str(folder) + "\n")
         if args[0] == "rofi":
             return reply("0\n")
-        if args[1] == "list-sessions":
-            return reply("100\t$1\n200\t$2\n")
+        if args[0] == "i3-msg":
+            return reply(json.dumps(main_tree) if "get_tree" in args else '[{"success":true}]')
+        if args[0] == "xprop":
+            return reply("_NET_WM_PID(CARDINAL) = 200")
+        if args[1] == "list-clients":
+            return reply("201\t$1\n301\t$2\n")
         return reply()
 
     with patch.object(launcher.subprocess, "run", side_effect=launcher_run), \
+         patch.object(launcher.Path, "read_text", process_status), \
          patch.object(launcher.subprocess, "Popen") as launch:
         launcher.main()
-        assert [launcher.TMUX, "new-window", "-t", "$2", "-c", str(folder)] in calls
-        assert launch.call_args.args[0][-2:] == ["-t", "$2"]
+        assert [launcher.TMUX, "new-window", "-t", "$1", "-c", str(folder)] in calls
+        assert ["i3-msg", "[con_id=42] focus"] in calls
+        launch.assert_not_called()
+    for candidate in ({"nodes": []}, {"type": "workspace", "num": 1, "nodes": [
+        {"id": 42, "window": 100, "window_properties": {"class": "kitty"}},
+        {"id": 43, "window": 101, "window_properties": {"class": "kitty"}},
+    ]}):
+        calls.clear()
+
+        def failed_target_run(args, **kwargs):
+            if "get_tree" in args:
+                return reply(json.dumps(candidate))
+            if args[0] == "xprop" and args[2] == "101":
+                return reply("_NET_WM_PID(CARDINAL) = 300")
+            return launcher_run(args, **kwargs)
+
+        with patch.object(launcher.subprocess, "run", side_effect=failed_target_run), \
+             patch.object(launcher.Path, "read_text", process_status):
+            try:
+                launcher.main()
+                raise AssertionError("Missing or ambiguous main terminal must be rejected")
+            except RuntimeError as error:
+                assert "one main tmux terminal" in str(error)
+        assert not any("new-window" in args or "new-session" in args for args in calls)
     with patch.object(launcher.subprocess, "run", side_effect=[reply(str(folder)), reply(code=1)]), \
          patch.object(launcher.subprocess, "Popen") as launch:
         launcher.main()
