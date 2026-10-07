@@ -33,7 +33,7 @@ ln -s ~/thomas_config/blerc ~/.blerc
 
 
 # Set up i3wm
-sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl conky-all -y
+sudo ${DEFAULT_PACKAGE_MANAGER} install i3 i3status i3lock dmenu suckless-tools picom feh polybar playerctl conky-all copyq copyq-plugins xclip -y
 rm -rf ~/.config/i3
 ln -s ~/thomas_config/i3 ~/.config/i3
 ## Scaling global

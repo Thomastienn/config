@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Stream home directories into Rofi and open the selection in Nemo."""
+"""Stream home folders or documents into Rofi and open the selection."""
 
 import html
 from collections import deque
@@ -9,14 +9,22 @@ import subprocess
 import sys
 
 
-def scan_command():
-    return [sys.executable, "-u", str(Path(__file__).resolve()), "--scan"]
+DOCUMENT_EXTENSIONS = {
+    ".pdf", ".doc", ".docx", ".odt", ".rtf", ".txt", ".md", ".rst", ".org",
+    ".typ", ".tex", ".ppt", ".pptx", ".odp", ".xls", ".xlsx", ".ods", ".csv",
+}
 
 
-def scan_folders():
+def scan_command(documents=False):
+    return [sys.executable, "-u", str(Path(__file__).resolve()),
+            "--scan-documents" if documents else "--scan"]
+
+
+def scan_folders(documents=False):
     excluded = {"node_modules", "target", "venv", "__pycache__", "build", "dist"}
     pending = deque([Path(".")])
-    print("~/")
+    if not documents:
+        print("~/")
     while pending:
         parent = pending.popleft()
         try:
@@ -28,24 +36,27 @@ def scan_folders():
                         continue
                     try:
                         if entry.is_dir():
-                            print("~/" + str(path))
+                            if not documents:
+                                print("~/" + str(path))
                             if not entry.is_symlink():
                                 pending.append(path)
+                        elif documents and path.suffix.lower() in DOCUMENT_EXTENSIONS and entry.is_file():
+                            print("~/" + str(path))
                     except OSError:
                         continue
         except OSError:
             continue
 
 
-def main():
+def main(documents=False):
     home = Path.home()
-    scan = subprocess.Popen(scan_command(), cwd=home, stdout=subprocess.PIPE,
+    scan = subprocess.Popen(scan_command(documents), cwd=home, stdout=subprocess.PIPE,
                             stderr=subprocess.DEVNULL)
     try:
         choice = subprocess.run(
             ["rofi", "-dmenu", "-i", "-matching", "fuzzy", "-sort", "-no-custom",
              "-async-pre-read", "0", "-format", "s", "-theme-str",
-             'entry { placeholder: "Open folder in Nemo…"; }'],
+             'entry { placeholder: "' + ("Open document…" if documents else "Open folder in Nemo…") + '"; }'],
             stdin=scan.stdout, capture_output=True, text=True,
         )
     finally:
@@ -66,18 +77,18 @@ def main():
         return
     if not selected.startswith("~/") or ".." in Path(selected[2:]).parts:
         raise RuntimeError("Invalid folder selection.")
-    folder = home / selected[2:]
-    if not folder.is_dir():
-        raise RuntimeError(f"Folder no longer exists: {folder}")
-    subprocess.Popen(["nemo", str(folder)], start_new_session=True)
+    path = home / selected[2:]
+    if not (path.is_file() if documents else path.is_dir()):
+        raise RuntimeError(f"{'File' if documents else 'Folder'} no longer exists: {path}")
+    subprocess.Popen(["xdg-open" if documents else "nemo", str(path)], start_new_session=True)
 
 
 if __name__ == "__main__":
     try:
-        if sys.argv[1:] == ["--scan"]:
-            scan_folders()
+        if sys.argv[1:] in (["--scan"], ["--scan-documents"]):
+            scan_folders(documents=sys.argv[1] == "--scan-documents")
         else:
-            main()
+            main(documents=sys.argv[1:] == ["--documents"])
     except BrokenPipeError:
         pass
     except (OSError, RuntimeError, subprocess.SubprocessError) as error:

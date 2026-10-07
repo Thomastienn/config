@@ -12,24 +12,33 @@ focus_follows_mouse no
 # ================================================================
 # VOLUME CONTROL
 # ================================================================
+# shortcut: Volume up
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5% && notify-send -t 1000 -a "volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1 | tr -d '%')" -r 1111 "Volume Up"
+# shortcut: Volume down
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5% && notify-send -t 1000 -a "volume" -h "int:value:$(pactl get-sink-volume @DEFAULT_SINK@ | grep -oP '\d+%' | head -1 | tr -d '%')" -r 1111 "Volume Down"
+# shortcut: Toggle speaker mute
 bindsym XF86AudioMute exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && sleep 0.1 && notify-send -t 1000 -a "volume" -r 1111 "$(pactl get-sink-mute @DEFAULT_SINK@ | grep -q 'yes' && echo 'Muted' || echo 'Unmuted')"
 
 # Mic mute toggle with visual feedback
+# shortcut: Toggle microphone mute
 bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ toggle && sleep 0.1 && notify-send -t 1000 -a "microphone" -r 1112 "$(pactl get-source-mute @DEFAULT_SOURCE@ | grep -q 'yes' && echo 'Mic Muted' || echo 'Mic Unmuted')" && polybar-msg action microphone hook 0
 
 # ================================================================
 # BRIGHTNESS CONTROL
 # ================================================================
+# shortcut: Brightness up
 bindsym XF86MonBrightnessUp exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh up
+# shortcut: Brightness down
 bindsym XF86MonBrightnessDown exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh down
 
 # ================================================================
 # SCREENSHOT
 # ================================================================
+# shortcut: Save full-screen screenshot
 bindsym Print exec flameshot full -p /home/thomas/Pictures
+# shortcut: Select screenshot region
 bindsym Shift+Print exec flameshot gui
+# shortcut: Copy screenshot
 bindsym Ctrl+Print exec flameshot screen -c
 
 # ================================================================
@@ -40,6 +49,7 @@ bindsym Ctrl+Print exec flameshot screen -c
 # ================================================================
 # KEYBOARD
 # ================================================================
+# shortcut: Switch keyboard layout
 bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/shapes/scripts/keyboard-switch.sh
 exec --no-startup-id ibus-daemon -drx
 
@@ -99,95 +109,147 @@ exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 
 # ActivityWatch
 exec --no-startup-id ~/Downloads/activitywatch/aw-qt
+exec --no-startup-id copyq
 
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
+# shortcut: Quick task capture
 bindsym $mod+t exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/quick-task.py
+# shortcut: Dropdown terminal
 bindsym $mod+grave exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-terminal.py
+# shortcut: Open project in main tmux
 bindsym $mod+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/project-launcher.py
+# shortcut: Find folder in Nemo
 bindsym $mod+Shift+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/nemo-folder.py
+# shortcut: Clipboard history
+bindsym $mod+Ctrl+v exec --no-startup-id copyq toggle
+# shortcut: Screenshot to text
+bindsym $mod+Print exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/screenshot-text.py
+# shortcut: Find document
+bindsym $mod+Ctrl+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/nemo-folder.py --documents
+# shortcut: Find keyboard shortcut
+bindsym $mod+F1 exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/shortcut-finder.py
+# shortcut: Open terminal
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
+# shortcut: Open Brave browser
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
+# shortcut: Open Nemo file explorer
 bindsym $mod+Shift+m exec nemo
+# shortcut: Open Discord
 bindsym $mod+Shift+d exec flatpak run com.discordapp.Discord
+# shortcut: Open OBS Studio
 bindsym $mod+Shift+o exec flatpak run com.obsproject.Studio
 
 # Cinnamon
+# shortcut: Open desktop settings
 bindsym $mod+Shift+z exec cinnamon-settings
 
 # Kill focused window (vim-style)
+# shortcut: Close focused window
 bindsym $mod+q kill
+# shortcut: Close focused window
 bindsym $mod+Shift+q kill
 
 # Application launcher
+# shortcut: Launch application
 bindsym $mod+d exec --no-startup-id rofi -show drun
+# shortcut: Switch application window
 bindsym $mod+x exec --no-startup-id rofi -show window
+# shortcut: SSH connection menu
 bindsym $mod+m exec --no-startup-id rofi -show ssh
 
 # Virtualization
+# shortcut: Open virtual machine manager
 bindsym $mod+Shift+v exec virt-manager
 
 # Zooming
+# shortcut: Screen magnifier
 bindsym $mod+z exec --no-startup-id ~/tools/boomer/boomer
 
 # ================================================================
 # VIM-STYLE NAVIGATION
 # ================================================================
 # Change focus (vim hjkl)
+# shortcut: Focus left
 bindsym $mod+h focus left
+# shortcut: Focus down
 bindsym $mod+j focus down
+# shortcut: Focus up
 bindsym $mod+k focus up
+# shortcut: Focus right
 bindsym $mod+l focus right
 
 # Alternative: arrow keys
+# shortcut: Focus left
 bindsym $mod+Left focus left
+# shortcut: Focus down
 bindsym $mod+Down focus down
+# shortcut: Focus up
 bindsym $mod+Up focus up
+# shortcut: Focus right
 bindsym $mod+Right focus right
 
 # Move focused window (vim hjkl with Shift)
+# shortcut: Move left
 bindsym $mod+Shift+h move left
+# shortcut: Move down
 bindsym $mod+Shift+j move down
+# shortcut: Move up
 bindsym $mod+Shift+k move up
+# shortcut: Move right
 bindsym $mod+Shift+l move right
 
 # Alternative: arrow keys with Shift
+# shortcut: Move left
 bindsym $mod+Shift+Left move left
+# shortcut: Move down
 bindsym $mod+Shift+Down move down
+# shortcut: Move up
 bindsym $mod+Shift+Up move up
+# shortcut: Move right
 bindsym $mod+Shift+Right move right
 
 # ================================================================
 # WINDOW SPLITS (Vim-style)
 # ================================================================
 # Split in horizontal orientation (like vim :sp)
+# shortcut: Split horizontally
 bindsym $mod+s split h
 
 # Split in vertical orientation (like vim :vsp)
+# shortcut: Split vertically
 bindsym $mod+v split v
 
 # ================================================================
 # LAYOUTS
 # ================================================================
 # Fullscreen toggle
+# shortcut: Toggle fullscreen
 bindsym $mod+Shift+f fullscreen toggle
 
 # Change container layout (stacked, tabbed, toggle split)
+# shortcut: Stacked window layout
 bindsym $mod+Shift+s layout stacking
+# shortcut: Tabbed window layout
 bindsym $mod+w layout tabbed
+# shortcut: Toggle split layout
 bindsym $mod+e layout toggle split
 
 # Toggle tiling / floating
+# shortcut: Toggle floating window
 bindsym $mod+Shift+space floating toggle
 
 # Change focus between tiling / floating windows
+# shortcut: Switch between floating and tiled windows
 bindsym $mod+space focus mode_toggle
 
 # Focus the parent container (vim-style with a for "ancestor")
+# shortcut: Focus parent
 bindsym $mod+a focus parent
 
 # Focus the child container
+# shortcut: Focus child
 bindsym $mod+c focus child
 
 # ================================================================
@@ -205,31 +267,53 @@ set $ws9 "9"
 set $ws10 "10"
 
 # Switch to workspace (vim number row)
+# shortcut: Switch to workspace 1
 bindsym $mod+1 workspace number $ws1
+# shortcut: Switch to workspace 2
 bindsym $mod+2 workspace number $ws2
+# shortcut: Switch to workspace 3
 bindsym $mod+3 workspace number $ws3
+# shortcut: Switch to workspace 4
 bindsym $mod+4 workspace number $ws4
+# shortcut: Switch to workspace 5
 bindsym $mod+5 workspace number $ws5
+# shortcut: Switch to workspace 6
 bindsym $mod+6 workspace number $ws6
+# shortcut: Switch to workspace 7
 bindsym $mod+7 workspace number $ws7
+# shortcut: Switch to workspace 8
 bindsym $mod+8 workspace number $ws8
+# shortcut: Switch to workspace 9
 bindsym $mod+9 workspace number $ws9
+# shortcut: Switch to workspace 10
 bindsym $mod+0 workspace number $ws10
 
 # Move focused container to workspace
+# shortcut: Move window to workspace 1
 bindsym $mod+Shift+1 move container to workspace number $ws1
+# shortcut: Move window to workspace 2
 bindsym $mod+Shift+2 move container to workspace number $ws2
+# shortcut: Move window to workspace 3
 bindsym $mod+Shift+3 move container to workspace number $ws3
+# shortcut: Move window to workspace 4
 bindsym $mod+Shift+4 move container to workspace number $ws4
+# shortcut: Move window to workspace 5
 bindsym $mod+Shift+5 move container to workspace number $ws5
+# shortcut: Move window to workspace 6
 bindsym $mod+Shift+6 move container to workspace number $ws6
+# shortcut: Move window to workspace 7
 bindsym $mod+Shift+7 move container to workspace number $ws7
+# shortcut: Move window to workspace 8
 bindsym $mod+Shift+8 move container to workspace number $ws8
+# shortcut: Move window to workspace 9
 bindsym $mod+Shift+9 move container to workspace number $ws9
+# shortcut: Move window to workspace 10
 bindsym $mod+Shift+0 move container to workspace number $ws10
 
 # Navigate workspaces (vim-style with Ctrl+h/l like buffers)
+# shortcut: Previous workspace
 bindsym $mod+Ctrl+h workspace prev
+# shortcut: Next workspace
 bindsym $mod+Ctrl+l workspace next
 
 # ================================================================
@@ -237,35 +321,50 @@ bindsym $mod+Ctrl+l workspace next
 # ================================================================
 mode "resize" {
         # Vim hjkl keys for resizing
+        # shortcut: Shrink window width
         bindsym h resize shrink width 10 px or 10 ppt
+        # shortcut: Grow window height
         bindsym j resize grow height 10 px or 10 ppt
+        # shortcut: Shrink window height
         bindsym k resize shrink height 10 px or 10 ppt
+        # shortcut: Grow window width
         bindsym l resize grow width 10 px or 10 ppt
 
         # Arrow keys
+        # shortcut: Shrink window width
         bindsym Left resize shrink width 10 px or 10 ppt
+        # shortcut: Grow window height
         bindsym Down resize grow height 10 px or 10 ppt
+        # shortcut: Shrink window height
         bindsym Up resize shrink height 10 px or 10 ppt
+        # shortcut: Grow window width
         bindsym Right resize grow width 10 px or 10 ppt
 
         # Exit resize mode: Enter or Escape (vim-style Escape)
+        # shortcut: Exit resize mode
         bindsym Return mode "default"
+        # shortcut: Exit resize mode
         bindsym Escape mode "default"
+        # shortcut: Exit resize mode
         bindsym $mod+r mode "default"
 }
 
+# shortcut: Enter resize mode
 bindsym $mod+r mode "resize"
 
 # ================================================================
 # i3 MANAGEMENT
 # ================================================================
 # Reload configuration (vim-style :source)
+# shortcut: Reload i3 configuration
 bindsym $mod+Shift+c reload
 
 # Restart i3 inplace (polybar restarts via exec_always)
+# shortcut: Restart i3
 bindsym $mod+Shift+r restart
 
 # Power menu
+# shortcut: Power menu
 bindsym $mod+Shift+e exec "~/thomas_config/polybar/shapes/scripts/powermenu.sh"
 
 # ================================================================
@@ -287,6 +386,7 @@ gaps outer 5
 for_window [class="Brave-browser"] border pixel 2
 
 # Floating windows
+for_window [class="(?i)^copyq$"] floating enable, resize set 640 px 480 px, move position center
 for_window [class="^task-dropdown$"] floating enable, resize set 80 ppt 50 ppt, move position center, move scratchpad
 for_window [class="Pavucontrol"] floating enable
 for_window [class="Lxappearance"] floating enable

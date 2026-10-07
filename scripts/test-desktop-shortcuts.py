@@ -18,13 +18,15 @@ def load(name):
 
 
 def reply(stdout="", code=0):
-    return subprocess.CompletedProcess([], code, stdout, "")
+    return subprocess.CompletedProcess([], code, stdout, b"" if isinstance(stdout, bytes) else "")
 
 
 capture = load("quick-task")
 dropdown = load("dropdown-terminal")
 launcher = load("project-launcher")
 nemo = load("nemo-folder")
+ocr = load("screenshot-text")
+finder = load("shortcut-finder")
 real_run = subprocess.run
 
 with tempfile.TemporaryDirectory() as directory:
@@ -153,16 +155,25 @@ with tempfile.TemporaryDirectory() as directory:
     (home / "link").symlink_to(nested, target_is_directory=True)
     (home / "go" / "pkg" / "mod").mkdir(parents=True)
     (nested / "loop").symlink_to(home, target_is_directory=True)
+    document = nested / "Lecture.PDF"
+    document.write_text("Document test")
+    (home / "todo.md").write_text("Notes")
+    (home / ".hidden" / "hidden.pdf").write_text("Excluded")
+    (home / "target" / "generated.pdf").write_text("Excluded")
+    (home / "photo.png").write_text("Not a document")
     paths = real_run(nemo.scan_command(), cwd=home, capture_output=True,
                      text=True, check=True).stdout.splitlines()
     assert set(paths) == {"~/", "~/course work; $(literal)", "~/course work; $(literal)/notes",
                           "~/course work; $(literal)/notes/loop", "~/link", "~/go"}
     assert paths.index("~/go") < paths.index("~/course work; $(literal)/notes")
+    documents = real_run(nemo.scan_command(documents=True), cwd=home,
+                         capture_output=True, text=True, check=True).stdout.splitlines()
+    assert set(documents) == {"~/todo.md", "~/course work; $(literal)/notes/Lecture.PDF"}
     real_popen = subprocess.Popen
     scans = []
 
     def start_scan(*args, **kwargs):
-        if args[0][0] == "nemo":
+        if args[0][0] in ("nemo", "xdg-open"):
             calls.append(args[0])
             return None
         process = real_popen(*args, **kwargs)
@@ -187,5 +198,65 @@ with tempfile.TemporaryDirectory() as directory:
         assert scans[-1].poll() is not None
         launches = [args for args in calls if args[0] == "nemo"]
         assert launches == ([["nemo", str(nested)]] if selection.stdout.startswith("~/course") else [])
+
+    calls = []
+    with patch.object(nemo.Path, "home", return_value=home), \
+         patch.object(nemo.subprocess, "Popen", side_effect=start_scan), \
+         patch.object(nemo.subprocess, "run", return_value=reply("~/course work; $(literal)/notes/Lecture.PDF\n")):
+        nemo.main(documents=True)
+    assert calls == [["xdg-open", str(document)]] and scans[-1].poll() is not None
+
+    sample = home / "ocr.png"
+    real_run(["convert", "-size", "900x140", "xc:white", "-font", "DejaVu-Sans",
+              "-pointsize", "48", "-fill", "black", "-gravity", "center", "-annotate", "0",
+              "Clipboard OCR check", str(sample)], check=True)
+    copied = []
+
+    def ocr_run(args, **kwargs):
+        if args[0] == "flameshot":
+            return reply(sample.read_bytes())
+        if args[0] == "xclip":
+            copied.append(kwargs["input"])
+            return reply()
+        if args[0] == "notify-send":
+            return reply()
+        return real_run(args, **kwargs)
+
+    with patch.object(ocr.subprocess, "run", side_effect=ocr_run):
+        ocr.main()
+    assert copied == [b"Clipboard OCR check"]
+    with patch.object(ocr.subprocess, "run", return_value=reply(b"", code=1)) as run:
+        ocr.main()
+        assert run.call_count == 1
+    with patch.object(ocr.subprocess, "run", side_effect=[reply(b"PNG"), reply(b""), reply()]) as run:
+        ocr.main()
+        assert not any(call.args[0][0] == "xclip" for call in run.call_args_list)
+    with patch.object(ocr.subprocess, "run", side_effect=[reply(b"PNG"), reply(b"", code=2)]) as run:
+        try:
+            ocr.main()
+            raise AssertionError("Recognition error must be reported")
+        except RuntimeError:
+            assert run.call_count == 2
+
+rows = finder.shortcuts('''set $mod Mod4
+# shortcut: Open terminal
+bindsym $mod+Return exec kitty
+mode "resize" {
+    # shortcut: Shrink width
+    bindsym h resize shrink width 10 px
+}
+bindsym --release $mod+F2 exec \\
+    echo fallback
+''')
+assert rows == ["Super+Enter — Open terminal", "Resize mode: h — Shrink width",
+                "Super+F2 — exec echo fallback"]
+config = Path(__file__).resolve().parents[1] / "i3/config"
+current_rows = finder.shortcuts(config.read_text())
+assert "Super+Print — Screenshot to text" in current_rows
+assert "Super+Ctrl+p — Find document" in current_rows
+with patch.object(finder.Path, "read_text", return_value=config.read_text()), \
+     patch.object(finder.subprocess, "run", side_effect=[reply("0"), reply()]) as run:
+    finder.main()
+    assert [call.args[0][0] for call in run.call_args_list] == ["rofi", "notify-send"]
 
 print("Desktop shortcut checks passed")
