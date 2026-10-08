@@ -1,67 +1,56 @@
+# Cozy Mint notifications: quiet cards, clear titles, compact system controls.
 [global]
-    ### Display ###
     monitor = 0
     follow = none
-    
-    ### Geometry ###
-    width = (320, 420)
-    height = (0, 220)
+
+    width = 360
+    height = (0, 240)
     origin = top-right
-    offset = (20, 50)
+    offset = (24, 58)
     scale = 0
     notification_limit = 3
-    
-    ### Progress bar ###
+
     progress_bar = true
-    progress_bar_height = 10
-    progress_bar_frame_width = 1
-    progress_bar_min_width = 240
-    progress_bar_max_width = 360
-    progress_bar_corner_radius = 4
-    
-    ### Icons ###
+    progress_bar_height = 6
+    progress_bar_frame_width = 0
+    progress_bar_min_width = 200
+    progress_bar_max_width = 324
+    progress_bar_corner_radius = 3
+
     icon_position = left
     min_icon_size = 32
     max_icon_size = 32
-    icon_path = /usr/share/icons/Papirus-Dark/32x32/status/:/usr/share/icons/Papirus-Dark/32x32/devices/:/usr/share/icons/Papirus-Dark/32x32/apps/
-    icon_corner_radius = 6
-    
-    ### Text ###
+    enable_recursive_icon_lookup = true
+    icon_theme = Papirus-Dark, Adwaita
+    default_icon = dialog-information
+    icon_corner_radius = 0
+
     font = ComicShannsMono Nerd Font 10
-    line_height = 4
+    line_height = 3
     markup = full
-    
-    # Clean format - %% escapes the percent sign
-    format = "<span size='small' alpha='70%%'>%a</span>\n<b><span size='large'>%s</span></b>\n%b"
-    
+    format = "<b><span size='large'>%s</span></b>\n<span alpha='85%%'>%b</span>\n<span size='small' alpha='80%%'>%a</span>"
     alignment = left
     vertical_alignment = center
     show_age_threshold = 60
-    ellipsize = middle
+    ellipsize = end
     ignore_newline = no
     stack_duplicates = true
     hide_duplicate_count = false
     show_indicators = no
-    
-    ### Styling - VISIBLE BOX ###
-    separator_height = 2
-    padding = 12
-    horizontal_padding = 12
-    text_icon_padding = 12
+
+    separator_height = 0
+    padding = 16
+    horizontal_padding = 18
+    text_icon_padding = 14
     frame_width = 1
-    gap_size = 8
+    gap_size = 12
     separator_color = frame
     sort = yes
-    
-    ### NO TRANSPARENCY - Solid notifications ###
     transparency = 0
-    corner_radius = 8
-    
-    ### History ###
+    corner_radius = 14
+
     sticky_history = yes
     history_length = 30
-    
-    ### Behavior ###
     dmenu = /usr/bin/rofi -dmenu -p dunst:
     browser = /usr/bin/brave
     always_run_script = true
@@ -70,34 +59,26 @@
     ignore_dbusclose = false
     force_xwayland = false
     force_xinerama = false
-    
-    ### Mouse ###
     mouse_left_click = do_action, close_current
     mouse_middle_click = close_all
     mouse_right_click = close_current
-    
-    ### Idle ###
     idle_threshold = 120
 
 [experimental]
     per_monitor_dpi = false
 
-# ================================================================
-# URGENCY LEVELS - Visible, Eye-Friendly, Obsidian Steel
-# ================================================================
-
 [urgency_low]
-    background = "#272C27"
+    background = "#191B19"
     foreground = "#ABAFA4"
     frame_color = "#46534A"
     highlight = "#A7CCAE"
     timeout = 4
 
 [urgency_normal]
-    background = "#272C27"
+    background = "#191B19"
     foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
-    highlight = "#C0AFD5"
+    frame_color = "#C0AFD5"
+    highlight = "#A7CCAE"
     timeout = 6
 
 [urgency_critical]
@@ -107,211 +88,127 @@
     highlight = "#DBA0AA"
     timeout = 0
 
-# ================================================================
-# APP-SPECIFIC RULES
-# Using Nerd Font glyphs (monochrome, same color as text)
-# Note: %% escapes percent sign in format strings
-# ================================================================
-
-# Volume Up - 󰝝 glyph (plus)
+# SVG paths cover Papirus status icons missing from its 32px theme lookup.
 [volume-up]
     appname = "volume"
     summary = "Volume Up"
-    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝝  %s</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Volume</b>  <span foreground='#A7CCAE'>%n%%</span>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-audio-volume-high.svg
     timeout = 2
-    alignment = center
-    highlight = "#A7CCAE"
-    icon_position = off
 
-# Volume Down - 󰝞 glyph (minus)
 [volume-down]
     appname = "volume"
     summary = "Volume Down"
-    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝞  %s</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Volume</b>  <span foreground='#A7CCAE'>%n%%</span>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-audio-volume-low.svg
     timeout = 2
-    alignment = center
-    highlight = "#A7CCAE"
-    icon_position = off
 
-# Volume Unmuted - 󰕾 glyph (must come before muted rule)
 [volume-unmuted]
     appname = "volume"
     summary = "Unmuted"
-    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰕾  Unmuted</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Volume unmuted</b>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-audio-volume-high.svg
     timeout = 2
-    alignment = center
-    icon_position = off
 
-# Volume Muted - 󰖁 glyph
 [volume-muted]
     appname = "volume"
     summary = "Muted"
-    format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰖁  Muted</span></b>"
-    background = "#272C27"
+    format = "<b>Volume muted</b>"
     foreground = "#ABAFA4"
     frame_color = "#46534A"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-audio-volume-muted.svg
     timeout = 2
-    alignment = center
-    icon_position = off
 
-# Brightness Up - 󰃠 glyph (bright sun)
 [brightness-up]
     appname = "brightness"
     summary = "Brightness Up"
-    format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃠  %s</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Brightness</b>  <span foreground='#C0AFD5'>%n%%</span>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-display-brightness-high.svg
+    highlight = "#C0AFD5"
     timeout = 2
-    alignment = center
-    highlight = "#A7CCAE"
-    icon_position = off
 
-# Brightness Down - 󰃞 glyph (dim sun)
 [brightness-down]
     appname = "brightness"
     summary = "Brightness Down"
-    format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃞  %s</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Brightness</b>  <span foreground='#C0AFD5'>%n%%</span>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-display-brightness-low.svg
+    highlight = "#C0AFD5"
     timeout = 2
-    alignment = center
-    highlight = "#A7CCAE"
-    icon_position = off
 
-# Mic Unmuted - 󰍬 glyph (must come before muted rule)
 [mic-unmuted]
     appname = "microphone"
     summary = "*Unmuted*"
-    format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍬  Unmuted</span></b>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    format = "<b>Microphone unmuted</b>"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/microphone-sensitivity-high.svg
     timeout = 2
-    alignment = center
-    icon_position = off
 
-# Mic Muted - 󰍭 glyph
 [mic-muted]
     appname = "microphone"
     summary = "*Muted*"
-    format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍭  Muted</span></b>"
-    background = "#272C27"
+    format = "<b>Microphone muted</b>"
     foreground = "#ABAFA4"
     frame_color = "#46534A"
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/microphone-sensitivity-muted.svg
     timeout = 2
-    alignment = center
-    icon_position = off
 
-# Screenshot - 󰹑 glyph
+# App rules supply an icon only when the sender does not provide one.
+[taskwarrior]
+    appname = "Taskwarrior"
+    default_icon = /usr/share/icons/Papirus-Dark/24x24/actions/view-task.svg
+
 [screenshot]
     appname = "*creenshot*"
     summary = "*creenshot*"
-    format = "<span size='small' alpha='70%%'>SCREENSHOT</span>\n<b><span size='large'>󰹑  Captured</span></b>\n<span font_family='ComicShannsMono Nerd Font' size='small'>%b</span>"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#C0AFD5"
+    default_icon = /usr/share/icons/Papirus-Dark/symbolic/devices/camera-photo-symbolic.svg
     timeout = 3
-    icon_position = off
 
-# Spotify/Music - 󰎆 glyph
 [spotify]
     appname = "*potify*"
-    format = "<span size='small' alpha='70%%'>󰎆  NOW PLAYING</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    default_icon = spotify
     timeout = 4
-    icon_position = off
 
-# Battery Warning - 󰁺 glyph
 [battery]
     appname = "*attery*"
-    format = "<span size='small' alpha='70%%'>󰁺  BATTERY</span>\n<b><span size='large'>%s</span></b>\n%b"
     urgency = critical
     background = "#3A2730"
     foreground = "#EEE8DC"
     frame_color = "#DBA0AA"
-    icon_position = off
+    default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-battery-low.svg
 
-# Network - 󰖩 glyph
 [network]
     appname = "*etwork*"
-    format = "<span size='small' alpha='70%%'>󰖩  NETWORK</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#C0AFD5"
+    default_icon = /usr/share/icons/Papirus-Dark/symbolic/devices/network-wireless-symbolic.svg
     timeout = 4
-    icon_position = off
 
-# Discord - 󰙯 glyph
 [discord]
     appname = "discord"
-    format = "<span size='small' alpha='70%%'>󰙯  DISCORD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    default_icon = discord
     timeout = 5
-    icon_position = off
 
 [discord-dm]
     appname = "discord"
     summary = "Direct Message"
-    format = "<span size='small' alpha='70%%'>󰙯  DISCORD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    default_icon = discord
     timeout = 5
-    icon_position = off
 
-# Terminal - 󰆍 glyph
 [kitty]
     appname = "kitty"
-    format = "<span size='small' alpha='70%%'>󰆍  TERMINAL</span>\n<b><span size='large'>%s</span></b>\n<span font_family='ComicShannsMono Nerd Font'>%b</span>"
-    background = "#272C27"
-    foreground = "#C0AFD5"
-    frame_color = "#A7CCAE"
+    default_icon = utilities-terminal
     timeout = 5
-    icon_position = off
 
-# Brave Browser - 󰖟 glyph
 [brave]
     appname = "Brave*"
-    format = "<span size='small' alpha='70%%'>󰖟  BROWSER</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    default_icon = brave-browser
     timeout = 5
-    icon_position = off
 
-# Downloads - 󰇚 glyph
 [brave-download]
     appname = "Brave*"
     summary = "*ownload*"
-    format = "<span size='small' alpha='70%%'>󰇚  DOWNLOAD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#C0AFD5"
+    default_icon = /usr/share/icons/Papirus-Dark/24x24/actions/document-save.svg
     timeout = 4
-    icon_position = off
 
-# System Updates - 󰚰 glyph
 [updates]
     appname = "*pdate*"
     summary = "*pdate*"
-    format = "<span size='small' alpha='70%%'>󰚰  SYSTEM</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#272C27"
-    foreground = "#EEE8DC"
-    frame_color = "#A7CCAE"
+    default_icon = /usr/share/icons/Papirus-Dark/symbolic/status/software-update-available-symbolic.svg
     timeout = 8
-    icon_position = off
