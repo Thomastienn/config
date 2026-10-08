@@ -1,10 +1,10 @@
-/* colors - Obsidian Steel Theme */
+/* Cozy Mint */
 
 * {
   al:    #00000000;
-  bg:    #121212FF;
-  bg1:   #4A5568FF;
-  bg2:   #5C6370FF;
-  bg3:   #6E8898FF;
-  fg:    #C9C9C9FF;
+  bg:    #191B19FF;
+  bg1:   #272C27FF;
+  bg2:   #ABAFA4FF;
+  bg3:   #403849FF;
+  fg:    #EEE8DCFF;
 }

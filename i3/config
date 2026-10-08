@@ -1,11 +1,11 @@
 # i3 config file (v4)
-# Obsidian Steel Theme - Vim-style keybinds
+# Cozy Mint Theme - Vim-style keybinds
 
 # ================================================================
 # GENERAL SETTINGS
 # ================================================================
 set $mod Mod4
-font pango:monospace 10
+font pango:ComicShannsMono Nerd Font 10
 floating_modifier $mod
 focus_follows_mouse no
 
@@ -54,21 +54,23 @@ bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/shapes/scripts
 exec --no-startup-id ibus-daemon -drx
 
 # ================================================================
-# THEME COLORS (Obsidian Steel - Eye-Friendly Dark Professional)
+# THEME COLORS (Cozy Mint)
 # ================================================================
-set $bg-color            #6E8898
-set $inactive-bg-color   #121212
-set $text-color          #C9C9C9
-set $inactive-text-color #5C6370
-set $urgent-bg-color     #B87A5E
-set $indicator-color     #8FA3B0
-set $border-color        #4A5568
+set $bg-color            #272C27
+set $inactive-bg-color   #191B19
+set $inactive-border-color #46534A
+set $text-color          #EEE8DC
+set $inactive-text-color #ABAFA4
+set $urgent-bg-color     #3A2730
+set $urgent-color        #DBA0AA
+set $indicator-color     #C0AFD5
+set $border-color        #A7CCAE
 
 # Window colors         border              background          text                 indicator           child_border
 client.focused          $border-color       $bg-color           $text-color          $indicator-color    $border-color
-client.unfocused        $inactive-bg-color  $inactive-bg-color  $inactive-text-color $inactive-bg-color  $inactive-bg-color
-client.focused_inactive $inactive-bg-color  $inactive-bg-color  $inactive-text-color $inactive-bg-color  $inactive-bg-color
-client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color          $urgent-bg-color    $urgent-bg-color
+client.unfocused        $inactive-border-color $inactive-bg-color $inactive-text-color $inactive-bg-color $inactive-border-color
+client.focused_inactive $inactive-border-color $inactive-bg-color $inactive-text-color $inactive-bg-color $inactive-border-color
+client.urgent           $urgent-color       $urgent-bg-color    $text-color          $urgent-color       $urgent-color
 
 # ================================================================
 # AUTOSTART APPLICATIONS

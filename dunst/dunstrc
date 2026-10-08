@@ -9,25 +9,25 @@
     origin = top-right
     offset = (20, 50)
     scale = 0
-    notification_limit = 4
+    notification_limit = 3
     
     ### Progress bar ###
     progress_bar = true
     progress_bar_height = 10
     progress_bar_frame_width = 1
-    progress_bar_min_width = 300
-    progress_bar_max_width = 400
+    progress_bar_min_width = 240
+    progress_bar_max_width = 360
     progress_bar_corner_radius = 4
     
     ### Icons ###
     icon_position = left
-    min_icon_size = 48
-    max_icon_size = 64
-    icon_path = /usr/share/icons/Papirus-Dark/48x48/status/:/usr/share/icons/Papirus-Dark/48x48/devices/:/usr/share/icons/Papirus-Dark/48x48/apps/
+    min_icon_size = 32
+    max_icon_size = 32
+    icon_path = /usr/share/icons/Papirus-Dark/32x32/status/:/usr/share/icons/Papirus-Dark/32x32/devices/:/usr/share/icons/Papirus-Dark/32x32/apps/
     icon_corner_radius = 6
     
     ### Text ###
-    font = JetBrainsMono Nerd Font 10
+    font = ComicShannsMono Nerd Font 10
     line_height = 4
     markup = full
     
@@ -45,17 +45,17 @@
     
     ### Styling - VISIBLE BOX ###
     separator_height = 2
-    padding = 20
-    horizontal_padding = 22
-    text_icon_padding = 18
-    frame_width = 2
+    padding = 12
+    horizontal_padding = 12
+    text_icon_padding = 12
+    frame_width = 1
     gap_size = 8
     separator_color = frame
     sort = yes
     
     ### NO TRANSPARENCY - Solid notifications ###
     transparency = 0
-    corner_radius = 10
+    corner_radius = 8
     
     ### History ###
     sticky_history = yes
@@ -87,24 +87,24 @@
 # ================================================================
 
 [urgency_low]
-    background = "#232A35"
-    foreground = "#A0AEC0"
-    frame_color = "#4A5568"
-    highlight = "#6E8898"
+    background = "#272C27"
+    foreground = "#ABAFA4"
+    frame_color = "#46534A"
+    highlight = "#A7CCAE"
     timeout = 4
 
 [urgency_normal]
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
-    highlight = "#8FA3B0"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
+    highlight = "#C0AFD5"
     timeout = 6
 
 [urgency_critical]
-    background = "#2D2832"
-    foreground = "#F5F0EB"
-    frame_color = "#B87A5E"
-    highlight = "#B87A5E"
+    background = "#3A2730"
+    foreground = "#EEE8DC"
+    frame_color = "#DBA0AA"
+    highlight = "#DBA0AA"
     timeout = 0
 
 # ================================================================
@@ -118,12 +118,12 @@
     appname = "volume"
     summary = "Volume Up"
     format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝝  %s</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
-    highlight = "#6E8898"
+    highlight = "#A7CCAE"
     icon_position = off
 
 # Volume Down - 󰝞 glyph (minus)
@@ -131,12 +131,12 @@
     appname = "volume"
     summary = "Volume Down"
     format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰝞  %s</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
-    highlight = "#6E8898"
+    highlight = "#A7CCAE"
     icon_position = off
 
 # Volume Unmuted - 󰕾 glyph (must come before muted rule)
@@ -144,9 +144,9 @@
     appname = "volume"
     summary = "Unmuted"
     format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰕾  Unmuted</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
     icon_position = off
@@ -156,9 +156,9 @@
     appname = "volume"
     summary = "Muted"
     format = "<span size='small' alpha='70%%'>VOLUME</span>\n<b><span size='x-large'>󰖁  Muted</span></b>"
-    background = "#232A35"
-    foreground = "#A0AEC0"
-    frame_color = "#4A5568"
+    background = "#272C27"
+    foreground = "#ABAFA4"
+    frame_color = "#46534A"
     timeout = 2
     alignment = center
     icon_position = off
@@ -168,12 +168,12 @@
     appname = "brightness"
     summary = "Brightness Up"
     format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃠  %s</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
-    highlight = "#6E8898"
+    highlight = "#A7CCAE"
     icon_position = off
 
 # Brightness Down - 󰃞 glyph (dim sun)
@@ -181,12 +181,12 @@
     appname = "brightness"
     summary = "Brightness Down"
     format = "<span size='small' alpha='70%%'>BRIGHTNESS</span>\n<b><span size='x-large'>󰃞  %s</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
-    highlight = "#6E8898"
+    highlight = "#A7CCAE"
     icon_position = off
 
 # Mic Unmuted - 󰍬 glyph (must come before muted rule)
@@ -194,9 +194,9 @@
     appname = "microphone"
     summary = "*Unmuted*"
     format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍬  Unmuted</span></b>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 2
     alignment = center
     icon_position = off
@@ -206,9 +206,9 @@
     appname = "microphone"
     summary = "*Muted*"
     format = "<span size='small' alpha='70%%'>MICROPHONE</span>\n<b><span size='x-large'>󰍭  Muted</span></b>"
-    background = "#232A35"
-    foreground = "#A0AEC0"
-    frame_color = "#4A5568"
+    background = "#272C27"
+    foreground = "#ABAFA4"
+    frame_color = "#46534A"
     timeout = 2
     alignment = center
     icon_position = off
@@ -217,10 +217,10 @@
 [screenshot]
     appname = "*creenshot*"
     summary = "*creenshot*"
-    format = "<span size='small' alpha='70%%'>SCREENSHOT</span>\n<b><span size='large'>󰹑  Captured</span></b>\n<span font_family='monospace' size='small'>%b</span>"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#8FA3B0"
+    format = "<span size='small' alpha='70%%'>SCREENSHOT</span>\n<b><span size='large'>󰹑  Captured</span></b>\n<span font_family='ComicShannsMono Nerd Font' size='small'>%b</span>"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#C0AFD5"
     timeout = 3
     icon_position = off
 
@@ -228,9 +228,9 @@
 [spotify]
     appname = "*potify*"
     format = "<span size='small' alpha='70%%'>󰎆  NOW PLAYING</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 4
     icon_position = off
 
@@ -239,18 +239,18 @@
     appname = "*attery*"
     format = "<span size='small' alpha='70%%'>󰁺  BATTERY</span>\n<b><span size='large'>%s</span></b>\n%b"
     urgency = critical
-    background = "#2D2832"
-    foreground = "#F5F0EB"
-    frame_color = "#B87A5E"
+    background = "#3A2730"
+    foreground = "#EEE8DC"
+    frame_color = "#DBA0AA"
     icon_position = off
 
 # Network - 󰖩 glyph
 [network]
     appname = "*etwork*"
     format = "<span size='small' alpha='70%%'>󰖩  NETWORK</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#8FA3B0"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#C0AFD5"
     timeout = 4
     icon_position = off
 
@@ -258,9 +258,9 @@
 [discord]
     appname = "discord"
     format = "<span size='small' alpha='70%%'>󰙯  DISCORD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 5
     icon_position = off
 
@@ -268,19 +268,19 @@
     appname = "discord"
     summary = "Direct Message"
     format = "<span size='small' alpha='70%%'>󰙯  DISCORD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 5
     icon_position = off
 
 # Terminal - 󰆍 glyph
 [kitty]
     appname = "kitty"
-    format = "<span size='small' alpha='70%%'>󰆍  TERMINAL</span>\n<b><span size='large'>%s</span></b>\n<span font_family='monospace'>%b</span>"
-    background = "#232A35"
-    foreground = "#8FA3B0"
-    frame_color = "#6E8898"
+    format = "<span size='small' alpha='70%%'>󰆍  TERMINAL</span>\n<b><span size='large'>%s</span></b>\n<span font_family='ComicShannsMono Nerd Font'>%b</span>"
+    background = "#272C27"
+    foreground = "#C0AFD5"
+    frame_color = "#A7CCAE"
     timeout = 5
     icon_position = off
 
@@ -288,9 +288,9 @@
 [brave]
     appname = "Brave*"
     format = "<span size='small' alpha='70%%'>󰖟  BROWSER</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 5
     icon_position = off
 
@@ -299,9 +299,9 @@
     appname = "Brave*"
     summary = "*ownload*"
     format = "<span size='small' alpha='70%%'>󰇚  DOWNLOAD</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#8FA3B0"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#C0AFD5"
     timeout = 4
     icon_position = off
 
@@ -310,8 +310,8 @@
     appname = "*pdate*"
     summary = "*pdate*"
     format = "<span size='small' alpha='70%%'>󰚰  SYSTEM</span>\n<b><span size='large'>%s</span></b>\n%b"
-    background = "#232A35"
-    foreground = "#E2E8F0"
-    frame_color = "#6E8898"
+    background = "#272C27"
+    foreground = "#EEE8DC"
+    frame_color = "#A7CCAE"
     timeout = 8
     icon_position = off

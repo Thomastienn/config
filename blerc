@@ -4,109 +4,99 @@ if [[ -f "$HOME/thomas_config/theme.sh" ]]; then
 fi
 
 # ================================================================
-# BLE.SH THEME CONFIGURATION (OBSIDIAN STEEL)
+# BLE.SH THEME CONFIGURATION (COZY MINT)
 # ================================================================
-# Professional dark theme with steel blue accents
+# Professional dark theme with mint and lavender accents
 # Easy on the eyes, high readability
 # ================================================================
 
-# Color reference (256-color):
-# 67  = Steel blue (#6E8898)
-# 109 = Pale steel (#8FA3B0)
-# 60  = Gunmetal (#4A5568)
-# 66  = Iron (#718096)
-# 242 = Dim gray (#5C6370)
-# 137 = Muted copper (#B87A5E)
-# 249 = Silver (#C9C9C9)
-# 252 = Light gray (#EEEEEE)
-
 # General text and defaults
-ble-face syntax_default="fg=249"       # Silver gray
-ble-face disabled="fg=242"             # Dim gray
+ble-face syntax_default="fg=#EEE8DC"       # Cream
+ble-face disabled="fg=#ABAFA4"             # Muted text
 
 # Command structure
-ble-face syntax_command="fg=67,bold"   # Steel blue
-ble-face command_keyword="fg=109,bold" # Pale steel
-ble-face command_builtin="fg=67"       # Steel blue
-ble-face command_builtin_dot="fg=109"  # Pale steel
-ble-face command_alias="fg=66"         # Iron
-ble-face command_function="fg=109"     # Pale steel
-ble-face syntax_function_name="fg=109"
-ble-face argument_option="fg=66"       # Iron
+ble-face syntax_command="fg=#A7CCAE,bold"   # Mint
+ble-face command_keyword="fg=#C0AFD5,bold" # Lavender
+ble-face command_builtin="fg=#A7CCAE"       # Mint
+ble-face command_builtin_dot="fg=#C0AFD5"  # Lavender
+ble-face command_alias="fg=#A7CCAE"         # Mint
+ble-face command_function="fg=#C0AFD5"     # Lavender
+ble-face syntax_function_name="fg=#C0AFD5"
+ble-face argument_option="fg=#A7CCAE"       # Mint
 
 # Variables
-ble-face syntax_varname="fg=109"       # Pale steel
-ble-face varname_array="fg=109,bold"
-ble-face varname_hash="fg=109,bold"
-ble-face varname_expr="fg=66,bold"     # Iron
-ble-face varname_transform="fg=66"
-ble-face varname_export="fg=67,bold"   # Steel blue
-ble-face varname_readonly="fg=67"
-ble-face varname_number="fg=137"       # Muted copper
-ble-face varname_empty="fg=242"
-ble-face varname_unset="fg=242"
-ble-face varname_new="fg=109"          # Pale steel
+ble-face syntax_varname="fg=#C0AFD5"       # Lavender
+ble-face varname_array="fg=#C0AFD5,bold"
+ble-face varname_hash="fg=#C0AFD5,bold"
+ble-face varname_expr="fg=#A7CCAE,bold"     # Mint
+ble-face varname_transform="fg=#A7CCAE"
+ble-face varname_export="fg=#A7CCAE,bold"   # Mint
+ble-face varname_readonly="fg=#A7CCAE"
+ble-face varname_number="fg=#DEC28A"       # Amber
+ble-face varname_empty="fg=#ABAFA4"
+ble-face varname_unset="fg=#ABAFA4"
+ble-face varname_new="fg=#C0AFD5"          # Lavender
 
 # Syntax elements
-ble-face syntax_delimiter="fg=66"      # Iron
-ble-face syntax_brace="fg=67,bold"     # Steel blue
-ble-face syntax_quoted="fg=249"        # Silver (override green default)
-ble-face syntax_quotation="fg=66"      # Iron (override green default)
-ble-face syntax_escape="fg=137"        # Muted copper
-ble-face syntax_expr="fg=109"          # Pale steel
-ble-face syntax_glob="fg=67,bold"      # Steel blue
-ble-face syntax_tilde="fg=109"         # Pale steel
-ble-face syntax_param_expansion="fg=67"
-ble-face syntax_history_expansion="fg=16,bg=67"  # Black on steel blue
-ble-face syntax_document="fg=249"
-ble-face syntax_document_begin="fg=67,bold"
-ble-face syntax_comment="fg=242"       # Dim gray
+ble-face syntax_delimiter="fg=#A7CCAE"      # Mint
+ble-face syntax_brace="fg=#A7CCAE,bold"     # Mint
+ble-face syntax_quoted="fg=#EEE8DC"        # Cream (override green default)
+ble-face syntax_quotation="fg=#A7CCAE"      # Mint (override green default)
+ble-face syntax_escape="fg=#DEC28A"        # Amber
+ble-face syntax_expr="fg=#C0AFD5"          # Lavender
+ble-face syntax_glob="fg=#A7CCAE,bold"      # Mint
+ble-face syntax_tilde="fg=#C0AFD5"         # Lavender
+ble-face syntax_param_expansion="fg=#A7CCAE"
+ble-face syntax_history_expansion="fg=#191B19,bg=#A7CCAE"  # Black on mint
+ble-face syntax_document="fg=#EEE8DC"
+ble-face syntax_document_begin="fg=#A7CCAE,bold"
+ble-face syntax_comment="fg=#ABAFA4"       # Muted text
 
 # Commands (override green defaults)
-ble-face command_file="fg=109"         # Pale steel (override green default)
-ble-face command_directory="fg=67,underline"  # Steel blue
-ble-face command_suffix="fg=252,bg=60"        # Light on gunmetal (override green bg)
-ble-face command_suffix_new="fg=252,bg=124"   # Light on red
+ble-face command_file="fg=#C0AFD5"         # Lavender (override green default)
+ble-face command_directory="fg=#A7CCAE,underline"  # Mint
+ble-face command_suffix="fg=#EEE8DC,bg=#403849"        # Light on gunmetal (override green bg)
+ble-face command_suffix_new="fg=#EEE8DC,bg=#DBA0AA"   # Light on red
 
 # Errors and warnings
-ble-face syntax_error="fg=224,bg=124"        # Soft red
-ble-face argument_error="fg=224,bg=124"
-ble-face filename_warning="fg=137,underline" # Muted copper
-ble-face filename_orphan="fg=242,underline"
-ble-face command_jobs="fg=67,bold"
+ble-face syntax_error="fg=#191B19,bg=#DBA0AA"        # Rose
+ble-face argument_error="fg=#191B19,bg=#DBA0AA"
+ble-face filename_warning="fg=#DEC28A,underline" # Amber
+ble-face filename_orphan="fg=#ABAFA4,underline"
+ble-face command_jobs="fg=#A7CCAE,bold"
 
 # File and directory names
-ble-face filename_directory="fg=67,bold"       # Steel blue
-ble-face filename_directory_sticky="fg=16,bg=67"
-ble-face filename_executable="fg=109"          # Pale steel
-ble-face filename_link="fg=66,underline"       # Iron
-ble-face filename_other="fg=249"               # Silver
-ble-face filename_url="fg=67,underline"        # Steel blue
+ble-face filename_directory="fg=#A7CCAE,bold"       # Mint
+ble-face filename_directory_sticky="fg=#191B19,bg=#A7CCAE"
+ble-face filename_executable="fg=#C0AFD5"          # Lavender
+ble-face filename_link="fg=#A7CCAE,underline"       # Mint
+ble-face filename_other="fg=#EEE8DC"               # Cream
+ble-face filename_url="fg=#A7CCAE,underline"        # Mint
 
 # Highlighting and UI
-ble-face region="bg=60,fg=252"                # Gunmetal bg, light text
-ble-face region_insert="bg=66,fg=252"         # Iron bg
-ble-face region_match="bg=60,fg=252"          # Gunmetal bg
-ble-face region_target="bg=67,fg=16"          # Steel blue bg
-ble-face overwrite_mode="fg=16,bg=137"        # Muted copper
-ble-face vbell="bg=67"                        # Steel blue
-ble-face vbell_erase="bg=242"
-ble-face vbell_flash="fg=67,reverse"          # Steel blue (override green default)
-ble-face prompt_status_line="fg=252,bg=60"    # Light on gunmetal
+ble-face region="bg=#403849,fg=#EEE8DC"                # Lavender selection bg, light text
+ble-face region_insert="bg=#A7CCAE,fg=#EEE8DC"         # Mint bg
+ble-face region_match="bg=#403849,fg=#EEE8DC"          # Lavender selection bg
+ble-face region_target="bg=#A7CCAE,fg=#191B19"          # Mint bg
+ble-face overwrite_mode="fg=#191B19,bg=#DEC28A"        # Amber
+ble-face vbell="bg=#A7CCAE"                        # Mint
+ble-face vbell_erase="bg=#ABAFA4"
+ble-face vbell_flash="fg=#A7CCAE,reverse"          # Mint (override green default)
+ble-face prompt_status_line="fg=#EEE8DC,bg=#403849"    # Light on gunmetal
 
 # Additional file/directory faces (override green defaults)
-ble-face filename_pipe="fg=66,underline,bg=236"      # Iron (override lime default)
-ble-face filename_socket="fg=109,underline,bg=236"   # Pale steel
-ble-face filename_character="fg=249,underline,bg=236"
-ble-face filename_block="fg=137,underline,bg=236"    # Muted copper
-ble-face filename_setuid="fg=16,underline,bg=137"    # Black on copper
-ble-face filename_setgid="fg=16,underline,bg=109"    # Black on pale steel
+ble-face filename_pipe="fg=#A7CCAE,underline,bg=#272C27"      # Mint (override lime default)
+ble-face filename_socket="fg=#C0AFD5,underline,bg=#272C27"   # Lavender
+ble-face filename_character="fg=#EEE8DC,underline,bg=#272C27"
+ble-face filename_block="fg=#DEC28A,underline,bg=#272C27"    # Amber
+ble-face filename_setuid="fg=#191B19,underline,bg=#DEC28A"    # Black on copper
+ble-face filename_setgid="fg=#191B19,underline,bg=#C0AFD5"    # Black on pale steel
 ble-face filename_ls_colors="underline"
 
 # Autocomplete menu
-ble-face auto_complete="bg=236,fg=242"             # Dark bg, dim suggestion
-ble-face menu_filter_input="bg=60,fg=252,bold"     # Gunmetal bg, light text
-ble-face menu_filter_fixed="fg=67,bold"            # Steel blue
-ble-face menu_complete_match="fg=67,bold"          # Steel blue for matched text
-ble-face menu_complete_selected="bg=67,fg=16,bold" # Steel blue bg, dark text
-ble-face cmdinfo_cd_cdpath="fg=67,bg=60"           # Steel blue on gunmetal
+ble-face auto_complete="bg=#272C27,fg=#ABAFA4"             # Dark bg, dim suggestion
+ble-face menu_filter_input="bg=#403849,fg=#EEE8DC,bold"     # Lavender selection bg, light text
+ble-face menu_filter_fixed="fg=#A7CCAE,bold"            # Mint
+ble-face menu_complete_match="fg=#A7CCAE,bold"          # Mint for matched text
+ble-face menu_complete_selected="bg=#A7CCAE,fg=#191B19,bold" # Mint bg, dark text
+ble-face cmdinfo_cd_cdpath="fg=#A7CCAE,bg=#403849"           # Mint on gunmetal

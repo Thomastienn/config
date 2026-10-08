@@ -1,6 +1,6 @@
 #!/bin/bash
 
-icon_mute="ﱝ"
+icon_mute="󰖁"
 
 # Function to get and display status
 get_status() {
@@ -8,7 +8,7 @@ get_status() {
     player_status=$(playerctl -a status 2>/dev/null | head -n1)
 
     if [ -z "$player_status" ]; then
-        echo "$icon_mute No media"
+        echo " $icon_mute No media"
         return
     fi
 
@@ -37,9 +37,9 @@ get_status() {
     elif [[ "$player" == *"firefox"* ]] || [[ "$player" == *"chrome"* ]]; then
         icon=""
     else
-        icon="ﱘ"
+        icon=""
     fi
-    icon="ﱘ"
+    icon=""
 
     # Show play/pause status
     if [ "$player_status" = "Playing" ]; then

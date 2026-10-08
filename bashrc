@@ -103,10 +103,10 @@ show_virtual_env() {
 }
 
 if [ "$color_prompt" = yes ]; then
-	# Sky blue theme prompt - use eval to expand THEME_ variables
-	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR1}\][\t]\[${THEME_RESET}\] \[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(parse_git_branch)\[${THEME_COLOR5}\]\$(parse_git_status)\[${THEME_RESET}\]\n\[${THEME_COLOR4}\]❯ \[${THEME_RESET}\]"
+	# Cozy Mint prompt; clock and system status live in the desktop bar/widgets
+	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(parse_git_branch)\[${THEME_COLOR5}\]\$(parse_git_status)\[${THEME_RESET}\]\n\[${THEME_COLOR4}\]❯ \[${THEME_RESET}\]"
 else
-    PS1='$(show_virtual_env)[\t] \u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
+    PS1='$(show_virtual_env)\u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
 fi
 unset color_prompt force_color_prompt
 
@@ -319,47 +319,7 @@ extract() {
     fi
 }
 
-# Show enhanced intro with live system info
-# Minimalist Terminal Intro - Red Theme
-
-# ================================================================
-# STARTUP BANNER COLOR DEFINITIONS - RED THEME
-# ================================================================
-
-# Color definitions (Red spectrum palette)
-RESET="\033[0m"
-BOLD="\033[1m"
-DIM="\033[2m"
-
-# Grayscale for text
-# Use theme colors
-DARK_GRAY="${THEME_GRAY}"
-LIGHT_GRAY="\033[38;5;250m"
-WHITE="\033[38;5;255m"
-
-# Sky blue spectrum colors (mapped from theme)
-DEEP_BLUE="${THEME_COLOR2}"       # Sky blue
-BRIGHT_BLUE="${THEME_COLOR4}"     # Bright sky blue
-MEDIUM_BLUE="${THEME_COLOR3}"     # Medium sky blue
-LIGHT_BLUE="${THEME_COLOR1}"      # Light sky blue
-PALE_BLUE="${THEME_COLOR6}"       # Pale sky blue
-CYAN_BLUE="${THEME_COLOR5}"       # Cyan blue
-DARK_BLUE="\033[38;5;24m"         # Dark blue
-AZURE="${THEME_COLOR1}"           # Azure
-
-# Color scheme for the banner
-COLOR1=$DEEP_BLUE          # Primary (header, name)
-COLOR2=$LIGHT_BLUE         # Secondary (labels)
-COLOR3=$BRIGHT_BLUE        # Accent 1 (warnings)
-COLOR4=$CYAN_BLUE          # Accent 2 (info)
-COLOR5=$MEDIUM_BLUE        # Accent 3 (success)
-COLOR6=$PALE_BLUE          # Accent 4 (paths)
-GRAY=$DARK_GRAY            # Muted text
-ROSE=$AZURE                # ASCII art color
-
-# Clear terminal with fade effect
-clear
-echo
+# Cozy Mint greeting and name artwork
 
 # Dynamic greeting based on time of day
 HOUR=$(date +%H)
@@ -373,67 +333,14 @@ else
     GREETING="Good Night, Thomas"
 fi
 
-# Minimalist header with sky blue theme
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  ${COLOR1}${BOLD}${GREETING}${RESET}"
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
 echo
-
-# ASCII name with light sky blue
-echo -e "${ROSE}      ████████ ██   ██  ██████  ███    ███  █████  ███████${RESET}"
-echo -e "${ROSE}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${RESET}"
-echo -e "${ROSE}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${RESET}"
-echo -e "${ROSE}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${RESET}"
-echo -e "${ROSE}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${RESET}"
+echo -e "  ${THEME_COLOR3}${THEME_BOLD}${GREETING}${THEME_RESET}"
 echo
-
-# System info
-DATE_TIME=$(date '+%A, %B %d, %Y at %I:%M %p')
-echo -e "  ${GRAY}Today:${RESET}    ${DATE_TIME}"
-
-UPTIME=$(uptime -p | sed 's/up //')
-echo -e "  ${GRAY}Uptime:${RESET}   ${UPTIME}"
-
-MEMORY=$(free -h | awk 'NR==2{printf "%.1fGB / %.1fGB", $3/1024,$2/1024}')
-echo -e "  ${GRAY}Memory:${RESET}   ${MEMORY}"
-
-DISK=$(df -h $HOME | awk 'NR==2{printf "%s / %s", $3,$2}')
-echo -e "  ${GRAY}Storage:${RESET}  ${DISK}"
-
-PWD_DISPLAY=$(pwd | sed "s|$HOME|~|")
-echo -e "  ${GRAY}Location:${RESET} ${COLOR6}${PWD_DISPLAY}${RESET}"
-
-LOAD=$(uptime | awk -F'load average:' '{print $2}' | awk '{print $1}' | sed 's/,//')
-echo -e "  ${GRAY}Load:${RESET}     ${LOAD}"
-
-echo
-
-# Git status if in a git repository
-if git rev-parse --git-dir > /dev/null 2>&1; then
-    BRANCH=$(git branch --show-current 2>/dev/null || echo "detached")
-    STATUS=$(git status --porcelain 2>/dev/null | wc -l)
-    if [ "$STATUS" -eq 0 ]; then
-        GIT_STATUS="${COLOR5}clean${RESET}"
-    else
-        GIT_STATUS="${COLOR4}${STATUS} changes${RESET}"
-    fi
-    echo -e "  ${GRAY}Git:${RESET}      ${COLOR2}${BRANCH}${RESET} (${GIT_STATUS})"
-fi
-
-# Network connectivity test
-# ping -c 1 8.8.8.8 > /dev/null 2>&1
-# if [ $? -eq 0 ]; then
-#     NETWORK="${COLOR5}online${RESET}"
-# else
-#     NETWORK="${COLOR3}offline${RESET}"
-# fi
-# echo -e "  ${DIM}Network:${RESET}  ${NETWORK}"
-
-echo
-
-# Ready indicator
-echo -e "${GRAY}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${RESET}"
-echo -e "  ${COLOR1}${BOLD}⚡ System Ready${RESET}"
+echo -e "${THEME_COLOR1}      ████████ ██   ██  ██████  ███    ███  █████  ███████${THEME_RESET}"
+echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${THEME_RESET}"
+echo -e "${THEME_COLOR1}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${THEME_RESET}"
+echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${THEME_RESET}"
+echo -e "${THEME_COLOR1}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${THEME_RESET}"
 echo
 
 # ================================================================
@@ -519,8 +426,7 @@ fi
 [ -f "$HOME/.ssh/id_ed25519_github" ] && ssh-add ~/.ssh/id_ed25519_github
 [ -f "$HOME/.ssh/id_ed25519_gitlab" ] && ssh-add ~/.ssh/id_ed25519_gitlab
 
-# taskwarrior display all
-[ -f "$HOME/.taskrc" ] && task calendar && task
+# Task calendar and next tasks are visible in Conky; use task for details.
 
 # Unbind Ctrl-S and Ctrl-Q to avoid terminal freeze
 stty -ixon

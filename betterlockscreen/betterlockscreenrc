@@ -8,8 +8,23 @@ fx_list=(dim blur dimblur pixel dimpixel color)
 dim_level=40
 blur_level=1
 pixel_scale=10,1000
-solid_color=333333
-bgcolor=000000
+solid_color=191B19
+bgcolor=191B19ff
+
+# Cozy Mint indicators and text
+font="ComicShannsMono Nerd Font"
+ringcolor=A7CCAEff
+ringvercolor=C0AFD5ff
+ringwrongcolor=DBA0AAff
+insidewrongcolor=3A2730ff
+timecolor=EEE8DCff
+greetercolor=EEE8DCff
+layoutcolor=ABAFA4ff
+keyhlcolor=A7CCAEff
+bshlcolor=C0AFD5ff
+verifcolor=C0AFD5ff
+wrongcolor=DBA0AAff
+modifcolor=DEC28Aff
 
 # Default lockscreen effect
 lockscreen_effect=dimblur
@@ -24,4 +39,4 @@ date_format="%A, %d %B"
 greeter="Welcome back!"
 
 # Path to wallpaper
-wallpaper=~/thomas_config/wallpapers/Porsche_911.jpeg
+wallpaper=~/thomas_config/wallpapers/hoppers.png

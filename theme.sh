@@ -2,34 +2,34 @@
 # ================================================================
 # CENTRALIZED THEME CONFIGURATION
 # ================================================================
-# Change these colors to switch the entire theme across all tools
-# Current theme: Obsidian Steel (Eye-Friendly Dark Professional)
+# Shell and Conky palette, coordinated with the native app configs.
+# Current theme: Cozy Mint
 # ================================================================
 
-# Obsidian Steel Theme Colors (ANSI/Terminal)
-export THEME_COLOR1="\033[38;5;67m"     # Steel blue (#6E8898)
-export THEME_COLOR2="\033[38;5;60m"     # Gunmetal (#4A5568)
-export THEME_COLOR3="\033[38;5;109m"    # Pale steel (#8FA3B0)
-export THEME_COLOR4="\033[38;5;66m"     # Iron (#718096)
-export THEME_COLOR5="\033[38;5;242m"    # Dim gray (#5C6370)
-export THEME_COLOR6="\033[38;5;137m"    # Muted copper (#B87A5E)
+# Truecolor shell accents
+export THEME_COLOR1="\033[38;2;167;204;174m"  # Mint (#A7CCAE)
+export THEME_COLOR2="\033[38;2;238;232;220m"  # Cream (#EEE8DC)
+export THEME_COLOR3="\033[38;2;192;175;213m"  # Lavender (#C0AFD5)
+export THEME_COLOR4="\033[38;2;167;204;174m"  # Mint (#A7CCAE)
+export THEME_COLOR5="\033[38;2;219;160;170m"  # Rose (#DBA0AA)
+export THEME_COLOR6="\033[38;2;192;175;213m"  # Lavender (#C0AFD5)
 
 # Standard colors
-export THEME_GRAY="\033[38;5;243m"
+export THEME_GRAY="\033[38;2;171;175;164m"
 export THEME_RESET="\033[00m"
 export THEME_BOLD="\033[1m"
 
 # Tmux Colors (color names for tmux)
-export TMUX_COLOR_PRIMARY="colour67"         # Steel blue for primary
-export TMUX_COLOR_ACCENT="colour109"         # Pale steel for accents
-export TMUX_COLOR_SECONDARY="colour60"       # Gunmetal
-export TMUX_COLOR_TERTIARY="colour137"       # Muted copper for contrast
-export TMUX_COLOR_HIGHLIGHT="colour66"       # Iron for highlights
+export TMUX_COLOR_PRIMARY="#A7CCAE"
+export TMUX_COLOR_ACCENT="#C0AFD5"
+export TMUX_COLOR_SECONDARY="#272C27"
+export TMUX_COLOR_TERTIARY="#DEC28A"
+export TMUX_COLOR_HIGHLIGHT="#A7CCAE"
 
 # Conky Colors (hex for conky - optimized for transparent bg)
-export CONKY_COLOR1="6E8898"    # Steel blue (headers)
-export CONKY_COLOR2="DDDDDD"    # Light gray (values)
-export CONKY_COLOR3="888888"    # Medium gray (labels)
-export CONKY_COLOR4="555555"    # Dark gray (muted)
-export CONKY_GRAPH1="6E8898"    # Graph color 1 (steel blue)
-export CONKY_GRAPH2="8FA3B0"    # Graph color 2 (pale steel)
+export CONKY_COLOR1="A7CCAE"    # Mint headings
+export CONKY_COLOR2="EEE8DC"    # Cream values
+export CONKY_COLOR3="ABAFA4"    # Muted labels
+export CONKY_COLOR4="5D6D5E"    # Sage separators
+export CONKY_GRAPH1="A7CCAE"
+export CONKY_GRAPH2="C0AFD5"

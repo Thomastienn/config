@@ -22,9 +22,9 @@ def render(today, due_dates):
                     continue
                 color = None
                 if day in due_dates:
-                    color = "DC322F" if day == today else "D33682" if day < today else "CB4B16"
+                    color = "DEC28A" if day == today else "DBA0AA" if day < today else "C0AFD5"
                 elif day == today:
-                    color = "268BD2"
+                    color = "A7CCAE"
                 cell = f"{day.day:2}"
                 cells.append(f"${{color #{color}}}{cell}${{color}}" if color else cell)
             lines.append(" ".join(cells))
@@ -33,8 +33,8 @@ def render(today, due_dates):
     rows = ["\n".join(left + "    " + right for left, right in zip(months[i], months[i + 1]))
             for i in range(0, 6, 2)]
     return "\n\n".join(rows) + (
-        "\n\n${color #268BD2}Today${color}  ${color #CB4B16}Due${color}  "
-        "${color #DC322F}Due today${color}  ${color #D33682}Overdue${color}"
+        "\n\n${color #A7CCAE}Today${color}  ${color #C0AFD5}Due${color}  "
+        "${color #DEC28A}Due today${color}  ${color #DBA0AA}Overdue${color}"
     )
 
 
