@@ -123,6 +123,8 @@ exec --no-startup-id copyq
 bindsym $mod+t exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/quick-task.py
 # shortcut: Dropdown terminal
 bindsym $mod+grave exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-terminal.py
+# shortcut: Browser scratchpad (Firefox)
+bindsym $mod+g exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py
 # shortcut: Open project in main tmux
 bindsym $mod+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/project-launcher.py
 # shortcut: Find folder in Nemo
@@ -150,11 +152,11 @@ bindsym $mod+Shift+o exec flatpak run com.obsproject.Studio
 # shortcut: Open desktop settings
 bindsym $mod+Shift+z exec cinnamon-settings
 
-# Kill focused window (vim-style)
-# shortcut: Close focused window
-bindsym $mod+q kill
-# shortcut: Close focused window
-bindsym $mod+Shift+q kill
+# Close normal windows; keep browser scratchpad running when dismissed.
+# shortcut: Close window or hide browser scratchpad
+bindsym $mod+q exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py --close
+# shortcut: Close window or hide browser scratchpad
+bindsym $mod+Shift+q exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py --close
 
 # Application launcher
 # shortcut: Launch application
