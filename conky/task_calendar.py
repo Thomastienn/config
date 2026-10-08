@@ -12,8 +12,12 @@ def render(today, due_dates):
     for offset in range(6):
         year, month = divmod(today.year * 12 + today.month - 1 + offset, 12)
         month += 1
-        lines = [f"{calendar.month_name[month]} {year}".center(20),
-                 "Su Mo Tu We Th Fr Sa"]
+        heading_color = "A7CCAE" if offset == 0 else "EEE8DC"
+        lines = ["${font ComicShannsMono Nerd Font:bold:size=8}"
+                 + f"${{color #{heading_color}}}"
+                 + f"{calendar.month_name[month]} {year}".center(20)
+                 + "${font ComicShannsMono Nerd Font:size=8}${color}",
+                 "${color #ABAFA4}Su Mo Tu We Th Fr Sa${color}"]
         for week in cal.monthdatescalendar(year, month):
             cells = []
             for day in week:
@@ -32,8 +36,8 @@ def render(today, due_dates):
         months.append(lines)
     rows = ["\n".join(left + "    " + right for left, right in zip(months[i], months[i + 1]))
             for i in range(0, 6, 2)]
-    return "\n\n".join(rows) + (
-        "\n\n${color #A7CCAE}Today${color}  ${color #C0AFD5}Due${color}  "
+    return "\n".join(rows) + (
+        "\n${voffset 8}${color #A7CCAE}Today${color}  ${color #C0AFD5}Due${color}  "
         "${color #DEC28A}Due today${color}  ${color #DBA0AA}Overdue${color}"
     )
 

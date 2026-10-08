@@ -58,8 +58,8 @@ def render(report):
     lines = SGR.sub(color_codes, report.replace("$", "$$")).strip("\n").splitlines()
     if not lines:
         return "No pending tasks"
-    return ("${font ComicShannsMono Nerd Font:bold:size=9}" + lines[0]
-            + "${font ComicShannsMono Nerd Font:size=9}\n${hr 1}\n"
+    return ("${color #ABAFA4}${font ComicShannsMono Nerd Font:size=9}" + lines[0]
+            + "${color}\n${color #5D6D5E}${hr 1}${color}\n"
             + "\n".join(lines[1:]) + "${color}")
 
 
