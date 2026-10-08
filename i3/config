@@ -79,6 +79,7 @@ client.urgent           $urgent-color       $urgent-bg-color    $text-color     
 # ================================================================
 exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/hoppers.png
 exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
+exec_always --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/i3-frame-hints.py
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
 exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
@@ -137,7 +138,7 @@ bindsym $mod+F1 exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config
 # shortcut: Open terminal
 bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
 # shortcut: Open Brave browser
-bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
+bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 1'"
 # shortcut: Open Nemo file explorer
 bindsym $mod+Shift+m exec nemo
 # shortcut: Open Discord
@@ -384,14 +385,14 @@ for_window [all] title_window_icon padding 6px
 for_window [class=".*"] title_format "  <b>%title</b>  "
 
 # Border settings
-default_border pixel 2
-default_floating_border pixel 2
-for_window [class=".*"] border pixel 2
+default_border pixel 1
+default_floating_border pixel 1
+for_window [class=".*"] border pixel 1
 gaps inner 10
 gaps outer 5
 
 # Force borders on Brave - match exact class names
-for_window [class="Brave-browser"] border pixel 2
+for_window [class="Brave-browser"] border pixel 1
 
 # Floating windows
 for_window [class="(?i)^copyq$"] floating enable, resize set 640 px 480 px, move position center
