@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "Cozy Mint Gradient",
+  "version": "1.0.0",
+  "description": "Dark sage, cream text, mint accents and a subtle lavender gradient matching the Cozy Mint desktop.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cozy-mint-gradient@thomas-config.local",
+      "strict_min_version": "156.0"
+    }
+  },
+  "theme": {
+    "images": {
+      "additional_backgrounds": [
+        { "linear-gradient": "110deg, #233028 0%, #191B19 55%, #2D2934 100%" }
+      ]
+    },
+    "colors": {
+      "frame": "#191B19",
+      "frame_inactive": "#191B19",
+      "toolbar": "rgba(39, 44, 39, 0.84)",
+      "toolbar_text": "#EEE8DC",
+      "tab_selected": "#272C27",
+      "tab_text": "#A7CCAE",
+      "tab_background_text": "#ABAFA4",
+      "tab_line": "#A7CCAE",
+      "tab_loading": "#C0AFD5",
+      "icons": "#A7CCAE",
+      "icons_attention": "#C0AFD5",
+      "toolbar_field": "#191B19",
+      "toolbar_field_text": "#EEE8DC",
+      "toolbar_field_border": "#46534A",
+      "toolbar_field_focus": "#272C27",
+      "toolbar_field_text_focus": "#EEE8DC",
+      "toolbar_field_border_focus": "#C0AFD5",
+      "toolbar_field_highlight": "#46534A",
+      "toolbar_field_highlight_text": "#EEE8DC",
+      "toolbar_top_separator": "#46534A",
+      "toolbar_bottom_separator": "#191B19",
+      "toolbar_vertical_separator": "#46534A",
+      "button_background_hover": "rgba(167, 204, 174, 0.12)",
+      "button_background_active": "rgba(167, 204, 174, 0.2)",
+      "popup": "#272C27",
+      "popup_text": "#EEE8DC",
+      "popup_border": "#46534A",
+      "popup_highlight": "#46534A",
+      "popup_highlight_text": "#EEE8DC",
+      "ntp_background": "#191B19",
+      "ntp_text": "#EEE8DC",
+      "sidebar": "#191B19",
+      "sidebar_text": "#EEE8DC",
+      "sidebar_border": "#46534A",
+      "sidebar_highlight": "#46534A",
+      "sidebar_highlight_text": "#EEE8DC"
+    },
+    "properties": {
+      "additional_backgrounds_alignment": ["right top"],
+      "additional_backgrounds_tiling": ["no-repeat"],
+      "additional_backgrounds_size": ["100% 100%"],
+      "backgrounds_area": "top_toolbars",
+      "color_scheme": "dark",
+      "content_color_scheme": "dark"
+    }
+  }
+}

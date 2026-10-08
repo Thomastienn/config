@@ -1,0 +1,100 @@
+/* Cozy Mint: dark sage with a quiet mint-to-lavender header. */
+:root {
+  --cozy-bg: #191b19;
+  --cozy-surface: #272c27;
+  --cozy-text: #eee8dc;
+  --cozy-muted: #abafa4;
+  --cozy-mint: #a7ccae;
+  --cozy-lavender: #c0afd5;
+  --cozy-border: #46534a;
+  --cozy-gradient: linear-gradient(110deg, #233028 0%, #191b19 55%, #2d2934 100%);
+
+  color-scheme: dark !important;
+  font-family: "ComicShannsMono Nerd Font", monospace !important;
+  --lwt-accent-color: var(--cozy-bg) !important;
+  --lwt-text-color: var(--cozy-muted) !important;
+  --toolbox-background-color: var(--cozy-bg) !important;
+  --toolbar-background-color: var(--cozy-surface) !important;
+  --toolbar-bgcolor: var(--cozy-surface) !important;
+  --toolbar-color: var(--cozy-text) !important;
+  --toolbar-field-background-color: var(--cozy-bg) !important;
+  --toolbar-field-color: var(--cozy-text) !important;
+  --toolbar-field-border-color: var(--cozy-border) !important;
+  --toolbar-field-focus-background-color: var(--cozy-surface) !important;
+  --toolbar-field-focus-color: var(--cozy-text) !important;
+  --toolbar-field-focus-border-color: var(--cozy-lavender) !important;
+  --toolbarbutton-icon-fill: var(--cozy-mint) !important;
+  --toolbarbutton-hover-background: rgba(167, 204, 174, 0.12) !important;
+  --toolbarbutton-active-background: rgba(167, 204, 174, 0.2) !important;
+  --tab-selected-bgcolor: var(--cozy-surface) !important;
+  --tab-selected-textcolor: var(--cozy-mint) !important;
+  --tab-loading-fill: var(--cozy-lavender) !important;
+  --arrowpanel-background: var(--cozy-surface) !important;
+  --arrowpanel-color: var(--cozy-text) !important;
+  --arrowpanel-border-color: var(--cozy-border) !important;
+  --sidebar-background-color: var(--cozy-bg) !important;
+  --sidebar-text-color: var(--cozy-text) !important;
+  --sidebar-border-color: var(--cozy-border) !important;
+  --focus-outline-color: var(--cozy-lavender) !important;
+}
+
+#navigator-toolbox {
+  background: var(--cozy-gradient) !important;
+  color: var(--cozy-text) !important;
+  border-bottom-color: var(--cozy-border) !important;
+}
+
+#TabsToolbar,
+#nav-bar,
+#PersonalToolbar {
+  background: transparent !important;
+  color: var(--cozy-text) !important;
+}
+
+.tabbrowser-tab {
+  color: var(--cozy-muted) !important;
+}
+
+.tabbrowser-tab:is([selected], [visuallyselected]) {
+  color: var(--cozy-mint) !important;
+}
+
+.tab-background:is([selected], [visuallyselected]) {
+  background: var(--cozy-surface) !important;
+}
+
+#urlbar-background,
+#urlbar .urlbar-background,
+#searchbar {
+  background-color: var(--cozy-bg) !important;
+  border-color: var(--cozy-border) !important;
+}
+
+#urlbar[focused] :is(#urlbar-background, .urlbar-background) {
+  background-color: var(--cozy-surface) !important;
+  border-color: var(--cozy-lavender) !important;
+}
+
+#urlbar-input,
+#urlbar .urlbar-input,
+#searchbar input {
+  color: var(--cozy-text) !important;
+}
+
+#urlbar-results,
+#urlbar .urlbarView {
+  background: var(--cozy-surface) !important;
+  color: var(--cozy-text) !important;
+}
+
+.urlbarView-row[selected] {
+  background: var(--cozy-border) !important;
+  color: var(--cozy-text) !important;
+}
+
+#sidebar-box,
+#sidebar-main,
+#sidebar-container {
+  background: var(--cozy-bg) !important;
+  color: var(--cozy-text) !important;
+}
