@@ -20,8 +20,8 @@ configuration {
 
 * {
     /* Wallpaper mint and lavender over warm charcoal */
-    bg: #191B19;
-    bg-alt: #272C27;
+    bg: #191B19D1;
+    bg-alt: #272C2799;
     fg: #EEE8DC;
     fg-dim: #ABAFA4;
     accent: #A7CCAE;
@@ -37,14 +37,14 @@ window {
     background-color: @bg;
     border: 1px solid;
     border-color: @border-color;
-    border-radius: 8px;
+    border-radius: 14px;
     padding: 0;
 }
 
 mainbox {
     children: [ "inputbar", "message", "listview" ];
     spacing: 0;
-    background-color: @bg;
+    background-color: transparent;
 }
 
 inputbar {
@@ -65,7 +65,7 @@ entry {
 
 message {
     padding: 8px 20px;
-    background-color: @bg;
+    background-color: transparent;
     border: 0 0 1px 0;
     border-color: @border-color;
 }
@@ -82,7 +82,7 @@ listview {
     cycle: true;
     scrollbar: false;
     padding: 8px 0;
-    background-color: @bg;
+    background-color: transparent;
 }
 
 element {

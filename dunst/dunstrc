@@ -68,21 +68,21 @@
     per_monitor_dpi = false
 
 [urgency_low]
-    background = "#191B19"
+    background = "#191B19D9"
     foreground = "#ABAFA4"
     frame_color = "#46534A"
     highlight = "#A7CCAE"
     timeout = 4
 
 [urgency_normal]
-    background = "#191B19"
+    background = "#191B19D9"
     foreground = "#EEE8DC"
     frame_color = "#C0AFD5"
     highlight = "#A7CCAE"
     timeout = 6
 
 [urgency_critical]
-    background = "#3A2730"
+    background = "#3A2730E6"
     foreground = "#EEE8DC"
     frame_color = "#DBA0AA"
     highlight = "#DBA0AA"
@@ -170,7 +170,7 @@
 [battery]
     appname = "*attery*"
     urgency = critical
-    background = "#3A2730"
+    background = "#3A2730E6"
     foreground = "#EEE8DC"
     frame_color = "#DBA0AA"
     default_icon = /usr/share/icons/Papirus-Dark/48x48/status/notification-battery-low.svg

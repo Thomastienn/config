@@ -78,7 +78,7 @@ client.urgent           $urgent-color       $urgent-bg-color    $text-color     
 # AUTOSTART APPLICATIONS
 # ================================================================
 exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/hoppers.png
-exec_always --no-startup-id picom --config /home/thomas/thomas_config/picom/picom.conf
+exec_always --no-startup-id /home/thomas/thomas_config/picom/run.sh
 exec_always --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/i3-frame-hints.py
 exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
 exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
