@@ -152,11 +152,10 @@ bindsym $mod+Shift+o exec flatpak run com.obsproject.Studio
 # shortcut: Open desktop settings
 bindsym $mod+Shift+z exec cinnamon-settings
 
-# Close normal windows; keep browser scratchpad running when dismissed.
-# shortcut: Close window or hide browser scratchpad
-bindsym $mod+q exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py --close
-# shortcut: Close window or hide browser scratchpad
-bindsym $mod+Shift+q exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py --close
+# shortcut: Close window
+bindsym $mod+q kill
+# shortcut: Close window
+bindsym $mod+Shift+q kill
 
 # Application launcher
 # shortcut: Launch application

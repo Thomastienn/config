@@ -27,31 +27,6 @@ assert set(browser.browser_windows(tree)) == {20}
 assert not browser.browser_windows(window(40, window_class=None))
 assert set(browser.browser_windows(window(50, window_class="Firefox"))) == {50}
 
-# Close shortcuts hide the marked browser, targeting its original container only.
-scratch["focused"] = True
-with patch.object(browser, "get_tree", return_value=tree), \
-        patch.object(browser, "command") as command, \
-        patch.object(browser.subprocess, "Popen") as launch:
-    browser.close_focused()
-    command.assert_called_once_with("[con_id=20] move scratchpad")
-    launch.assert_not_called()
-scratch["focused"] = False
-
-# Ordinary Firefox and other applications still close; hidden scratch stays alive.
-for window_class in ("firefox", "kitty"):
-    ordinary_focused = window(60, window_class=window_class)
-    ordinary_focused["focused"] = True
-    close_tree = {"nodes": [{"nodes": [ordinary_focused]}], "floating_nodes": [scratch]}
-    with patch.object(browser, "get_tree", return_value=close_tree), \
-            patch.object(browser, "command") as command:
-        browser.close_focused()
-        command.assert_called_once_with("[con_id=60] kill")
-
-with patch.object(browser, "get_tree", return_value={}), \
-        patch.object(browser, "command") as command:
-    browser.close_focused()
-    command.assert_not_called()
-
 with tempfile.TemporaryDirectory() as directory, patch.dict(os.environ, {"XDG_RUNTIME_DIR": directory}):
     # Reuse the marked browser, whether it is visible or hidden; preserve its geometry.
     with patch.object(browser, "get_windows", return_value={20: scratch}), \
@@ -118,6 +93,6 @@ finder_spec.loader.exec_module(finder)
 rows = finder.shortcuts((Path(__file__).resolve().parents[1] / "i3/config").read_text())
 assert "Super+g — Browser scratchpad (Firefox)" in rows
 assert "Super+` — Dropdown terminal" in rows
-assert "Super+q — Close window or hide browser scratchpad" in rows
-assert "Super+Shift+q — Close window or hide browser scratchpad" in rows
-print("Firefox profile reuse, session launch, close-to-hide, window reuse, failures and shortcuts passed")
+assert "Super+q — Close window" in rows
+assert "Super+Shift+q — Close window" in rows
+print("Firefox profile reuse, session launch, window reuse, failures and shortcuts passed")

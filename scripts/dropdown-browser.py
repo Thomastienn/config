@@ -6,7 +6,6 @@ import json
 import os
 from pathlib import Path
 import subprocess
-import sys
 import time
 
 MARK = "browser-scratchpad"
@@ -34,27 +33,10 @@ def get_windows():
     return browser_windows(get_tree())
 
 
-def focused_window(node):
-    if node.get("focused"):
-        return node
-    for child in node.get("nodes", []) + node.get("floating_nodes", []):
-        focused = focused_window(child)
-        if focused is not None:
-            return focused
-    return None
-
-
 def command(action):
     result = subprocess.run(["i3-msg", action], capture_output=True, text=True, check=True)
     if not all(reply.get("success") for reply in json.loads(result.stdout)):
         raise RuntimeError("i3 window command failed.")
-
-
-def close_focused():
-    focused = focused_window(get_tree())
-    if focused is not None:
-        action = "move scratchpad" if MARK in focused.get("marks", []) else "kill"
-        command(f"[con_id={focused['id']}] {action}")
 
 
 def main():
@@ -88,9 +70,6 @@ def main():
 
 if __name__ == "__main__":
     try:
-        if sys.argv[1:] == ["--close"]:
-            close_focused()
-        else:
-            main()
+        main()
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         subprocess.run(["notify-send", "-u", "critical", "Window action failed", str(error)])
