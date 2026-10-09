@@ -68,7 +68,7 @@ function conky_gauges()
         cairo_set_source_rgb(context, 171/255, 175/255, 164/255)
         centered_text(context, metric.label, x, y + radius + 16, 9, CAIRO_FONT_WEIGHT_NORMAL)
     end
-    for _, history in pairs(histories) do
+    for name, history in pairs(histories) do
         -- Conky increments its update counter between text evaluation and the draw hook.
         if history.requested == update - 1 then
             if history.last_update ~= update then
@@ -85,28 +85,41 @@ function conky_gauges()
             local y = history.y or (window.height * 266 / window.width - history.bottom)
             local height, maximum = history.height, 1
             for _, value in ipairs(history.values) do maximum = math.max(maximum, value) end
-            cairo_set_line_width(context, 1)
-            cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.5)
-            cairo_new_path(context)
-            cairo_move_to(context, x, y + height)
-            cairo_line_to(context, x + width, y + height)
-            cairo_stroke(context)
-            if #history.values > 1 then
-                cairo_new_path(context)
+            if name == 'cpu' then
+                local step = width / 61
+                -- Fixed slots leave unrecorded time blank while the history fills.
                 for index, value in ipairs(history.values) do
-                    local px = x + width * (index - 1) / (#history.values - 1)
-                    local py = y + height - height * value / (maximum * 1.15)
-                    if index == 1 then cairo_move_to(context, px, py)
-                    else cairo_line_to(context, px, py) end
+                    local px = x + step * (61 - #history.values + index - 1)
+                    local alpha = 0.2 + 0.8 * value / (maximum * 1.15)
+                    cairo_set_source_rgba(context, history.color[1], history.color[2], history.color[3], alpha)
+                    cairo_new_path(context)
+                    cairo_rectangle(context, px, y + 6, step - 1, height - 12)
+                    cairo_fill(context)
                 end
-                cairo_set_line_width(context, 1.5)
-                cairo_set_source_rgb(context, history.color[1], history.color[2], history.color[3])
-                cairo_stroke_preserve(context)
+            else
+                cairo_set_line_width(context, 1)
+                cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.5)
+                cairo_new_path(context)
+                cairo_move_to(context, x, y + height)
                 cairo_line_to(context, x + width, y + height)
-                cairo_line_to(context, x, y + height)
-                cairo_close_path(context)
-                cairo_set_source_rgba(context, history.color[1], history.color[2], history.color[3], 0.08)
-                cairo_fill(context)
+                cairo_stroke(context)
+                if #history.values > 1 then
+                    cairo_new_path(context)
+                    for index, value in ipairs(history.values) do
+                        local px = x + width * (index - 1) / (#history.values - 1)
+                        local py = y + height - height * value / (maximum * 1.15)
+                        if index == 1 then cairo_move_to(context, px, py)
+                        else cairo_line_to(context, px, py) end
+                    end
+                    cairo_set_line_width(context, 1.5)
+                    cairo_set_source_rgb(context, history.color[1], history.color[2], history.color[3])
+                    cairo_stroke_preserve(context)
+                    cairo_line_to(context, x + width, y + height)
+                    cairo_line_to(context, x, y + height)
+                    cairo_close_path(context)
+                    cairo_set_source_rgba(context, history.color[1], history.color[2], history.color[3], 0.08)
+                    cairo_fill(context)
+                end
             end
         end
     end

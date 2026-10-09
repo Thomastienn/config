@@ -4,6 +4,7 @@ CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL = 0, 0
 CAIRO_FONT_WEIGHT_BOLD, CAIRO_LINE_CAP_ROUND = 1, 1
 local arcs, labels, destroyed, scale = {}, {}, 0, nil
 local path, curves = {}, {}
+local cells, alpha = {}, 1
 local has_point = false
 local values = {['${updates}'] = '2', ['${cpu cpu0}'] = '5', ['${memperc}'] = '50'}
 function conky_parse(variable) return values[variable] end
@@ -12,8 +13,13 @@ function cairo_create() return {} end
 function cairo_scale(_, x, y) assert(x == y); scale = x end
 function cairo_set_line_width() end
 function cairo_set_line_cap() end
-function cairo_set_source_rgb() end
-function cairo_set_source_rgba() end
+function cairo_set_source_rgb() alpha = 1 end
+function cairo_set_source_rgba(_, _, _, _, opacity) alpha = opacity end
+function cairo_rectangle(_, x, y, width, height)
+    assert(x == x and y == y and width > 0 and height > 0, 'Heat cells must have finite, positive bounds')
+    assert(alpha > 0 and alpha <= 1, 'Heat intensity must be visible and bounded')
+    cells[#cells + 1] = {x = x, y = y, width = width, height = height, alpha = alpha}
+end
 function cairo_stroke() has_point, path = false, {} end
 function cairo_new_path() has_point, path = false, {} end
 function cairo_stroke_preserve()
@@ -76,25 +82,31 @@ end
 values['${updates}'], values['${cpu cpu0}'] = '2', '5'
 assert(request('cpu', 'cpu', 'cpu0') == 'live')
 conky_gauges()
-assert(#curves == 0, 'Do not invent history at startup')
+assert(#curves == 0 and #cells == 1, 'Startup shows only its one real CPU reading')
+assert(cells[1].x > 248 and cells[1].x + cells[1].width <= 252, 'Newest reading sits at the right edge')
+cells = {}
 values['${updates}'], values['${cpu cpu0}'] = '3', '1'
 assert(request('cpu', 'cpu', 'cpu0') == 'last 1s')
 conky_gauges()
-assert(#curves == 1 and #curves[1] == 2)
-assert(curves[1][1].x == 12 and curves[1][2].x == 252, 'Two real readings already span the full width')
-assert(curves[1][1].y < curves[1][2].y)
+assert(#curves == 0 and #cells == 2, 'CPU draws heat cells instead of a curve')
+assert(cells[1].x + cells[1].width < cells[2].x, 'Readings have a gap and run oldest to newest')
+assert(cells[1].y == cells[2].y and cells[1].height == cells[2].height,
+       'CPU activity changes intensity, not cell height')
+assert(cells[1].alpha > cells[2].alpha, 'Busier readings look brighter')
+local recent_alpha = cells[2].alpha
+cells = {}
 values['${cpu cpu0}'] = '99'
 request('cpu', 'cpu', 'cpu0')
 conky_gauges()
-assert(#curves[2] == 2 and curves[2][2].y == curves[1][2].y, 'Redrawing cannot add extra samples')
+assert(#cells == 2 and cells[2].alpha == recent_alpha, 'Redrawing cannot add extra samples')
 for update = 4, 63 do
     values['${updates}'], values['${cpu cpu0}'] = tostring(update), tostring(update)
     request('cpu', 'cpu', 'cpu0')
-    curves = {}
+    cells = {}
     conky_gauges()
 end
-assert(#curves[1] == 61 and conky_history_span() == 'last 60s')
-assert(math.abs(curves[1][1].y - (258 - 24 / (63 * 1.15))) < 1e-10,
+assert(#cells == 61 and cells[1].x == 12 and conky_history_span() == 'last 60s')
+assert(cells[1].alpha < 0.22 and cells[61].alpha > 0.85,
        'The oldest reading drops out once the one-minute buffer is full')
 
 curves = {}
@@ -125,14 +137,17 @@ request('download', 'downspeedf', 'enp55s0')
 conky_gauges()
 assert(#curves == 0, 'Returning from offline starts a fresh history')
 
+cells = {}
 values['${updates}'], values['${cpu cpu0}'] = '69', 'not available'
 request('cpu', 'cpu', 'cpu0')
 conky_gauges()
-assert(#curves == 0, 'Unavailable readings do not fabricate data')
+assert(#curves == 0 and #cells == 0, 'Unavailable readings do not fabricate data')
 for update = 70, 71 do
     values['${updates}'], values['${cpu cpu0}'] = tostring(update), '0'
     request('cpu', 'cpu', 'cpu0')
+    cells = {}
     conky_gauges()
 end
-assert(#curves == 1 and curves[1][1].y == 258 and curves[1][2].y == 258, 'Idle readings draw a flat line')
-print('Rings, startup width, one-minute history, duplicate redraws, interface changes, offline, and missing readings passed')
+assert(#curves == 0 and #cells == 2 and cells[1].alpha == cells[2].alpha,
+       'Real idle readings remain visible at equal intensity')
+print('Rings, CPU heat strip, one-minute history, duplicate redraws, network curves, offline, and missing readings passed')
