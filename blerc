@@ -101,5 +101,13 @@ ble-face menu_complete_match="fg=#A7CCAE,bold"          # Mint for matched text
 ble-face menu_complete_selected="bg=#A7CCAE,fg=#191B19,bold" # Mint bg, dark text
 ble-face cmdinfo_cd_cdpath="fg=#A7CCAE,bg=#403849"           # Mint on gunmetal
 
+# Blank line between commands; quiet rose exit mark
+bleopt prompt_ruler=empty-line
+bleopt exec_errexit_mark=$'\e[38;2;219;160;170m✘ %d\e[m'
+
+# Vi mode shown by cursor shape (bar insert, block normal) instead of a "-- INSERT --" line.
+# The vi keymap loads lazily, so its options only exist after load.
+blehook/eval-after-load keymap_vi 'bleopt keymap_vi_mode_show=; ble-bind -m vi_imap --cursor 5; ble-bind -m vi_nmap --cursor 2'
+
 # fzf: Ctrl-R history, Ctrl-T files, Alt-C cd
 ble-import -d integration/fzf-key-bindings

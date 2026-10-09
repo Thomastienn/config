@@ -87,7 +87,7 @@ git_prompt() {
     read -r behind ahead < <(git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null)
     ((ahead)) && s+=" ↑$ahead"
     ((behind)) && s+=" ↓$behind"
-    echo " ($s)"
+    printf '  \uf418 %s' "$s"
 }
 
 # ❯ is mint, rose after a failed command; prompt_status is set by the ble.sh PRECMD hook below.
@@ -103,9 +103,13 @@ show_virtual_env() {
     fi
 }
 
+# user@host only over SSH; locally it never changes
+prompt_host=
+[ -n "$SSH_CONNECTION" ] && prompt_host="\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h "
+
 if [ "$color_prompt" = yes ]; then
 	# Cozy Mint prompt; clock and system status live in the desktop bar/widgets
-	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
+	PS1="\[${THEME_GRAY}\]\$(show_virtual_env)${prompt_host}\[${THEME_BOLD}${THEME_COLOR6}\]\w\[${THEME_RESET}${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
 else
     PS1='$(show_virtual_env)\u@\h:\w$(git_prompt)\n> '
 fi
