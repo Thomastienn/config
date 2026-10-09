@@ -1,4 +1,3 @@
-export TERM=xterm-256color
 export COLORTERM=truecolor
 export LANG=C.UTF-8
 export LC_ALL=C.UTF-8
@@ -38,7 +37,6 @@ HISTFILESIZE=20000
 HISTTIMEFORMAT="%F %T "
 HISTCONTROL=ignoreboth:erasedups
 # Save and reload history after each command
-shopt -s histappend
 PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 # check the window size after each command and, if necessary,
@@ -78,19 +76,22 @@ if [ -n "$force_color_prompt" ]; then
     fi
 fi
 
-# Enhanced Git-aware prompt function
-parse_git_branch() {
-    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+# Git prompt: branch plus * unstaged, + staged, % untracked, ↑ unpushed, ↓ unpulled
+[ -f /usr/lib/git-core/git-sh-prompt ] && . /usr/lib/git-core/git-sh-prompt
+GIT_PS1_SHOWDIRTYSTATE=1
+GIT_PS1_SHOWUNTRACKEDFILES=1
+git_prompt() {
+    local s ahead behind
+    s=$(__git_ps1 '%s' 2>/dev/null)
+    [ -n "$s" ] || return
+    read -r behind ahead < <(git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null)
+    ((ahead)) && s+=" ↑$ahead"
+    ((behind)) && s+=" ↓$behind"
+    echo " ($s)"
 }
 
-parse_git_status() {
-    if git rev-parse --git-dir > /dev/null 2>&1; then
-        local status=$(git status --porcelain 2>/dev/null | wc -l)
-        if [ $status -gt 0 ]; then
-            echo " 🗲︎ $status"
-        fi
-    fi
-}
+# ❯ is mint, rose after a failed command; prompt_status is set by the ble.sh PRECMD hook below.
+prompt_marks=("${THEME_COLOR4@E}" "${THEME_COLOR5@E}")
 
 # Disable default virtual environment prompt modification
 export VIRTUAL_ENV_DISABLE_PROMPT=1
@@ -104,9 +105,9 @@ show_virtual_env() {
 
 if [ "$color_prompt" = yes ]; then
 	# Cozy Mint prompt; clock and system status live in the desktop bar/widgets
-	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(parse_git_branch)\[${THEME_COLOR5}\]\$(parse_git_status)\[${THEME_RESET}\]\n\[${THEME_COLOR4}\]❯ \[${THEME_RESET}\]"
+	PS1="\[${THEME_COLOR1}\]\$(show_virtual_env)\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h\[${THEME_RESET}\] \[${THEME_COLOR6}\]\w\[${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
 else
-    PS1='$(show_virtual_env)\u@\h:\w$(parse_git_branch)$(parse_git_status)\n> '
+    PS1='$(show_virtual_env)\u@\h:\w$(git_prompt)\n> '
 fi
 unset color_prompt force_color_prompt
 
@@ -197,18 +198,12 @@ export VISUAL=nvim
 [ -d "$HOME/my_bin/vcpkg" ] && export PATH="$HOME/my_bin/vcpkg:$PATH"
 [ -d "$HOME/my_bin/cmake-4.1.1-linux-x86_64/bin" ] && export PATH="$HOME/my_bin/cmake-4.1.1-linux-x86_64/bin:$PATH"
 [ -d "$HOME/my_bin/mongodb-linux-x86_64-ubuntu2204-7.0.5/bin" ] && export PATH="$HOME/my_bin/mongodb-linux-x86_64-ubuntu2204-7.0.5/bin:$PATH"
-[ -d "$HOME/.local/bin" ] && export PATH="$HOME/.local/bin:$PATH"
 [ -d "$HOME/.local/bin/typst" ] && export PATH="$HOME/.local/bin/typst:$PATH"
 [ -d "$HOME/.local/kitty.app/bin" ] && export PATH="$HOME/.local/kitty.app/bin:$PATH"
 [ -d "/opt/nvim-linux-x86_64/bin" ] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
 [ -d "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
-
-# Only add Windows paths if they exist (WSL)
-[ -d "/mnt/c/Windows" ] && export PATH="$PATH:/mnt/c/Windows:/mnt/c/Windows/System32"
-[ -d "/mnt/c/Users/thoma/AppData/Local/Microsoft/WindowsApps" ] && export PATH="$PATH:/mnt/c/Users/thoma/AppData/Local/Microsoft/WindowsApps"
-
 [ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
 [ -d "/home/linuxbrew/.linuxbrew/opt/imagemagick/lib/pkgconfig" ] && export PKG_CONFIG_PATH="/home/linuxbrew/.linuxbrew/opt/imagemagick/lib/pkgconfig:$PKG_CONFIG_PATH"
@@ -218,7 +213,6 @@ export VISUAL=nvim
 [ -d "$HOME/typst/" ] && export PATH="$HOME/typst/:$PATH"
 
 export WARP_ENABLE_WAYLAND=1
-export MESA_D3D12_DEFAULT_ADAPTER_NAME=NVIDIA
 export BROWSER=brave-browser
 
 export NNN_TERMINAL=tmux
@@ -233,7 +227,7 @@ LS_COLORS=$LS_COLORS:'ow=1;34:' ; export LS_COLORS
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # ================================================================
-# AUTO-START TMUX ON WSL LOAD (After full initialization)
+# AUTO-START TMUX (After full initialization)
 # ================================================================
 
 # Function to auto-start tmux with intelligent session management
@@ -253,20 +247,10 @@ auto_start_tmux() {
        [[ "$TERM_PROGRAM" != "WarpTerminal" ]] && \
        [[ -z "$WARP_IS_LOCAL_SHELL_SESSION" ]] && \
        command -v tmux >/dev/null 2>&1; then
-        
-        # Wait a moment to ensure WSL is fully loaded
-        #sleep 0.5
-        
-        # Check if there are any existing tmux sessions
+        # Attach to the most recent session if one exists
         if tmux list-sessions >/dev/null 2>&1; then
-            echo "🚀 Found existing tmux sessions:"
-            tmux list-sessions
-            echo ""
-            echo "✨ Attaching to the most recent session..."
-            # Attach to the most recent session
             tmux attach-session
         else
-            echo "🎯 Starting new tmux session with glassmorphism theme..."
             # Create a new session named after the current directory or 'main'
             local session_name=$(basename "$PWD" | tr '.' '_')
             [[ -z "$session_name" ]] && session_name="main"
@@ -333,24 +317,18 @@ else
     GREETING="Good Night, Thomas"
 fi
 
-echo
-echo -e "  ${THEME_COLOR3}${THEME_BOLD}${GREETING}${THEME_RESET}"
-echo
-echo -e "${THEME_COLOR1}      ████████ ██   ██  ██████  ███    ███  █████  ███████${THEME_RESET}"
-echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${THEME_RESET}"
-echo -e "${THEME_COLOR1}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${THEME_RESET}"
-echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${THEME_RESET}"
-echo -e "${THEME_COLOR1}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${THEME_RESET}"
-echo
-
-# ================================================================
-# Windows Terminal Fix - Auto-applied settings
-# ================================================================
-
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+# Neovim terminals set $NVIM; keep the banner to real shells.
+if [ -z "$NVIM" ]; then
+    echo
+    echo -e "  ${THEME_COLOR3}${THEME_BOLD}${GREETING}${THEME_RESET}"
+    echo
+    echo -e "${THEME_COLOR1}      ████████ ██   ██  ██████  ███    ███  █████  ███████${THEME_RESET}"
+    echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ████  ████ ██   ██ ██     ${THEME_RESET}"
+    echo -e "${THEME_COLOR1}         ██    ███████ ██    ██ ██ ████ ██ ███████ ███████${THEME_RESET}"
+    echo -e "${THEME_COLOR1}         ██    ██   ██ ██    ██ ██  ██  ██ ██   ██      ██${THEME_RESET}"
+    echo -e "${THEME_COLOR1}         ██    ██   ██  ██████  ██      ██ ██   ██ ███████${THEME_RESET}"
+    echo
+fi
 
 
 # MY CUSTOM FUNCTIONS AND ALIASES
@@ -414,17 +392,26 @@ rmvenv() {
 # bat (cat)
 export BAT_THEME="Monokai Extended"
 
+# fzf in Cozy Mint; key bindings come from blerc
+export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border=rounded --info=inline \
+--color=fg:#EEE8DC,bg:-1,hl:#A7CCAE,fg+:#EEE8DC,bg+:#272C27,hl+:#A7CCAE \
+--color=info:#ABAFA4,prompt:#A7CCAE,pointer:#C0AFD5,marker:#C0AFD5,spinner:#C0AFD5,header:#ABAFA4,border:#5D6D5E,gutter:-1"
+
 # zoxide
 eval "$(zoxide init bash)"
 
-# SSH agent
-if [ -z "$SSH_AUTH_SOCK" ]; then
-    eval "$(ssh-agent -s)"
+# SSH agent: reuse a live one (inherited, GNOME gcr, or one fixed socket) instead of one per shell.
+ssh-add -l >/dev/null 2>&1
+if [ $? -eq 2 ]; then
+    if [ -S "$XDG_RUNTIME_DIR/gcr/ssh" ]; then
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
+    else
+        export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.sock"
+        ssh-add -l >/dev/null 2>&1
+        [ $? -eq 2 ] && rm -f "$SSH_AUTH_SOCK" && eval "$(ssh-agent -s -a "$SSH_AUTH_SOCK")" >/dev/null
+    fi
 fi
-
-[ -f "$HOME/.ssh/id_ed25519" ] && ssh-add ~/.ssh/id_ed25519
-[ -f "$HOME/.ssh/id_ed25519_github" ] && ssh-add ~/.ssh/id_ed25519_github
-[ -f "$HOME/.ssh/id_ed25519_gitlab" ] && ssh-add ~/.ssh/id_ed25519_gitlab
+ssh-add -l >/dev/null 2>&1 || ssh-add -q ~/.ssh/id_ed25519 ~/.ssh/id_ed25519_github ~/.ssh/id_ed25519_gitlab 2>/dev/null
 
 # Task calendar and next tasks are visible in Conky; use task for details.
 
@@ -435,8 +422,10 @@ stty -ixon
 
 # Ble.sh
 if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
+    # ble.sh loads ~/.blerc (-> thomas_config/blerc) itself.
     source -- ~/.local/share/blesh/ble.sh
-    . ~/thomas_config/blerc
+    # $(...) in PS1 clobbers $?, and wakatime's PROMPT_COMMAND runs first; PRECMD still sees the real status.
+    blehook PRECMD+='prompt_status=$?'
     bleopt default_keymap=vi
     ble-bind -m vi_imap -f 'j j' vi_imap/normal-mode
     ble-bind -m vi_imap -T j 200

@@ -100,3 +100,6 @@ ble-face menu_filter_fixed="fg=#A7CCAE,bold"            # Mint
 ble-face menu_complete_match="fg=#A7CCAE,bold"          # Mint for matched text
 ble-face menu_complete_selected="bg=#A7CCAE,fg=#191B19,bold" # Mint bg, dark text
 ble-face cmdinfo_cd_cdpath="fg=#A7CCAE,bg=#403849"           # Mint on gunmetal
+
+# fzf: Ctrl-R history, Ctrl-T files, Alt-C cd
+ble-import -d integration/fzf-key-bindings
