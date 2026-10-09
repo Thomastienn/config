@@ -10,15 +10,20 @@ blur_level=1
 pixel_scale=10,1000
 solid_color=191B19
 bgcolor=191B19ff
+loginbox=00000000
+loginshadow=00000000
 
 # Cozy Mint indicators and text
-font="ComicShannsMono Nerd Font"
-ringcolor=A7CCAEff
+font="Lato"
+insidecolor=00000000
+ringcolor=A7CCAE88
 ringvercolor=C0AFD5ff
 ringwrongcolor=DBA0AAff
-insidewrongcolor=3A2730ff
+insidevercolor=00000000
+insidewrongcolor=3A273066
+separatorcolor=00000000
 timecolor=EEE8DCff
-greetercolor=EEE8DCff
+greetercolor=ABAFA4ff
 layoutcolor=ABAFA4ff
 keyhlcolor=A7CCAEff
 bshlcolor=C0AFD5ff
@@ -26,17 +31,42 @@ verifcolor=C0AFD5ff
 wrongcolor=DBA0AAff
 modifcolor=DEC28Aff
 
-# Default lockscreen effect
-lockscreen_effect=dimblur
+# Calm clock and concise unlock feedback
+time_format="%H:%M"
+date_format="%A, %-d %B"
+locktext="Type password to unlock"
+veriftext="Checking..."
+wrongtext="Try again"
 
-# Time format
-time_format="%H:%M:%S"
+# Override Betterlockscreen's fixed bottom-left layout with i3lock-color options.
+lockargs=(
+    -n
+    --indicator
+    --ind-pos="x+w*0.80:y+h*0.54"
+    --radius=16
+    --ring-width=2
+    --time-pos="ix:iy-104"
+    --time-align=0
+    --time-font="Lato Light"
+    --time-size=64
+    --date-pos="ix:iy-72"
+    --date-align=0
+    --date-str="$date_format"
+    --date-color="$layoutcolor"
+    --date-font="$font"
+    --date-size=14
+    --greeter-pos="ix:iy+44"
+    --greeter-align=0
+    --greeter-size=12
+    --verif-pos="ix:iy+72"
+    --verif-align=0
+    --wrong-pos="ix:iy+72"
+    --wrong-align=0
+    --modif-pos="ix:iy+96"
+    --modif-align=0
+    --layout-pos="ix:iy+120"
+    --layout-align=0
+)
 
-# Date format  
-date_format="%A, %d %B"
-
-# Greeter text
-greeter="Welcome back!"
-
-# Path to wallpaper
+# Wallpaper for: betterlockscreen --update "$wallpaper"
 wallpaper=~/thomas_config/wallpapers/hoppers.png
