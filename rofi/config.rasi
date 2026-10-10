@@ -30,14 +30,15 @@ configuration {
 }
 
 * {
-    /* Wallpaper mint and lavender over warm charcoal */
+    /* Mint on warm charcoal with sage surfaces, matching Conky and Polybar */
     bg: #191B19D1;
     bg-alt: #272C2799;
     fg: #EEE8DC;
     fg-dim: #ABAFA4;
     accent: #A7CCAE;
     urgent: #DBA0AA;
-    selected-bg: #403849;
+    lavender: #C0AFD5;
+    selected-bg: #303730;
     border-color: #46534A;
 
     background-color: transparent;
@@ -157,7 +158,8 @@ element selected.normal,
 element selected.urgent,
 element selected.active {
     background-color: @selected-bg;
-    border-color: @accent;
+    border-color: @lavender;
+    text-color: @accent;
 }
 
 element selected.urgent {
