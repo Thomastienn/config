@@ -2,8 +2,8 @@
 
 # Get mic mute status with error handling
 
-icon=""
-icon_muted=""
+icon="%{F#A7CCAE}%{F-}"
+icon_muted="%{F#DBA0AA}%{F-}"
 
 status=$(pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null) || {
     echo "$icon --"
@@ -12,7 +12,7 @@ status=$(pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null) || {
 }
 
 if echo "$status" | grep -q 'yes'; then
-    echo "$icon_muted Muted"
+    echo "$icon_muted"
 else
-    echo "$icon On"
+    echo "$icon"
 fi

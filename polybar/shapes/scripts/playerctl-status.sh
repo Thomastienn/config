@@ -1,6 +1,6 @@
 #!/bin/bash
 
-icon_mute="󰖁"
+icon_mute="%{F#ABAFA4}󰖁%{F-}"
 
 # Function to get and display status
 get_status() {
@@ -8,7 +8,7 @@ get_status() {
     player_status=$(playerctl -a status 2>/dev/null | head -n1)
 
     if [ -z "$player_status" ]; then
-        echo " $icon_mute No media"
+        echo "$icon_mute"
         return
     fi
 
@@ -20,15 +20,8 @@ get_status() {
     title=$(playerctl metadata title 2>/dev/null)
 
     if [ -z "$artist" ] || [ -z "$title" ]; then
-        echo "$icon_mute No media"
+        echo "$icon_mute"
         return
-    fi
-
-    # Truncate if too long
-    max_length=30
-    output="$artist - $title"
-    if [ ${#output} -gt $max_length ]; then
-        output="${output:0:$max_length}..."
     fi
 
     # Icon based on player
@@ -37,15 +30,15 @@ get_status() {
     elif [[ "$player" == *"firefox"* ]] || [[ "$player" == *"chrome"* ]]; then
         icon=""
     else
-        icon=""
+        icon="%{F#A7CCAE}%{F-}"
     fi
-    icon=""
+    icon="%{F#A7CCAE}%{F-}"
 
     # Show play/pause status
     if [ "$player_status" = "Playing" ]; then
-        echo "$icon $output"
+        echo "$icon"
     else
-        echo "$icon_mute $output "
+        echo "$icon_mute"
     fi
 }
 

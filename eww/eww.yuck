@@ -1,0 +1,70 @@
+;; Quick-settings flyout, opened from the Polybar status island (qs.sh toggle).
+;; Polls only while the flyout is open; every action reuses the bar's scripts.
+
+(defvar qs_cmd "/home/thomas/thomas_config/eww/scripts/qs.sh")
+
+(defpoll qs :interval "1s"
+  :initial '{"vol":0,"vol_muted":false,"mic_muted":false,"bright":0,"kbd":"--","hz":0,"wifi":"","gpu":"","media":"","playing":false}'
+  "/home/thomas/thomas_config/eww/scripts/qs.sh status")
+
+(defpoll updates :interval "1800s" :initial "…"
+  "/home/thomas/thomas_config/polybar/shapes/scripts/updates.sh")
+
+(defwidget tile [icon text on cmd]
+  (button :class "tile ${on ? 'on' : ''}" :onclick cmd
+    (box :orientation "v" :space-evenly false :spacing 4
+      (label :class "tile-icon" :text icon)
+      (label :class "tile-text" :text text :limit-width 10))))
+
+(defwidget slider-row [icon value cmd ?icon-cmd]
+  (box :class "slider-row" :space-evenly false :spacing 12
+    (button :class "slider-icon" :onclick {icon-cmd ?: ""} icon)
+    (scale :class "slider" :hexpand true :min 0 :max 101 :value value :onchange cmd)
+    (label :class "slider-value" :text "${value}%")))
+
+(defwidget flyout []
+  (box :class "card" :orientation "v" :space-evenly false :spacing 14
+    (box :class "header" :orientation "v" :space-evenly false
+      (label :class "clock" :xalign 0 :text {formattime(EWW_TIME, "%I:%M %p")})
+      (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%A, %d %B %Y")}))
+    (box :class "tiles" :spacing 10 :space-evenly true
+      (tile :icon {qs.mic_muted ? "" : ""} :text {qs.mic_muted ? "Muted" : "Mic"}
+            :on {!qs.mic_muted} :cmd "${qs_cmd} mic")
+      (tile :icon "" :text {qs.kbd} :on {qs.kbd == "VI"} :cmd "${qs_cmd} kbd")
+      (tile :icon "" :text "${qs.hz}Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
+      (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text {qs.wifi == "" ? "Offline" : qs.wifi}
+            :on {qs.wifi != ""} :cmd "${qs_cmd} wifi"))
+    (slider-row :icon {qs.vol_muted ? "" : ""} :value {qs.vol}
+                :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
+    (slider-row :icon "󰃟" :value {qs.bright} :cmd "${qs_cmd} bright {}")
+    (box :class "media" :space-evenly false :spacing 10
+      (label :class "media-icon ${qs.playing ? 'on' : ''}" :text "")
+      (label :class "media-text" :hexpand true :xalign 0 :limit-width 22
+             :text {qs.media == "" ? "No media" : qs.media})
+      (button :class "media-btn" :onclick "${qs_cmd} prev" "")
+      (button :class "media-btn" :onclick "${qs_cmd} play" {qs.playing ? "" : ""})
+      (button :class "media-btn" :onclick "${qs_cmd} next" ""))
+    (box :class "footer" :space-evenly false
+      (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
+      (button :class "footer-btn" :onclick "${qs_cmd} updates" {updates}))))
+
+;; Transparent full-screen catcher: clicking outside the card closes it.
+(defwidget closer []
+  (eventbox :onclick "${qs_cmd} close" (box)))
+
+(defwindow closer
+  :monitor 0
+  :geometry (geometry :x "0" :y "0" :width "100%" :height "100%")
+  :stacking "fg"
+  :wm-ignore true
+  :windowtype "desktop"
+  (closer))
+
+;; 22px matches the i3 window edge; 52px sits just under the 8+36px bar.
+(defwindow flyout
+  :monitor 0
+  :geometry (geometry :x "-22px" :y "52px" :width "380px" :anchor "top right")
+  :stacking "fg"
+  :wm-ignore true
+  :windowtype "dock"
+  (flyout))

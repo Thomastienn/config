@@ -12,12 +12,12 @@ fi
 
 case $engine in
     Unikey)
-        echo "  Unikey"
+        echo "VI"
         ;;
     *us*)
-        echo "  US"
+        echo "US"
         ;;
     *)
-        echo "  ${engine##*:}"
+        echo "${engine##*:}"
         ;;
 esac

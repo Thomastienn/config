@@ -1,0 +1,91 @@
+// Cozy Mint: mint on warm charcoal, sage surfaces, lavender as a small accent.
+$bg: rgba(25, 27, 25, 0.92);
+$surface: #272C27;
+$surface-hi: #303730;
+$border: #46534A;
+$fg: #EEE8DC;
+$dim: #ABAFA4;
+$mint: #A7CCAE;
+$lavender: #C0AFD5;
+$ink: #191B19;
+
+* {
+  all: unset;
+  font-family: "ComicShannsMono Nerd Font Propo";
+  font-size: 13px;
+  color: $fg;
+}
+
+.card {
+  background-color: $bg;
+  border: 1px solid $border;
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.header { padding: 0 4px; }
+.clock { font-size: 30px; font-weight: bold; color: $mint; }
+.date { color: $dim; }
+
+.tile {
+  background-color: $surface;
+  border-radius: 12px;
+  padding: 10px 4px;
+  .tile-icon { font-size: 18px; color: $mint; }
+  .tile-text { font-size: 12px; color: $dim; }
+  &:hover { background-color: $surface-hi; }
+  &.on {
+    background-color: $mint;
+    .tile-icon, .tile-text { color: $ink; }
+  }
+}
+
+.slider-row {
+  background-color: $surface;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+.slider-icon { font-size: 16px; color: $mint; min-width: 20px; }
+.slider-value { color: $dim; min-width: 40px; }
+.slider {
+  trough {
+    background-color: $border;
+    border-radius: 3px;
+    min-height: 6px;
+  }
+  highlight {
+    background-color: $mint;
+    border-radius: 3px;
+  }
+  slider {
+    background-color: $fg;
+    border-radius: 50%;
+    min-width: 14px;
+    min-height: 14px;
+    margin: -4px 0;
+  }
+}
+
+.media {
+  background-color: $surface;
+  border-radius: 12px;
+  padding: 8px 12px;
+}
+.media-icon { font-size: 16px; color: $dim; &.on { color: $mint; } }
+.media-btn {
+  font-size: 14px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  &:hover { background-color: $surface-hi; color: $mint; }
+}
+
+.footer { padding: 0 4px; }
+.footer-text { color: $dim; font-size: 12px; }
+.footer-btn {
+  color: $lavender;
+  font-size: 12px;
+  padding: 3px 10px;
+  border-radius: 8px;
+  background-color: $surface;
+  &:hover { background-color: $surface-hi; color: $fg; }
+}
