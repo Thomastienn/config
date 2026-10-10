@@ -12,7 +12,7 @@ fi
 
 case $engine in
     Unikey)
-        echo "VI"
+        echo "%{F#C0AFD5}VI%{F-}"
         ;;
     *us*)
         echo "US"
