@@ -8,6 +8,7 @@ configuration {
     show-icons: true;
     icon-theme: "Papirus-Dark";
     terminal: "kitty";
+    ssh-command: "/usr/bin/python3 /home/thomas/thomas_config/scripts/ssh-launcher.py {host}";
     modes: "drun,window,run,ssh,filebrowser";
     display-drun: "Apps";
     display-window: "Windows";
