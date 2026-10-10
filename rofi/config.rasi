@@ -1,6 +1,6 @@
 /*
  * ROFI THEME: COZY MINT
- * Centered list, maximum readability, no distractions
+ * Frosted card, pill search, fuzzy everything
  */
 
 configuration {
@@ -8,14 +8,25 @@ configuration {
     show-icons: true;
     icon-theme: "Papirus-Dark";
     terminal: "kitty";
-    drun-display-format: "{name}";
-    display-drun: "";
-    display-window: "";
-    display-run: "";
-    modi: "drun,window,run";
-    scroll-method: 0;
-    disable-history: false;
-    sidebar-mode: false;
+    modes: "drun,window,run,ssh,filebrowser";
+    display-drun: "Apps";
+    display-window: "Windows";
+    display-run: "Run";
+    display-ssh: "SSH";
+    display-filebrowser: "Files";
+    drun-display-format: "{name}[<span size='small' foreground='#ABAFA4'>  ·  {generic}</span>]";
+    window-format: "{w:3}{c:14}{t}";
+    drun-match-fields: "name,generic,exec,keywords";
+    matching: "fuzzy";
+    sort: true;
+    sorting-method: "fzf";
+    hover-select: true;
+    me-select-entry: "";
+    me-accept-entry: "MousePrimary";
+    filebrowser {
+        directories-first: true;
+        sorting-method: "name";
+    }
 }
 
 * {
@@ -25,49 +36,67 @@ configuration {
     fg: #EEE8DC;
     fg-dim: #ABAFA4;
     accent: #A7CCAE;
+    urgent: #DBA0AA;
     selected-bg: #403849;
     border-color: #46534A;
-    
+
     background-color: transparent;
     text-color: @fg;
 }
 
 window {
-    width: 480px;
+    width: 600px;
     background-color: @bg;
     border: 1px solid;
     border-color: @border-color;
-    border-radius: 14px;
-    padding: 0;
+    border-radius: 16px;
+    padding: 14px;
 }
 
 mainbox {
-    children: [ "inputbar", "message", "listview" ];
-    spacing: 0;
-    background-color: transparent;
+    border: 0;
+    children: [ "inputbar", "message", "listview", "mode-switcher" ];
+    spacing: 12px;
 }
 
 inputbar {
-    children: [ "entry" ];
-    padding: 16px 20px;
+    border: 0;
+    children: [ "textbox-search", "entry", "prompt" ];
+    spacing: 12px;
+    padding: 12px 16px;
     background-color: @bg-alt;
-    border: 0 0 1px 0;
-    border-color: @border-color;
+    border-radius: 12px;
+}
+
+textbox-search {
+    expand: false;
+    str: "";
+    text-color: @accent;
+    vertical-align: 0.5;
 }
 
 entry {
     placeholder: "Search...";
     placeholder-color: @fg-dim;
     text-color: @fg;
+    cursor-color: @accent;
     cursor: text;
-    background-color: transparent;
+    vertical-align: 0.5;
+}
+
+prompt {
+    padding: 2px 10px;
+    background-color: @selected-bg;
+    text-color: @accent;
+    border-radius: 8px;
+    vertical-align: 0.5;
 }
 
 message {
-    padding: 8px 20px;
-    background-color: transparent;
-    border: 0 0 1px 0;
-    border-color: @border-color;
+    border: 0;
+    padding: 8px 16px;
+    background-color: @bg-alt;
+    border-radius: 10px;
 }
 
 textbox {
@@ -75,26 +104,35 @@ textbox {
 }
 
 listview {
-    lines: 10;
+    border: 0;
+    lines: 8;
     columns: 1;
+    spacing: 4px;
     fixed-height: true;
-    fixed-columns: true;
     cycle: true;
     scrollbar: false;
-    padding: 8px 0;
-    background-color: transparent;
 }
 
 element {
-    padding: 10px 20px;
-    spacing: 12px;
-    background-color: transparent;
+    padding: 8px 14px;
+    spacing: 14px;
+    border: 0 0 0 3px;
+    border-color: transparent;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 element-icon {
-    size: 24px;
-    background-color: transparent;
+    size: 28px;
     vertical-align: 0.5;
+    cursor: inherit;
+}
+
+element-text {
+    text-color: inherit;
+    highlight: bold #A7CCAE;
+    vertical-align: 0.5;
+    cursor: inherit;
 }
 
 element normal.normal,
@@ -106,7 +144,7 @@ element alternate.normal {
 element normal.urgent,
 element alternate.urgent {
     background-color: transparent;
-    text-color: #DBA0AA;
+    text-color: @urgent;
 }
 
 element normal.active,
@@ -115,24 +153,35 @@ element alternate.active {
     text-color: @accent;
 }
 
-element selected.normal {
+element selected.normal,
+element selected.urgent,
+element selected.active {
     background-color: @selected-bg;
-    text-color: @fg;
+    border-color: @accent;
 }
 
 element selected.urgent {
-    background-color: @selected-bg;
-    text-color: #DBA0AA;
+    text-color: @urgent;
 }
 
 element selected.active {
-    background-color: @selected-bg;
     text-color: @accent;
 }
 
-element-text {
-    background-color: transparent;
-    text-color: inherit;
-    highlight: bold;
-    vertical-align: 0.5;
+mode-switcher {
+    border: 0;
+    spacing: 8px;
+}
+
+button {
+    padding: 6px 0;
+    background-color: @bg-alt;
+    text-color: @fg-dim;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+button selected {
+    background-color: @selected-bg;
+    text-color: @accent;
 }
