@@ -84,7 +84,6 @@ installation marks thousands of base libraries and old kernels as manual.
 
 Downloads/builds use `~/.cache/thomas-config`; persistent source checkouts live
 in `~/.local/share/thomas-config/sources`. Existing Neovim configs are preserved.
-A fresh Neovim checkout uses the recorded commit plus `setup/nvim-image.patch`.
 APT, Homebrew, Flatpak, and optional development packages track available updates;
 this restores the workflow and appearance, not a byte-identical OS image.
 The source machine's retired PyPy 3.10 formula is deliberately excluded from

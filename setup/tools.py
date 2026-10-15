@@ -48,7 +48,6 @@ def install(home, cache, link):
                 print(f"Keep existing Neovim repository: {target}")
                 continue
             source = checkout(name, spec, home / ".local/share/thomas-config")
-            run(["git", "-C", source, "apply", ROOT / "nvim-image.patch"])
             link(source, target)
             continue
         output = outputs.get(name, home / ".tmux/plugins" / name)
