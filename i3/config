@@ -115,6 +115,7 @@ exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 # ActivityWatch
 exec --no-startup-id ~/Downloads/activitywatch/aw-qt
 exec --no-startup-id copyq
+exec --no-startup-id /usr/bin/dex /home/thomas/.config/autostart/9router.desktop
 
 # ================================================================
 # APPLICATION SHORTCUTS
