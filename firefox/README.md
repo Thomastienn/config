@@ -15,11 +15,10 @@ cream text and ComicShannsMono in Firefox's interface and new-tab page.
    `toolkit.legacyUserProfileCustomizations.stylesheets` to `true`.
 5. Restart Firefox once to load the style.
 
-For this machine, the active profile is
-`/home/thomas/.mozilla/firefox/2v88o53l.default-release`.
-Its `chrome` folder links to the two CSS files in this directory. Its existing
-`user.js` link enables the styles and preserves session restore. Regular Firefox
-windows and the browser scratchpad share this profile.
+Alternatively, run `./setup.sh apply --configs-only` from the repository root.
+Setup detects the default native or Ubuntu Snap profile and links these CSS
+files and `user.js`. Run Firefox once first if no profile exists yet. Regular
+Firefox windows and the browser scratchpad share the default profile.
 
 Restarting reloads saved tabs, but active page activity can reset. Apply the
 style during a convenient restart.

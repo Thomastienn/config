@@ -28,15 +28,15 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 # BRIGHTNESS CONTROL
 # ================================================================
 # shortcut: Brightness up
-bindsym XF86MonBrightnessUp exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh up
+bindsym XF86MonBrightnessUp exec --no-startup-id $HOME/thomas_config/scripts/brightness.sh up
 # shortcut: Brightness down
-bindsym XF86MonBrightnessDown exec --no-startup-id /home/thomas/thomas_config/scripts/brightness.sh down
+bindsym XF86MonBrightnessDown exec --no-startup-id $HOME/thomas_config/scripts/brightness.sh down
 
 # ================================================================
 # SCREENSHOT
 # ================================================================
 # shortcut: Save full-screen screenshot
-bindsym Print exec flameshot full -p /home/thomas/Pictures
+bindsym Print exec flameshot full -p $HOME/Pictures
 # shortcut: Select screenshot region
 bindsym Shift+Print exec flameshot gui
 # shortcut: Copy screenshot
@@ -51,7 +51,7 @@ bindsym Ctrl+Print exec flameshot screen -c
 # KEYBOARD
 # ================================================================
 # shortcut: Switch keyboard layout
-bindsym $mod+Shift+Return exec /home/thomas/thomas_config/polybar/shapes/scripts/keyboard-switch.sh
+bindsym $mod+Shift+Return exec $HOME/thomas_config/polybar/shapes/scripts/keyboard-switch.sh
 exec --no-startup-id ibus-daemon -drx
 
 # ================================================================
@@ -77,12 +77,11 @@ client.urgent           $urgent-color       $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
-exec_always --no-startup-id feh --bg-scale /home/thomas/thomas_config/wallpapers/hoppers.png
-exec_always --no-startup-id /home/thomas/thomas_config/picom/run.sh
-exec_always --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/i3-frame-hints.py
-exec_always --no-startup-id /home/thomas/thomas_config/conky/run.sh
-exec_always --no-startup-id xinput set-prop "ASUF1204:00 2808:0202 Touchpad" "libinput Natural Scrolling Enabled" 1
-exec_always --no-startup-id xinput set-prop 9 "libinput Natural Scrolling Enabled" 1
+exec_always --no-startup-id feh --bg-scale $HOME/thomas_config/wallpapers/hoppers.png
+exec_always --no-startup-id $HOME/thomas_config/picom/run.sh
+exec_always --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/i3-frame-hints.py
+exec_always --no-startup-id $HOME/thomas_config/conky/run.sh
+exec_always --no-startup-id $HOME/thomas_config/scripts/touchpad.sh
 
 # Mint
 exec --no-startup-id mintupdate-launcher
@@ -109,40 +108,40 @@ exec --no-startup-id xidlehook \
 # exec --no-startup-id dunst
 
 # Default polybar
-# exec_always --no-startup-id killall -q polybar; polybar -c /home/thomas/thomas_config/polybar/config main
+# exec_always --no-startup-id killall -q polybar; polybar -c $HOME/thomas_config/polybar/config main
 # Preconfigured theme
 exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 
 # ActivityWatch
 exec --no-startup-id ~/Downloads/activitywatch/aw-qt
 exec --no-startup-id copyq
-exec --no-startup-id /usr/bin/dex /home/thomas/.config/autostart/9router.desktop
+exec --no-startup-id test ! -f "$HOME/.config/autostart/9router.desktop" || /usr/bin/dex "$HOME/.config/autostart/9router.desktop"
 
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
 # shortcut: Quick task capture
-bindsym $mod+t exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/quick-task.py
+bindsym $mod+t exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/quick-task.py
 # shortcut: Dropdown terminal
-bindsym $mod+grave exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-terminal.py
+bindsym $mod+grave exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/dropdown-terminal.py
 # shortcut: Browser scratchpad (Firefox)
-bindsym $mod+g exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/dropdown-browser.py
+bindsym $mod+g exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/dropdown-browser.py
 # shortcut: Open project in main tmux
-bindsym $mod+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/project-launcher.py
+bindsym $mod+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/project-launcher.py
 # shortcut: Find folder in Nemo
-bindsym $mod+Shift+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/nemo-folder.py
+bindsym $mod+Shift+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/nemo-folder.py
 # shortcut: Clipboard history
 bindsym $mod+Ctrl+v exec --no-startup-id copyq toggle
 # shortcut: Screenshot to text
-bindsym $mod+Print exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/screenshot-text.py
+bindsym $mod+Print exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/screenshot-text.py
 # shortcut: Find document
-bindsym $mod+Ctrl+p exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/nemo-folder.py --documents
+bindsym $mod+Ctrl+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/nemo-folder.py --documents
 # shortcut: Find keyboard shortcut
-bindsym $mod+F1 exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/shortcut-finder.py
+bindsym $mod+F1 exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/shortcut-finder.py
 # shortcut: Quick tools (encoding, JSON, hashes, dates)
-bindsym $mod+u exec --no-startup-id /usr/bin/python3 /home/thomas/thomas_config/scripts/quick-tools.py
+bindsym $mod+u exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/quick-tools.py
 # shortcut: Open terminal
-bindsym $mod+Return exec /home/thomas/.local/kitty.app/bin/kitty
+bindsym $mod+Return exec kitty
 # shortcut: Open Brave browser
 bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 1'"
 # shortcut: Open Nemo file explorer

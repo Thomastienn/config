@@ -206,7 +206,7 @@ export VISUAL=nvim
 [ -d "$HOME/.local/kitty.app/bin" ] && export PATH="$HOME/.local/kitty.app/bin:$PATH"
 [ -d "/opt/nvim-linux-x86_64/bin" ] && export PATH="/opt/nvim-linux-x86_64/bin:$PATH"
 
-[ -d "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
 [ -d "$HOME/.cargo/bin" ] && export PATH="$HOME/.cargo/bin:$PATH"
 [ -d "/home/linuxbrew/.linuxbrew/bin" ] && export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 
@@ -402,7 +402,7 @@ export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border=rounded --info=i
 --color=info:#ABAFA4,prompt:#A7CCAE,pointer:#C0AFD5,marker:#C0AFD5,spinner:#C0AFD5,header:#ABAFA4,border:#5D6D5E,gutter:-1"
 
 # zoxide
-eval "$(zoxide init bash)"
+command -v zoxide >/dev/null && eval "$(zoxide init bash)"
 
 # SSH agent: reuse a live one (inherited, GNOME gcr, or one fixed socket) instead of one per shell.
 ssh-add -l >/dev/null 2>&1
@@ -442,8 +442,8 @@ fi
 
 
 # Has to be at the end
-export SDKMAN_DIR="/home/thomas/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "/home/thomas/.sdkman/bin/sdkman-init.sh"
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
 
 [[ -d "$HOME/CodeBase/grindstone/" ]] && alias grind="~/CodeBase/grindstone/main.py"
 
@@ -458,9 +458,9 @@ fi
 export QT_QPA_PLATFORMTHEME=gtk3
 
 # Added by codebase-memory-mcp install
-export PATH="/home/thomas/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 
-eval "$(thefuck --alias)"
-. "$HOME/.rokit/env"
+command -v thefuck >/dev/null && eval "$(thefuck --alias)"
+[ -f "$HOME/.rokit/env" ] && . "$HOME/.rokit/env"
 
-[ -f "/home/thomas/.ghcup/env" ] && . "/home/thomas/.ghcup/env" # ghcup-env
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env

@@ -1,0 +1,4 @@
+# Development CLIs from the previous setup, plus the current coding agent.
+@github/copilot
+@google/gemini-cli
+@openai/codex

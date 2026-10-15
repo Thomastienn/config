@@ -1,20 +1,20 @@
 ;; Quick-settings flyout, opened from the Polybar status island (qs.sh toggle).
 ;; Polls only while the flyout is open; every action reuses the bar's scripts.
 
-(defvar qs_cmd "/home/thomas/thomas_config/eww/scripts/qs.sh")
-(defvar desktop_cmd "/usr/bin/python3 /home/thomas/thomas_config/scripts/desktop-controls.py")
-(defvar afk_cmd "/usr/bin/python3 /home/thomas/thomas_config/scripts/afk.py")
+(defvar qs_cmd "$HOME/thomas_config/eww/scripts/qs.sh")
+(defvar desktop_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py")
+(defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
 
 (defpoll desktop :interval "1s"
   :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","focus":{"active":false,"mode":"idle","task":"","remaining":"","label":"","minutes":10},"afk":false,"notes":[],"note_count":0,"notifications":[],"history_available":false}'
-  "/usr/bin/python3 /home/thomas/thomas_config/scripts/desktop-controls.py status")
+  "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
   :initial '{"vol":0,"vol_muted":false,"mic_muted":false,"bright":0,"kbd":"--","hz":0,"wifi":"","gpu":"","media":"","playing":false}'
-  "/home/thomas/thomas_config/eww/scripts/qs.sh status")
+  "$HOME/thomas_config/eww/scripts/qs.sh status")
 
 (defpoll updates :interval "1800s" :initial "…"
-  "/home/thomas/thomas_config/polybar/shapes/scripts/updates.sh")
+  "$HOME/thomas_config/polybar/shapes/scripts/updates.sh")
 
 (defwidget tile [icon text on cmd]
   (button :class "tile ${on ? 'on' : ''}" :onclick cmd

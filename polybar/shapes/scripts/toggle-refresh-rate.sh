@@ -4,12 +4,19 @@
 MONITOR=$(xrandr --current | grep " connected primary" | awk '{print $1}')
 MONITOR=${MONITOR:-$(xrandr --current | grep " connected" | head -n1 | awk '{print $1}')}
 
-RESOLUTION="1920x1080"
-RATE_HIGH="144"
-RATE_LOW="60"
+# Keep the active resolution and use only rates offered by this display.
+MODE=$(xrandr --current | awk -v monitor="$MONITOR" '
+    /^[^ ]/ { active = ($1 == monitor) }
+    active && /\*/ { print; exit }')
+read -r RESOLUTION RATES <<< "$MODE"
+AVAILABLE=$(printf '%s\n' "$RATES" | tr ' ' '\n' | tr -d '*+' | sed '/^$/d' | sort -n)
+RATE_HIGH=$(printf '%s\n' "$AVAILABLE" | tail -1)
+# Prefer 60 Hz when supported; otherwise use the lowest available rate.
+RATE_LOW=$(printf '%s\n' "$AVAILABLE" | awk '$1 >= 59 && $1 <= 61 { print; exit }')
+RATE_LOW=${RATE_LOW:-$(printf '%s\n' "$AVAILABLE" | head -1)}
 
 # Get current refresh rate
-CURRENT=$(xrandr --current | grep "^$MONITOR connected" -A 1 | grep -oP '\d+\.\d+(?=\*)')
+CURRENT=$(printf '%s\n' "$MODE" | grep -oP '\d+\.\d+(?=\*)')
 
 if [[ -z "$CURRENT" ]]; then
     echo "Error: Monitor $MONITOR not found or not connected" >&2
@@ -17,8 +24,7 @@ if [[ -z "$CURRENT" ]]; then
 fi
 
 # Toggle logic
-CURRENT_INT=${CURRENT%.*}  # Convert 144.00 -> 144
-if [[ "$CURRENT_INT" -ge "$RATE_HIGH" ]]; then
+if awk -v current="$CURRENT" -v high="$RATE_HIGH" 'BEGIN { exit !(current >= high - 0.5) }'; then
     NEW_RATE="$RATE_LOW"
 else
     NEW_RATE="$RATE_HIGH"
@@ -29,7 +35,7 @@ if xrandr --output "$MONITOR" --mode "$RESOLUTION" --rate "$NEW_RATE" 2>/dev/nul
     echo "Switched $MONITOR to ${NEW_RATE}Hz"
     
     # Notify polybar (if running)
-    /home/thomas/thomas_config/polybar/shapes/scripts/get-refresh-rate.sh
+    "$HOME/thomas_config/polybar/shapes/scripts/get-refresh-rate.sh"
     
     # Optional: Send desktop notification
     notify-send -u low "Display" "Refresh rate: ${NEW_RATE}Hz" 2>/dev/null || true

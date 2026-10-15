@@ -8,7 +8,7 @@ A color-only theme matching [theme.sh](../theme.sh) and the
 1. Open `brave://extensions`.
 2. Enable **Developer mode**.
 3. Click **Load unpacked**.
-4. Select this folder: `/home/thomas/thomas_config/brave`.
+4. Select `thomas_config/brave` inside your home directory.
 
 For dark browser dialogs and settings pages, also set Brave's color mode
 to **Dark** in browser settings.

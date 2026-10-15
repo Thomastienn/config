@@ -13,4 +13,4 @@ Temperatures use Celsius. Calgary coordinates and timezone live near the top
 of `weather.py`. The daylight marker moves using the local clock, without
 extra API requests.
 
-Checks: `python3 conky/test_weather.py` and `lua conky/test-weather.lua`.
+Installation checks: run `./setup.sh check` from the repository root.

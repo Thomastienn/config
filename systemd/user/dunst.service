@@ -1,0 +1,8 @@
+[Unit]
+Description=Cozy Mint notification daemon
+PartOf=graphical-session.target
+
+[Service]
+Type=dbus
+BusName=org.freedesktop.Notifications
+ExecStart=%h/.local/bin/dunst

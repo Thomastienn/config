@@ -1,0 +1,9 @@
+gtk-theme-name="Mint-Y-Dark-Grey"
+gtk-icon-theme-name="Mint-Y-Blue"
+gtk-font-name="Sans 10"
+gtk-cursor-theme-name="Bibata-Modern-Classic"
+gtk-cursor-theme-size=0
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle="hintfull"
+gtk-xft-rgba="rgb"

@@ -1,0 +1,12 @@
+# Apps currently installed from Flathub. Installed in user scope on new machines.
+com.discordapp.Discord
+com.github.d4nj1.tlpui
+com.github.jeromerobert.pdfarranger
+com.heroicgameslauncher.hgl
+com.obsproject.Studio
+io.github.wh201906.serialtest
+net.sapples.LiveCaptions
+org.localsend.localsend_app
+org.prismlauncher.PrismLauncher
+org.vinegarhq.Sober
+org.vinegarhq.Vinegar

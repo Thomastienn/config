@@ -3,8 +3,8 @@
 One-time setup from this checkout:
 
 ```sh
-sudo apt install --no-install-recommends recollcmd poppler-utils python3-gi
-/usr/bin/python3 ~/thomas_config/scripts/install-productivity.py
+cd ~/thomas_config
+./setup.sh apply
 ```
 
 Restart i3 once (`Super+Shift+R`) so xidlehook gains its control socket. This restarts
@@ -79,13 +79,8 @@ restores the saved display/idle settings, including after a worker crash.
 
 ## Checks
 
-```sh
-/usr/bin/python3 scripts/test-productivity.py
-/usr/bin/python3 scripts/test-desktop-shortcuts.py
-bash -n scripts/command-finished.sh
-i3 -C -c i3/config
-systemd-analyze --user verify systemd/user/thomas-*.service systemd/user/thomas-*.timer
-```
+Run `./setup.sh check` for installation differences, and `i3 -C -c i3/config`
+for i3 syntax. See [the setup guide](../README.md) for applying changes after a pull.
 
 Lid close/resume and actual headphone/microphone routing also need a laptop check;
 isolated/headless checks cannot prove those hardware behaviors.

@@ -1,0 +1,12 @@
+# Development/coursework/virtualization from the old setup. Opt in with --extras.
+bridge-utils
+cpu-checker
+latexmk
+maven
+openjdk-21-jdk
+qemu-system-x86
+texlive-fonts-recommended
+texlive-latex-extra
+texlive-latex-recommended
+virt-manager
+virtinst

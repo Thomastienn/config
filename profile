@@ -1,3 +1,6 @@
+# These paths must reach i3 and D-Bus clients, which do not read interactive bashrc.
+export PATH="$HOME/.local/bin:$HOME/.local/kitty.app/bin:$HOME/.cargo/bin:/home/linuxbrew/.linuxbrew/bin:/home/linuxbrew/.linuxbrew/sbin:$PATH"
+
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
@@ -29,12 +32,12 @@ fi
 if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
-. "$HOME/.cargo/env"
-. "/home/thomas/.deno/env"
+[ -f "$HOME/.cargo/env" ] && . "$HOME/.cargo/env"
+[ -f "$HOME/.deno/env" ] && . "$HOME/.deno/env"
 
 
 # Added by Antigravity CLI installer
-export PATH="/home/thomas/.local/bin:$PATH"
-. "$HOME/.rokit/env"
+export PATH="$HOME/.local/bin:$PATH"
+[ -f "$HOME/.rokit/env" ] && . "$HOME/.rokit/env"
 
-[ -f "/home/thomas/.ghcup/env" ] && . "/home/thomas/.ghcup/env" # ghcup-env
+[ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env

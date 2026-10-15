@@ -50,7 +50,7 @@ def search(query):
 
 def main(query=""):
     if not shutil.which("recollq"):
-        raise RuntimeError("PDF content search needs recollcmd. See scripts/PRODUCTIVITY.md for setup.")
+        raise RuntimeError("PDF content search needs recollcmd. Run ~/thomas_config/setup.sh apply.")
     message = "Search words inside PDFs · Ctrl+Tab: filenames · Ctrl+R: refresh index"
     while True:
         prompt = subprocess.run(["rofi", "-dmenu", "-filter", query, "-format", "f",

@@ -4,11 +4,12 @@
 import fcntl
 import json
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import time
 
-KITTY = str(Path.home() / ".local/kitty.app/bin/kitty")
+KITTY = shutil.which("kitty") or str(Path.home() / ".local/kitty.app/bin/kitty")
 CLASS = "task-dropdown"
 
 

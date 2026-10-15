@@ -1,0 +1,12 @@
+{
+  "picom": {"url": "https://github.com/yshui/picom.git", "rev": "a456d438d0a681365d90a8adbf0941cede41aaa9"},
+  "dunst": {"url": "https://github.com/dunst-project/dunst.git", "rev": "1f505921a77936bef9865e465216c5da9052bf2f"},
+  "eww": {"url": "https://github.com/elkowar/eww.git", "rev": "fddb4a09b107237819e661151e007b99b5cab36d"},
+  "blesh": {"url": "https://github.com/akinomyoga/ble.sh.git", "rev": "2f564e636f7b5dd99c4d9793277a93db29e81adf"},
+  "i3lock-color": {"url": "https://github.com/Raymo111/i3lock-color.git", "rev": "e6c0caf9b7aa22cc7864493132a1a2e258da1761"},
+  "betterlockscreen": {"url": "https://github.com/betterlockscreen/betterlockscreen.git", "rev": "bdfc4faf7142aa1d555528ab1a9a103be95a3f80"},
+  "tpm": {"url": "https://github.com/tmux-plugins/tpm.git", "rev": "e261deb1b47614eed3400089ce7197dc68acc4eb"},
+  "tmux-resurrect": {"url": "https://github.com/tmux-plugins/tmux-resurrect.git", "rev": "cff343cf9e81983d3da0c8562b01616f12e8d548"},
+  "tmux-continuum": {"url": "https://github.com/tmux-plugins/tmux-continuum.git", "rev": "0698e8f4b17d6454c71bf5212895ec055c578da0"},
+  "nvim": {"url": "https://github.com/Thomastienn/astronvimconfig.git", "rev": "47a98370567ac0828251516ac926c2acdfa780b1"}
+}

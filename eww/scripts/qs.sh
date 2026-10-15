@@ -6,7 +6,7 @@ DIR=$(dirname "$(readlink -f "$0")")
 # Polybar/i3 don't read bashrc, so eww's build dir may not be on PATH.
 EWW=("$(command -v eww || echo "$HOME/eww/target/release/eww")" -c "$DIR/..")
 PB=$HOME/thomas_config/polybar/shapes/scripts
-BACKLIGHT=nvidia_wmi_ec_backlight
+source "$HOME/thomas_config/scripts/backlight.sh"
 
 json_str() { local s=${1//\\/\\\\}; s=${s//\"/\\\"}; printf '"%s"' "$s"; }
 num() { [[ $1 =~ ^[0-9]+$ ]] && echo "$1" || echo 0; }
@@ -16,7 +16,7 @@ status() {
     vol=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\d+(?=%)' | head -1)
     pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -q yes && vol_muted=true || vol_muted=false
     pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null | grep -q yes && mic_muted=true || mic_muted=false
-    bright=$(brightnessctl -d "$BACKLIGHT" -m 2>/dev/null | cut -d, -f4 | tr -d %)
+    bright=$("${backlight[@]}" -m 2>/dev/null | cut -d, -f4 | tr -d %)
     engine=$(ibus engine 2>/dev/null)
     case $engine in Unikey) kbd=VI ;; *us*) kbd=US ;; "") kbd=-- ;; *) kbd=${engine##*:} ;; esac
     hz=$(xrandr --current 2>/dev/null | grep -oP '\d+(?=\.\d+\*)' | head -1)
@@ -46,7 +46,7 @@ case $1 in
     vol) pactl set-sink-volume @DEFAULT_SINK@ "$(num "${2%.*}")%" ;;
     mute) pactl set-sink-mute @DEFAULT_SINK@ toggle ;;
     # Floor at 5% so a stray drag can't black out the panel.
-    bright) b=$(num "${2%.*}"); brightnessctl -q -d "$BACKLIGHT" s "$(( b < 5 ? 5 : b ))%" ;;
+    bright) b=$(num "${2%.*}"); "${backlight[@]}" -q s "$(( b < 5 ? 5 : b ))%" ;;
     prev|next) playerctl "$1" ;;
     play) playerctl play-pause ;;
     *) echo "usage: $0 status|toggle|close|mic|kbd|hz|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;

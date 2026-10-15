@@ -29,7 +29,7 @@ if xrandr --output "$MONITOR" --mode "$RESOLUTION" --rate "$NEW_RATE" 2>/dev/nul
     echo "Switched $MONITOR to ${NEW_RATE}Hz"
     
     # Notify polybar (if running)
-    /home/thomas/thomas_config/polybar/hack/scripts/get-refresh-rate.sh
+    "$HOME/thomas_config/polybar/hack/scripts/get-refresh-rate.sh"
     
     # Optional: Send desktop notification
     notify-send -u low "Display" "Refresh rate: ${NEW_RATE}Hz" 2>/dev/null || true

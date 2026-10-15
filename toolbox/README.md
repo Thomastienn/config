@@ -38,6 +38,6 @@ and follows the upstream app's storage behavior.
 Checks:
 
 ```sh
-xvfb-run -a /usr/bin/python3 scripts/test-quick-tools.py
+./setup.sh check
 i3 -C -c i3/config
 ```
