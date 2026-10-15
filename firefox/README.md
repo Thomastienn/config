@@ -20,6 +20,21 @@ Setup detects the default native or Ubuntu Snap profile and links these CSS
 files and `user.js`. Run Firefox once first if no profile exists yet. Regular
 Firefox windows and the browser scratchpad share the default profile.
 
+## Scratchpad resource use
+
+`Super+G` pauses Firefox's dedicated process group when hiding the scratchpad,
+then resumes it before showing the window. Tabs and their current state remain
+in memory. Hidden audio, downloads, and page activity pause too; network sessions
+may need to reconnect after a long pause. This reduces CPU use, not retained RAM.
+External links sent to Firefox may wait until the scratchpad is shown again.
+
+If another regular Firefox window exists outside the scratchpad, Firefox keeps
+running so that window stays usable. Firefox started without its own process
+group also stays running; quit normally and reopen through `Super+G` in that case.
+Do not force-kill Firefox to enable this behavior. The existing shortcut picks up
+the script change immediately; no desktop or browser restart is required for
+Firefox already running in its own session.
+
 Restarting reloads saved tabs, but active page activity can reset. Apply the
 style during a convenient restart.
 
