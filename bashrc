@@ -430,6 +430,7 @@ if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
     source -- ~/.local/share/blesh/ble.sh
     # $(...) in PS1 clobbers $?, and wakatime's PROMPT_COMMAND runs first; PRECMD still sees the real status.
     blehook PRECMD+='prompt_status=$?'
+    source "$HOME/thomas_config/scripts/command-finished.sh"
     bleopt default_keymap=vi
     ble-bind -m vi_imap -f 'j j' vi_imap/normal-mode
     ble-bind -m vi_imap -T j 200

@@ -8,6 +8,7 @@ $dim: #ABAFA4;
 $mint: #A7CCAE;
 $lavender: #C0AFD5;
 $ink: #191B19;
+$amber: #DEC28A;
 
 * {
   all: unset;
@@ -89,3 +90,32 @@ $ink: #191B19;
   background-color: $surface;
   &:hover { background-color: $surface-hi; color: $fg; }
 }
+
+.section {
+  padding: 4px 2px;
+  > title { padding: 6px 0; }
+}
+.section-label { font-weight: bold; color: $mint; }
+.muted, .saved-note { color: $dim; }
+.device, .compact-btn, .afk-toggle {
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: $surface;
+  &:hover, &:focus { background: $surface-hi; color: $mint; }
+}
+.device.selected { color: $mint; }
+.primary-btn { color: $mint; }
+.afk-toggle.afk-on {
+  background: $amber;
+  label { color: $ink; }
+}
+expander arrow {
+  color: $dim;
+  min-width: 16px;
+  min-height: 16px;
+  -gtk-icon-source: -gtk-icontheme("pan-end-symbolic");
+}
+expander arrow:checked { -gtk-icon-source: -gtk-icontheme("pan-down-symbolic"); }
+expander title:hover label, expander title:focus label { color: $mint; }
+scrollbar { padding-left: 4px; }
+scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-height: 20px; }

@@ -1,0 +1,8 @@
+[Unit]
+Description=Gentle focus or break session
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/desktop-controls.py focus-run
+ExecStopPost=/usr/bin/python3 %h/thomas_config/scripts/desktop-controls.py focus-reset
+TimeoutStopSec=20

@@ -1,0 +1,9 @@
+[Unit]
+Description=Incremental PDF content index
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/pdf_search.py --index
+Nice=10
+IOSchedulingClass=idle

@@ -82,11 +82,32 @@
     timeout = 6
 
 [urgency_critical]
+    override_pause_level = 60
     background = "#3A2730E6"
     foreground = "#EEE8DC"
     frame_color = "#DBA0AA"
     highlight = "#DBA0AA"
     timeout = 0
+
+[focus-messages]
+    appname = "Focus"
+    override_pause_level = 100
+
+[command-results]
+    appname = "Command finished"
+    override_pause_level = 60
+
+[manual-volume-controls]
+    appname = "volume"
+    override_pause_level = 60
+
+[manual-brightness-controls]
+    appname = "brightness"
+    override_pause_level = 60
+
+[manual-microphone-controls]
+    appname = "microphone"
+    override_pause_level = 60
 
 # SVG paths cover Papirus status icons missing from its 32px theme lookup.
 [volume-up]

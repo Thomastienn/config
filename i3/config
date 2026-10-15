@@ -99,6 +99,7 @@ exec --no-startup-id ibus engine xkb:us::eng
 #   -detectsleep
 
 exec --no-startup-id xidlehook \
+  --socket "$XDG_RUNTIME_DIR/thomas-xidlehook.sock" \
   --not-when-audio \
   --not-when-fullscreen \
   --timer 600 'betterlockscreen --lock dimblur' '' \

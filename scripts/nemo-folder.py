@@ -48,14 +48,17 @@ def scan_folders(documents=False):
             continue
 
 
-def main(documents=False):
+def choose(documents=False, query=""):
     home = Path.home()
     scan = subprocess.Popen(scan_command(documents), cwd=home, stdout=subprocess.PIPE,
                             stderr=subprocess.DEVNULL)
+    options = (["-filter", query, "-format", "f\x1fs", "-kb-mode-next", "",
+                "-kb-custom-1", "Control+Tab", "-mesg", "Ctrl+Tab: search PDF contents"]
+               if documents else ["-format", "s", "-no-custom"])
     try:
         choice = subprocess.run(
-            ["rofi", "-dmenu", "-i", "-matching", "fuzzy", "-sort", "-no-custom",
-             "-async-pre-read", "0", "-format", "s", "-theme-str",
+            ["rofi", "-dmenu", "-i", "-matching", "fuzzy", "-sort",
+             "-async-pre-read", "0", *options, "-theme-str",
              'entry { placeholder: "' + ("Open document…" if documents else "Open folder in Nemo…") + '"; }'],
             stdin=scan.stdout, capture_output=True, text=True,
         )
@@ -68,11 +71,28 @@ def main(documents=False):
         except subprocess.TimeoutExpired:
             scan.kill()
             scan.wait()
+    return choice
+
+
+def main(documents=False):
+    home = Path.home()
+    query = ""
+    while True:
+        choice = choose(documents, query)
+        typed, separator, selected = choice.stdout.partition("\x1f")
+        content_query = documents and choice.returncode == 0 and separator and selected.strip() and not selected.startswith("~/")
+        if documents and (choice.returncode == 10 or content_query):
+            import pdf_search
+            query = pdf_search.main(typed.rstrip("\n"))
+            if query is None:
+                return
+            continue
+        break
     if choice.returncode == 1:
         return
     if choice.returncode != 0:
         raise RuntimeError(choice.stderr.strip() or f"Rofi exited with status {choice.returncode}.")
-    selected = choice.stdout.removesuffix("\n")
+    selected = choice.stdout.split("\x1f", 1)[-1].removesuffix("\n")
     if not selected:
         return
     if not selected.startswith("~/") or ".." in Path(selected[2:]).parts:
@@ -91,6 +111,6 @@ if __name__ == "__main__":
             main(documents=sys.argv[1:] == ["--documents"])
     except BrokenPipeError:
         pass
-    except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         subprocess.run(["notify-send", "-u", "critical", "Folder finder failed",
                         html.escape(str(error))])

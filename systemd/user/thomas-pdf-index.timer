@@ -1,0 +1,10 @@
+[Unit]
+Description=Refresh PDF content search every fifteen minutes
+
+[Timer]
+OnStartupSec=2min
+OnUnitInactiveSec=15min
+Unit=thomas-pdf-index.service
+
+[Install]
+WantedBy=timers.target

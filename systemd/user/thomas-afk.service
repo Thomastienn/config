@@ -1,0 +1,8 @@
+[Unit]
+Description=Lid-aware AFK keep-awake mode
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/afk.py run
+ExecStopPost=/usr/bin/python3 %h/thomas_config/scripts/afk.py reset
+TimeoutStopSec=35

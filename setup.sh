@@ -79,6 +79,10 @@ sudo ln -s ~/thomas_config/xfce/xflock4 /usr/local/bin/xflock4
 sudo ${DEFAULT_PACKAGE_MANAGER} install xautolock -y
 # End i3wm
 
+# PDF content search and the existing desktop's focus/AFK controls.
+sudo ${DEFAULT_PACKAGE_MANAGER} install --no-install-recommends recollcmd poppler-utils python3-gi -y
+/usr/bin/python3 ~/thomas_config/scripts/install-productivity.py
+
 
 # Install screen brightness
 sudo apt install brightnessctl
