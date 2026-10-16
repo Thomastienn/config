@@ -3,6 +3,7 @@
 
 (defvar qs_cmd "$HOME/thomas_config/eww/scripts/qs.sh")
 (defvar desktop_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py")
+(defvar qs_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
 
 (defpoll desktop :interval "1s"
@@ -16,112 +17,128 @@
 (defpoll updates :interval "1800s" :initial "…"
   "$HOME/thomas_config/polybar/shapes/scripts/updates.sh")
 
-(defwidget tile [icon text on cmd]
-  (button :class "tile ${on ? 'on' : ''}" :onclick cmd
-    (box :orientation "v" :space-evenly false :spacing 4
+(defwidget tile [icon text detail on cmd]
+  (button :timeout "10s" :class "tile ${on ? 'on' : ''}" :onclick cmd
+    (box :space-evenly false :spacing 14
       (label :class "tile-icon" :text icon)
-      (label :class "tile-text" :text text :limit-width 10))))
+      (box :orientation "v" :space-evenly false :spacing 4
+        (label :class "tile-text" :xalign 0 :text text)
+        (label :class "tile-detail" :xalign 0 :limit-width 20 :tooltip detail :text detail)))))
 
-(defwidget slider-row [icon value cmd ?icon-cmd]
-  (box :class "slider-row" :space-evenly false :spacing 12
-    (button :class "slider-icon" :onclick {icon-cmd ?: ""} icon)
-    (scale :class "slider" :hexpand true :min 0 :max 101 :value value :onchange cmd)
-    (label :class "slider-value" :text "${value}%")))
+(defwidget slider-row [icon text value cmd ?icon-cmd]
+  (box :class "slider-row" :orientation "v" :space-evenly false :spacing 10
+    (box :space-evenly false
+      (label :hexpand true :xalign 0 :text text)
+      (label :class "slider-value" :text "${value}%"))
+    (box :space-evenly false :spacing 16
+      (button :class "slider-icon" :tooltip text :onclick {icon-cmd ?: ""} icon)
+      (scale :class "slider" :hexpand true :min 0 :max 101 :value value :onchange cmd))))
 
 (defwidget audio-devices []
-  (expander :class "section" :name "Audio devices"
-    (box :orientation "v" :space-evenly false :spacing 6
-      (label :visible {!desktop.audio_available} :class "muted" :xalign 0 :text {desktop.audio_error})
-      (label :visible {desktop.audio_available} :class "section-label" :xalign 0 :text "Output")
-      (box :orientation "v" :space-evenly false :spacing 6
+  (box :orientation "v" :space-evenly false :spacing 24
+    (label :visible {!desktop.audio_available} :class "muted" :xalign 0 :wrap true :width 480 :text {desktop.audio_error})
+    (box :visible {desktop.audio_available} :orientation "v" :space-evenly false :spacing 12
+      (label :class "section-label" :xalign 0 :text "Sound output")
+      (label :visible {arraylength(desktop.outputs) == 0} :class "muted" :xalign 0 :text "No output connected")
+      (box :orientation "v" :space-evenly false :spacing 10
         (for device in {desktop.outputs}
-          (button :class "device ${device.selected ? 'selected' : ''}"
+          (button :timeout "10s" :class "device ${device.selected ? 'selected' : ''}"
                   :tooltip {device.name} :onclick "${desktop_cmd} audio output ${device.id}"
-            (label :xalign 0 :limit-width 33 :text "${device.selected ? '● ' : '○ '}${device.name}"))))
-      (label :visible {desktop.audio_available} :class "section-label" :xalign 0 :text "Microphone")
-      (label :visible {desktop.audio_available && arraylength(desktop.inputs) == 0}
-             :class "muted" :xalign 0 :text "No microphone connected")
-      (box :orientation "v" :space-evenly false :spacing 6
+            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '● ' : '○ '}${device.name}")))))
+    (box :visible {desktop.audio_available} :orientation "v" :space-evenly false :spacing 12
+      (label :class "section-label" :xalign 0 :text "Microphone")
+      (label :visible {arraylength(desktop.inputs) == 0} :class "muted" :xalign 0 :text "No microphone connected")
+      (box :orientation "v" :space-evenly false :spacing 10
         (for device in {desktop.inputs}
-          (button :class "device ${device.selected ? 'selected' : ''}"
+          (button :timeout "10s" :class "device ${device.selected ? 'selected' : ''}"
                   :tooltip {device.name} :onclick "${desktop_cmd} audio input ${device.id}"
-            (label :xalign 0 :limit-width 33 :text "${device.selected ? '● ' : '○ '}${device.name}")))))))
+            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '● ' : '○ '}${device.name}")))))))
 
 (defwidget focus-controls []
-  (expander :class "section" :name {desktop.focus.active ? desktop.focus.label : "Focus · one small step"}
-    (box :orientation "v" :space-evenly false :spacing 10
-      (label :xalign 0 :wrap true :limit-width 34 :class "muted"
-             :text {desktop.focus.task == "" ? "Pick one tiny next action. Stopping is always okay." : desktop.focus.task})
-      (box :visible {!desktop.focus.active} :spacing 8 :space-evenly true
-        (button :class "compact-btn" :onclick "${desktop_cmd} focus-start 5" "5 min")
-        (button :class "compact-btn primary-btn" :onclick "${desktop_cmd} focus-start 10" "10 min")
-        (button :class "compact-btn" :onclick "${desktop_cmd} focus-start 25" "25 min"))
-      (box :visible {desktop.focus.active || desktop.focus.mode == "done"} :spacing 8
-        (button :visible {!desktop.focus.active} :class "compact-btn"
-                :onclick "${desktop_cmd} focus-continue" "Continue")
-        (button :class "compact-btn" :onclick "${desktop_cmd} focus-break" "5 min break")
-        (button :class "compact-btn" :onclick "${desktop_cmd} focus-stop" "Stop"))
-      (button :class "compact-btn" :onclick "${desktop_cmd} park" "Save a thought for your break")
-      (expander :name "Saved for later (${desktop.note_count})"
-        (box :orientation "v" :space-evenly false :spacing 6
-          (label :visible {desktop.note_count == 0} :class "muted" :text "Nothing parked. Keep going gently.")
-          (scroll :height 100 :hscroll false
-            (box :orientation "v" :space-evenly false :spacing 6
-              (for note in {desktop.notes}
-                (label :class "saved-note" :xalign 0 :wrap true :limit-width 32 :text {note}))))
-          (button :visible {desktop.note_count > 0} :class "compact-btn"
-                  :onclick "${desktop_cmd} clear-notes" "Clear saved thoughts"))))))
+  (box :orientation "v" :space-evenly false :spacing 20
+    (label :class "section-label" :xalign 0 :text {desktop.focus.active ? desktop.focus.label : "One small step"})
+    (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480
+           :text {desktop.focus.task == "" ? "Choose one next action. Stopping is always okay." : desktop.focus.task})
+    (box :visible {!desktop.focus.active} :spacing 12 :space-evenly true
+      (button :timeout "1h" :class "compact-btn" :onclick "${desktop_cmd} focus-start 5" "5 min")
+      (button :timeout "1h" :class "compact-btn primary-btn" :onclick "${desktop_cmd} focus-start 10" "10 min")
+      (button :timeout "1h" :class "compact-btn" :onclick "${desktop_cmd} focus-start 25" "25 min"))
+    (box :visible {desktop.focus.active || desktop.focus.mode == "done"} :spacing 12
+      (button :timeout "10s" :visible {!desktop.focus.active} :class "compact-btn" :onclick "${desktop_cmd} focus-continue" "Continue")
+      (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-break" "5 min break")
+      (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-stop" "Stop"))
+    (button :timeout "1h" :class "compact-btn" :onclick "${desktop_cmd} park" "Save a thought for your break")
+    (label :class "section-label" :xalign 0 :text "Saved for later (${desktop.note_count})")
+    (label :visible {desktop.note_count == 0} :class "muted" :xalign 0 :text "No saved thoughts yet.")
+    (box :orientation "v" :space-evenly false :spacing 16
+      (for note in {desktop.notes}
+        (label :class "saved-note" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {note})))
+    (button :visible {desktop.note_count > 0} :class "compact-btn"
+            :onclick "${desktop_cmd} clear-notes" "Clear saved thoughts")))
 
 (defwidget notification-history []
-  (expander :class "section" :name "Notification history"
-    (box :orientation "v" :space-evenly false :spacing 8
-      (label :visible {!desktop.history_available} :class "muted" :text "Notification history unavailable")
-      (label :visible {desktop.history_available && arraylength(desktop.notifications) == 0}
-             :class "muted" :text "No past notifications")
-      (scroll :height 160 :hscroll false
-        (box :orientation "v" :space-evenly false :spacing 12
-          (for notice in {desktop.notifications}
-            (box :orientation "v" :space-evenly false :spacing 3
-              (label :class "section-label" :xalign 0 :wrap true :limit-width 32 :text {notice.summary})
-              (label :class "muted" :xalign 0 :wrap true :limit-width 32 :tooltip {notice.body} :text {notice.body})))))
-      (button :visible {arraylength(desktop.notifications) > 0} :class "compact-btn"
-              :onclick "${desktop_cmd} clear-history" "Clear history"))))
+  (box :orientation "v" :space-evenly false :spacing 20
+    (label :class "section-label" :xalign 0 :text "Notification history")
+    (label :visible {!desktop.history_available} :class "muted" :xalign 0 :text "Notification history unavailable")
+    (label :visible {desktop.history_available && arraylength(desktop.notifications) == 0}
+           :class "muted" :xalign 0 :text "No past notifications")
+    (box :orientation "v" :space-evenly false :spacing 24
+      (for notice in {desktop.notifications}
+        (box :class "notice" :orientation "v" :space-evenly false :spacing 8
+          (label :class "section-label" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {notice.summary})
+          (label :visible {notice.body != ""} :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {notice.body}))))
+    (button :visible {arraylength(desktop.notifications) > 0} :class "compact-btn"
+            :onclick "${desktop_cmd} clear-history" "Clear history")))
 
-(defwidget flyout []
-  (box :class "card" :orientation "v" :space-evenly false :spacing 14
-    (box :class "header" :orientation "v" :space-evenly false
-      (label :class "clock" :xalign 0 :text {formattime(EWW_TIME, "%I:%M %p")})
-      (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%A, %d %B %Y")}))
-    (scroll :height 440 :hscroll false
-     (box :orientation "v" :space-evenly false :spacing 14
-    (box :class "tiles" :spacing 10 :space-evenly true
-      (tile :icon {qs.mic_muted ? "" : ""} :text {qs.mic_muted ? "Muted" : "Mic"}
-            :on {!qs.mic_muted} :cmd "${qs_cmd} mic")
-      (tile :icon "" :text {qs.kbd} :on {qs.kbd == "VI"} :cmd "${qs_cmd} kbd")
-      (tile :icon "" :text "${qs.hz}Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
-      (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text {qs.wifi == "" ? "Offline" : qs.wifi}
-            :on {qs.wifi != ""} :cmd "${qs_cmd} wifi"))
-    (slider-row :icon {qs.vol_muted ? "" : ""} :value {qs.vol}
-                :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
-    (slider-row :icon "󰃟" :value {qs.bright} :cmd "${qs_cmd} bright {}")
-    (audio-devices)
-    (button :class "afk-toggle ${desktop.afk ? 'afk-on' : ''}"
+(defwidget settings-tab [text index]
+  (button :class "settings-tab ${qs_page == index ? 'selected' : ''}" :onclick "${qs_cmd} page ${index}" text))
+
+(defwidget quick-controls []
+  (box :orientation "v" :space-evenly false :spacing 24
+    (slider-row :icon {qs.vol_muted ? "" : ""} :text {qs.vol_muted ? "Volume · muted" : "Volume"}
+                :value {qs.vol} :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
+    (slider-row :icon "󰃟" :text "Brightness" :value {qs.bright} :cmd "${qs_cmd} bright {}")
+    (box :orientation "v" :space-evenly false :spacing 12
+      (box :spacing 12 :space-evenly true
+        (tile :icon {qs.mic_muted ? "" : ""} :text "Microphone" :detail {qs.mic_muted ? "Muted" : "On"}
+              :on {!qs.mic_muted} :cmd "${qs_cmd} mic")
+        (tile :icon "" :text "Keyboard" :detail {qs.kbd} :on {qs.kbd == "VI"} :cmd "${qs_cmd} kbd"))
+      (box :spacing 12 :space-evenly true
+        (tile :icon "" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
+        (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
+              :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")))
+    (button :timeout "10s" :class "afk-toggle ${desktop.afk ? 'afk-on' : ''}"
             :tooltip "Keep screen awake while lid is open. Lid close or sleep turns this off."
             :onclick "${afk_cmd} toggle"
-      (box :space-evenly false
+      (box :space-evenly false :spacing 12
         (label :hexpand true :xalign 0 :text "AFK · keep awake")
         (label :text {desktop.afk ? "On" : "Off"})))
-    (focus-controls)
-    (notification-history)
-    (box :class "media" :space-evenly false :spacing 10
-      (label :class "media-icon ${qs.playing ? 'on' : ''}" :text "")
-      (label :class "media-text" :hexpand true :xalign 0 :limit-width 22
-             :text {qs.media == "" ? "No media" : qs.media})
-      (button :class "media-btn" :onclick "${qs_cmd} prev" "")
-      (button :class "media-btn" :onclick "${qs_cmd} play" {qs.playing ? "" : ""})
-      (button :class "media-btn" :onclick "${qs_cmd} next" ""))
-    ))
-    (box :class "footer" :space-evenly false
+    (box :class "media" :space-evenly false :spacing 12
+      (label :class "media-text" :hexpand true :xalign 0 :limit-width 27 :tooltip {qs.media}
+             :text {qs.media == "" ? "No media playing" : qs.media})
+      (button :class "media-btn" :tooltip "Previous" :onclick "${qs_cmd} prev" "")
+      (button :class "media-btn" :tooltip "Play / pause" :onclick "${qs_cmd} play" {qs.playing ? "" : ""})
+      (button :class "media-btn" :tooltip "Next" :onclick "${qs_cmd} next" ""))))
+
+(defwidget flyout []
+  (box :class "card qs-panel" :orientation "v" :space-evenly false :spacing 20
+    (box :class "header" :space-evenly false :spacing 16
+      (box :orientation "v" :space-evenly false :hexpand true :spacing 8
+        (label :class "settings-title" :xalign 0 :text "Quick settings")
+        (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")}))
+      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
+      (button :class "compact-btn settings-close" :tooltip "Close quick settings" :onclick "${qs_cmd} close" "×"))
+    (box :class "settings-tabs" :space-evenly true :spacing 8
+      (settings-tab :text "Controls" :index 0)
+      (settings-tab :text "Audio" :index 1)
+      (settings-tab :text "Focus" :index 2)
+      (settings-tab :text "History" :index 3))
+    (stack :selected qs_page :transition "none" :same-size false :vexpand true
+      (scroll :vexpand true :hscroll false (quick-controls))
+      (scroll :vexpand true :hscroll false (audio-devices))
+      (scroll :vexpand true :hscroll false (focus-controls))
+      (scroll :vexpand true :hscroll false (notification-history)))
+    (box :class "footer" :space-evenly false :spacing 12
       (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
       (button :class "footer-btn" :onclick "${qs_cmd} updates" {updates}))))
 
@@ -138,10 +155,10 @@
   (closer))
 
 ;; 22px matches the i3 window edge; 52px sits just under the 8+36px bar.
-(defwindow flyout
+(defwindow flyout [?panel_height]
   :monitor 0
-  :geometry (geometry :x "-22px" :y "52px" :width "380px" :anchor "top right")
+  :geometry (geometry :x "-22px" :y "52px" :width "560px" :height {panel_height ?: "780px"} :anchor "top right")
   :stacking "fg"
-  :wm-ignore true
-  :windowtype "dock"
+  :wm-ignore false
+  :windowtype "dialog"
   (flyout))

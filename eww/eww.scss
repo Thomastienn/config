@@ -119,3 +119,44 @@ expander arrow:checked { -gtk-icon-source: -gtk-icontheme("pan-down-symbolic"); 
 expander title:hover label, expander title:focus label { color: $mint; }
 scrollbar { padding-left: 4px; }
 scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-height: 20px; }
+
+// Quick settings: direct pages, larger controls, one scroll area per page.
+.qs-panel {
+  padding: 24px;
+  * { font-size: 16px; }
+  .settings-title { font-size: 24px; font-weight: bold; color: $fg; }
+  .clock { font-size: 24px; color: $mint; }
+  .date, .footer-text { font-size: 14px; color: $dim; }
+  .settings-tabs { border-bottom: 1px solid $border; }
+  .settings-tab {
+    padding: 12px 4px;
+    border-bottom: 2px solid transparent;
+    label { color: $dim; }
+    &:hover label { color: $fg; }
+    &.selected { border-color: $mint; label { color: $mint; font-weight: bold; } }
+  }
+  .tile {
+    padding: 14px;
+    border-radius: 10px;
+    .tile-icon { font-size: 24px; min-width: 28px; }
+    .tile-text { font-size: 16px; color: $fg; }
+    .tile-detail { font-size: 14px; color: $dim; }
+    &.on .tile-text, &.on .tile-detail { color: $ink; }
+  }
+  .slider-row { background: none; padding: 0; }
+  .slider-icon { font-size: 24px; min-width: 40px; min-height: 36px; }
+  .slider-value { color: $fg; }
+  .slider trough, .slider highlight { min-height: 8px; }
+  .slider slider { min-width: 20px; min-height: 20px; margin: -6px 0; }
+  .device, .compact-btn, .afk-toggle { padding: 14px; border-radius: 10px; }
+  .device.selected label, .primary-btn label { color: $mint; }
+  .afk-on label { color: $ink; }
+  .section-label { font-size: 18px; }
+  .media { padding: 12px 0; background: none; }
+  .media-btn { padding: 12px 8px; }
+  .notice { padding-bottom: 20px; border-bottom: 1px solid $border; }
+  .footer { padding-top: 12px; border-top: 1px solid $border; }
+  .footer-btn { padding: 10px 14px; label { color: $lavender; } }
+  button:focus, scale:focus { outline: 2px solid $lavender; outline-offset: -2px; }
+  button:disabled { opacity: 0.5; }
+}

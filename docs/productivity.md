@@ -50,6 +50,12 @@ Click the existing Polybar status area to open Eww. **Audio devices** lists outp
 and microphones; selecting one moves active streams as well as changing the default.
 Desktop-audio capture streams are preserved when changing microphones.
 
+The larger quick-settings panel has **Controls**, **Audio**, **Focus**, and **History**
+pages. Select a page directly; there are no collapsed sections or nested scroll
+areas. Tab/Shift+Tab and Enter/Space work throughout. The panel fits the display
+height and each page scrolls when needed. Click outside or use the close button
+to dismiss it. Opening it again returns to Controls.
+
 **Focus** offers 5, 10, or 25 minutes. Name one small next action in the familiar
 Rofi prompt, or press Enter to start without writing one. Routine notifications
 wait; command results and critical alerts remain visible. Stop anytime. At the end,
