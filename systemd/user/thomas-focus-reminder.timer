@@ -1,0 +1,10 @@
+[Unit]
+Description=Optional Focus Garden reminder (configure in the Focus panel)
+
+[Timer]
+OnCalendar=Mon..Fri *-*-* 18:00:00
+AccuracySec=1s
+Persistent=false
+
+[Install]
+WantedBy=timers.target

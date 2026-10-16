@@ -74,6 +74,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, focus, audio, and AFK usage |
+| `docs/focus-garden.md` | Study/coding garden, optional reminders, private records, and research |
 
 To save appearance changes made through desktop settings, run `./setup.sh capture`,
 review `git diff`, then commit. Capture reads only the keys already listed in

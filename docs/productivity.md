@@ -46,7 +46,7 @@ source ~/thomas_config/scripts/command-finished.sh
 
 ## Focus and audio
 
-Click the existing Polybar status area to open Eww. **Audio devices** lists outputs
+Click the existing Polybar status area to open Eww. The **Audio** page lists outputs
 and microphones; selecting one moves active streams as well as changing the default.
 Desktop-audio capture streams are preserved when changing microphones.
 
@@ -56,19 +56,18 @@ areas. Tab/Shift+Tab and Enter/Space work throughout. The panel fits the display
 height and each page scrolls when needed. Click outside or use the close button
 to dismiss it. Opening it again returns to Controls.
 
-**Focus** offers 5, 10, or 25 minutes. Name one small next action in the familiar
-Rofi prompt, or press Enter to start without writing one. Routine notifications
-wait; command results and critical alerts remain visible. Stop anytime. At the end,
-choose another session or a 5-minute break. There are no streaks or penalties.
+Click **Focus** in Polybar, or press **Super+Ctrl+F**, to open
+[Focus Garden](focus-garden.md). Choose Study or Coding and start 5, 10, or 25
+minutes immediately. Each track remembers its own optional next step. Routine
+notifications wait; command results and critical alerts remain visible. Stop
+anytime and keep measured time. Plants grow with accumulated minutes, with no
+decay or lost streaks. Wins, breaks, and daily reminders are optional.
 **Save a thought** stores a note for your next break; notes remain until cleared.
 The panel shows the latest 20; all notes are stored in
 `~/.local/state/thomas-desktop/focus-notes.json`.
 
-Specific plans informed the next-action/parked-thought design:
-[Masicampo & Baumeister, 2011](https://pubmed.ncbi.nlm.nih.gov/21688924/).
-Optional breaks are supported for fatigue management, not promised performance gains:
-[Albulescu et al., 2022](https://doi.org/10.1371/journal.pone.0272460).
-Session lengths are practical defaults, not a scientifically optimal schedule.
+The [Focus Garden guide](focus-garden.md#research-and-design-decisions) explains
+the research, practical defaults, and limits behind these choices.
 
 ## AFK
 

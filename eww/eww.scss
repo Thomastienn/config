@@ -120,8 +120,10 @@ expander title:hover label, expander title:focus label { color: $mint; }
 scrollbar { padding-left: 4px; }
 scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-height: 20px; }
 
+
+
 // Quick settings: direct pages, larger controls, one scroll area per page.
-.qs-panel {
+.qs-panel, .focus-card {
   padding: 24px;
   * { font-size: 16px; }
   .settings-title { font-size: 24px; font-weight: bold; color: $fg; }
@@ -159,4 +161,29 @@ scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-
   .footer-btn { padding: 10px 14px; label { color: $lavender; } }
   button:focus, scale:focus { outline: 2px solid $lavender; outline-offset: -2px; }
   button:disabled { opacity: 0.5; }
+}
+
+.focus-card {
+  * { font-size: 18px; }
+  .focus-title { font-size: 32px; font-weight: bold; color: $mint; }
+  .settings-tab label { font-size: 16px; }
+  .garden-bed { padding: 0 12px; }
+  .focus-time { font-size: 28px; font-weight: bold; color: $fg; }
+  .focus-time.timer { font-size: 48px; }
+  .garden-count { color: $mint; }
+  .garden-progress trough, .garden-progress progress { min-height: 8px; border-radius: 4px; }
+  .garden-progress trough { background: $border; }
+  .garden-progress progress { background: $mint; }
+  .compact-btn { padding: 16px 20px; }
+  .track-selected, .start-btn { background: $mint; font-weight: bold; label { color: $ink; } }
+  .track-selected:hover, .start-btn:hover { background: $fg; }
+  .section-label { font-size: 20px; }
+  .focus-link { padding: 8px 0; label { font-size: 16px; color: $lavender; } }
+  .focus-link:hover label { color: $fg; }
+  .focus-feedback { padding-top: 20px; border-top: 1px solid $border; }
+  .garden-actions { padding-top: 20px; border-top: 1px solid $border; }
+  .week-dot { color: $dim; font-size: 30px; }
+  .week-dot.grown { color: $mint; }
+  .garden-history { padding-bottom: 20px; border-bottom: 1px solid $border; }
+  .focus-error { color: $amber; background: $surface; padding: 16px; border-radius: 10px; }
 }

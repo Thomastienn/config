@@ -1,0 +1,6 @@
+[Unit]
+Description=Optional gentle Focus Garden reminder
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/desktop-controls.py focus-remind
