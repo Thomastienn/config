@@ -112,12 +112,18 @@ def focus_status():
             "label": ("Break" if state.get("mode") == "break" else "Focus") + f" {remaining // 60:02d}:{remaining % 60:02d}" if active else ""}
 
 
+def update_focus_bar():
+    afk.update_bar("focus", focus_status()["label"])
+    return True
+
+
 def focus_reset(done=False):
     state = read_json(focus_path(), {})
     if not state:
         return
     state["mode"] = "done" if done else "idle"
     write_json(focus_path(), state)
+    afk.update_bar("focus", "")
     if "pause_set" in state:
         current = int(capture(["dunstctl", "get-pause-level"]))
         if current == state["pause_set"]:
@@ -174,6 +180,8 @@ def focus_run():
             state["pause_set"] = max(50, state["pause_before"])
             write_json(focus_path(), state)
             capture(["dunstctl", "set-pause-level", str(state["pause_set"])])
+        update_focus_bar()
+        GLib.timeout_add_seconds(1, update_focus_bar)
         GLib.timeout_add(max(1, int((state["deadline"] - time.monotonic()) * 1000)), complete)
         loop.run()
     finally:

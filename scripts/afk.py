@@ -55,6 +55,15 @@ def command(args, **kwargs):
     return subprocess.run(args, capture_output=True, text=True, timeout=5, check=True, **kwargs).stdout
 
 
+def update_bar(module, label):
+    try:
+        subprocess.run(["polybar-msg", "action", module, "send", label],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1, check=True)
+    except (OSError, subprocess.SubprocessError):
+        # A missing bar must not prevent idle-setting or notification recovery.
+        pass
+
+
 def idle_control(action):
     socket = directory().parent / "thomas-xidlehook.sock"
     command([str(Path.home() / ".cargo/bin/xidlehook-client"), "--socket", str(socket),
@@ -95,6 +104,7 @@ def reset():
             action()
         except (OSError, subprocess.SubprocessError) as error:
             errors.append(str(error))
+    update_bar("afk", "")
     if errors:
         raise RuntimeError("AFK stopped, but idle settings need recovery: " + "; ".join(errors))
     (directory() / "afk.json").unlink(missing_ok=True)
@@ -143,6 +153,7 @@ def run():
             command(["xset", "-dpms"])
         state["active"] = True
         save(state)
+        update_bar("afk", "AFK")
         loop.run()
     finally:
         try:

@@ -9,6 +9,7 @@ local state = {}
 function conky_weather(...)
     state = {}
     for index, value in ipairs({...}) do state[index] = tonumber(value) end
+    conky_set_update_interval(60)
     return ''
 end
 
