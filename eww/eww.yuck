@@ -125,7 +125,6 @@
         (label :class "settings-title" :xalign 0 :text "Quick settings")
         (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")}))
       (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
-      (button :class "compact-btn settings-close" :tooltip "Close quick settings" :onclick "${qs_cmd} close" "×"))
     (box :class "settings-tabs" :space-evenly true :spacing 8
       (settings-tab :text "Controls" :index 0)
       (settings-tab :text "Audio" :index 1)
@@ -269,7 +268,6 @@
       (box :orientation "v" :space-evenly false :hexpand true :spacing 8
         (label :class "focus-title" :xalign 0 :text "Focus Garden")
         (label :class "muted" :xalign 0 :text "One small step grows something."))
-      (button :timeout "10s" :class "compact-btn" :tooltip "Close · Super+Ctrl+F" :onclick "${qs_cmd} close" "×"))
     (box :class "settings-tabs" :space-evenly true :spacing 12
       (garden-tab :text "Focus" :index 0)
       (garden-tab :text "Progress" :index 1)
