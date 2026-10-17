@@ -74,6 +74,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/apt*.txt`, `Brewfile`, `setup/flatpaks.txt` | Reviewed package lists |
 | `setup/sources.json`, `setup/assets.json` | Pinned desktop revisions and asset checksums |
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
+| `codex/` | Portable Codex preferences and global instructions |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, focus, audio, and AFK usage |
 | `docs/focus-garden.md` | Study/coding garden, optional reminders, private records, and research |
@@ -91,6 +92,42 @@ APT, Homebrew, Flatpak, and optional development packages track available update
 this restores the workflow and appearance, not a byte-identical OS image.
 The source machine's retired PyPy 3.10 formula is deliberately excluded from
 fresh installs; install a currently supported PyPy separately if needed.
+
+## Codex
+
+`codex/config.toml` stores portable model, reasoning, UI, MCP, marketplace and
+plugin preferences. `link`, `apply`, and `apply --configs-only` merge these values
+into `~/.codex/config.toml`, backing up changes first. Extra local settings,
+browser tokens, project trust, and hook approvals survive. The resulting local
+file has mode `600`; rewriting it does not preserve TOML comments. Edit the
+repository defaults to carry preference changes to another machine, then rerun
+setup after pulling. `check` reports differences without writing anything.
+
+Global `AGENTS.md` and `RTK.md` link directly from `codex/`. The whole `.codex`
+directory and its live config are deliberately kept local: Codex writes private
+and machine-specific state there.
+
+On a new machine, `./setup.sh apply --extras` also installs Codex, the skills CLI,
+and codebase-memory-mcp through `setup/npm-extra.txt`. It restores missing global
+skills recorded in `setup/sources.json` and missing plugins from the configured
+marketplaces, downloading missing marketplace catalogues first. Existing
+skills/plugins are kept. Plugin npm dependencies are
+checked and repaired with locked production packages and lifecycle scripts
+disabled, including ECC's `js-yaml` dependency. Repeat runs skip completed work.
+Registry packages and newly downloaded skills/plugins follow their upstream
+versions; plugin caches and `node_modules` are not stored in Git.
+The old `compress` skill is covered by `caveman-compress`; an existing local
+`compress` installation is retained.
+
+Sign in to Codex and reconnect account-backed apps/MCP servers on the new
+machine. If the OpenAI catalogue is unavailable while signed out, setup reports
+the Canva and Superpowers plugins as pending; install them through `/plugins`
+after signing in. Review plugin hooks in `/hooks`; setup does not transfer hook trust.
+Install the Playwright MCP browser extension in Brave, then pair it when prompted.
+Its optional extension token stays only in the local config. Custom pet assets,
+saved command approvals, conversations, memories and other runtime data require
+a separate private backup. Restart Codex when convenient to load changed settings.
+See the [official configuration precedence](https://learn.chatgpt.com/docs/config-file/config-basic#configuration-precedence).
 
 ## Battery Saver
 

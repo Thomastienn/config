@@ -16,6 +16,7 @@ import sys
 import tools
 import power
 import graphics
+import codex
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
@@ -107,6 +108,7 @@ def apply_links():
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         directory.chmod(0o700)
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
+    codex.configuration(HOME, backup)
 
 
 def settings(capture=False):
@@ -206,7 +208,7 @@ def packages(extras):
 
 
 def check():
-    gaps = power.check()
+    gaps = power.check() + codex.configuration(HOME)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
@@ -273,7 +275,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", nargs="?", default="plan", choices=["plan", "apply", "link", "check", "capture"])
     parser.add_argument("--configs-only", action="store_true", help="skip packages, source builds and fonts")
-    parser.add_argument("--extras", action="store_true", help="also install coursework/virtualization packages")
+    parser.add_argument("--extras", action="store_true", help="also install development tools, Codex skills/plugins and virtualization")
     parser.add_argument("--graphics", choices=["on-demand", "nvidia"],
                         help="explicitly select a PRIME profile during apply; activate at the next login")
     args = parser.parse_args()
@@ -283,6 +285,7 @@ def main():
         print("Target: Mint 22 / Ubuntu 24.04+, i3 on X11. Run as your normal user.")
         print("apply: APT + Brewfile + Flatpak apps, pinned desktop builds/fonts, links, desktop settings, user services.")
         print("apply --configs-only: links, desktop settings and services after a Git pull.")
+        print("apply --extras: also restore development tools, Codex skills/plugins and virtualization.")
         print("link: only files/symlinks, no installations or session changes. Conflicts are backed up.")
         print("check: read-only differences. capture: refresh only allowlisted desktop settings.")
         print("No desktop restart. Browser sign-in/theme installation and hardware drivers remain manual.")
@@ -313,6 +316,8 @@ def main():
         tools.assets(HOME, CACHE)
     apply_links()
     if args.command == "apply":
+        if args.extras and not args.configs_only:
+            codex.install(HOME, run)
         power.install(run)
         if args.graphics:
             graphics.configure(args.graphics, run)

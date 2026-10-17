@@ -6,6 +6,8 @@
   "tmux.conf": ".tmux.conf",
   "taskrc": ".taskrc",
   "git/gitconfig": ".gitconfig",
+  "codex/AGENTS.md": ".codex/AGENTS.md",
+  "codex/RTK.md": ".codex/RTK.md",
   "XResource/Xresources": ".Xresources",
   "XResource/xinitrc": ".xinitrc",
   "i3": ".config/i3",

@@ -42,6 +42,8 @@ def install(home, cache, link):
                "blesh": prefix / "share/blesh/ble.sh", "i3lock-color": binaries / "i3lock",
                "betterlockscreen": binaries / "betterlockscreen"}
     for name, spec in specs.items():
+        if spec.get("kind") == "skills":
+            continue  # Optional Codex skills are installed by setup/codex.py with --extras.
         if spec.get("kind") == "model":
             venv = home / ".virtualenvs/focus-guard"
             target = home / ".local/share/thomas-desktop" / name

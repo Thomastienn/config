@@ -1,0 +1,75 @@
+# Portable defaults. Setup merges these into ~/.codex/config.toml.
+# Keep credentials, hook trust, project paths and other local state out of this file.
+model = "gpt-6.1-sol"
+model_reasoning_effort = "xhigh"
+plan_mode_reasoning_effort = "max"
+approvals_reviewer = "guardian_subagent"
+service_tier = "default"
+
+[tui]
+status_line = ["model-with-reasoning", "current-dir", "context-used", "five-hour-limit", "weekly-limit"]
+session_picker_view = "dense"
+pet = "rocky"
+
+[notice]
+hide_rate_limit_model_nudge = true
+
+[features]
+terminal_resize_reflow = true
+memories = true
+goals = true
+prevent_idle_sleep = true
+
+[mcp_servers.codebase-memory-mcp]
+command = "codebase-memory-mcp"
+
+[mcp_servers.codebase-memory-mcp.tools.get_architecture]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.get_code_snippet]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.index_status]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.list_projects]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.query_graph]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.search_code]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.search_graph]
+approval_mode = "approve"
+[mcp_servers.codebase-memory-mcp.tools.trace_path]
+approval_mode = "approve"
+
+[mcp_servers.figma]
+url = "https://mcp.figma.com/mcp"
+
+[mcp_servers.openaiDeveloperDocs]
+url = "https://developers.openai.com/mcp"
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest", "--extension"]
+
+[mcp_servers.playwright.env]
+PLAYWRIGHT_MCP_EXECUTABLE_PATH = "/usr/bin/brave-browser"
+
+[plugins."superpowers@openai-curated"]
+enabled = true
+[plugins."canva@openai-curated"]
+enabled = true
+[plugins."ponytail@ponytail"]
+enabled = true
+[plugins."drawio@drawio"]
+enabled = true
+[plugins."ecc@ecc"]
+enabled = true
+
+[marketplaces.ponytail]
+source_type = "git"
+source = "https://github.com/DietrichGebert/ponytail.git"
+[marketplaces.drawio]
+source_type = "git"
+source = "https://github.com/jgraph/drawio-mcp.git"
+[marketplaces.ecc]
+source_type = "git"
+source = "https://github.com/affaan-m/ECC.git"
