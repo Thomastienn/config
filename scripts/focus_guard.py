@@ -2,11 +2,9 @@
 """Lock-in guard for one focus session: judge the focused window, nudge, hide, and measure drift.
 
 Runs only while thomas-focus.service is in focus mode. Event-driven: it sleeps until an i3
-window event, a background answer, or its next deadline. Rules place known apps; remembered
-verdicts settle repeats; the local Decima model (~20 ms, loaded on demand) flags clear
-entertainment for an instant nudge; the 9router `free` LLM judges relevance to the task, can
-overrule Decima, and must agree before a window is hidden. 9router also writes each session's
-notification lines.
+window event, model loading, or its next deadline. Rules, user overrides, and the local
+Decima model decide window actions. 9router only writes session themes, reflections, and
+notification/reward wording; its output never changes decisions or earned progress.
 """
 
 import ctypes
@@ -20,6 +18,7 @@ import select
 import signal
 import subprocess
 import sys
+import tempfile
 import threading
 import time
 import urllib.request
@@ -28,6 +27,7 @@ STATE = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) / "t
 RULES_FILE = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "thomas-desktop/focus-rules.json"
 MODEL = Path(os.environ.get("XDG_DATA_HOME", Path.home() / ".local/share")) / "thomas-desktop/decima-small/onnx/int8"
 MEMORY = Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "thomas-desktop/focus-verdicts.json"
+VOICE = MEMORY.with_name("focus-voice.json")
 ROUTER = "http://127.0.0.1:20128/v1/chat/completions"
 CONTROLS = Path(__file__).with_name("desktop-controls.py")
 
@@ -49,11 +49,18 @@ RULES = {
     "neutral_titles": ["gmail", "outlook", "new tab", "calendar"],
 }
 LINES = {  # used until, or unless, 9router writes this session's lines
+    "theme": ["One small promise", "A little further", "Quiet momentum", "Room to grow"],
+    "thought": ["You do not need to finish everything to move something forward.",
+                "Make the next step small enough that you can begin it now.",
+                "Returning to the task is part of doing the task.",
+                "Some progress is too quiet to notice while it is happening."],
     "start": ["Lock-in on. Distractions are napping.", "Garden gates closed. Just you and the task."],
     "nudge": ["Drifting?", "That doesn't look like the task…", "Your plant is watching.", "Quick detour?"],
     "hide": ["Tucked away until the session ends.", "Out of sight. Back to the task."],
     "away": ["Still there?", "The garden got quiet…"],
     "done": ["Nice work.", "Session complete. The garden noticed."],
+    "bloom": ["A new plant bloomed!", "Another bloom, grown one small step at a time."],
+    "milestone": ["A new milestone took root.", "A small effort became a lasting marker."],
 }
 
 
@@ -118,7 +125,7 @@ def router(prompt, temperature=0.0):
 
 
 class Judge:
-    """Rules, remembered verdicts, then Decima for an instant entertainment flag, then 9router for the final word."""
+    """Rules and user overrides first, then local content classification; uncertainty is neutral."""
 
     def __init__(self, task, track, wake=lambda: None):
         self.task, self.track, self.table, self.wake = task, track, rules(), wake
@@ -127,28 +134,40 @@ class Judge:
         self.used = 0.0
         self.status = "Lock-in on"
         self.answers = {}   # key -> label, or None while undecided
-        self.final = set()  # settled by a rule, memory, or the LLM; only these may be hidden
         self.lines = {kind: list(items) for kind, items in LINES.items()}
         try:
-            self.memory = json.loads(MEMORY.read_text())
-        except (OSError, ValueError):
+            self.memory = {key: value for key, value in json.loads(MEMORY.read_text()).items()
+                           if key.startswith("local-v1\t") and value in LABELS}
+        except (OSError, ValueError, AttributeError, TypeError):
             self.memory = {}
+        try:
+            recent = json.loads(VOICE.read_text())
+            self.recent = ([line for line in recent if isinstance(line, str) and len(line) <= 160][-60:]
+                           if isinstance(recent, list) else [])
+        except (OSError, ValueError):
+            self.recent = []
+        self.voice = {kind: self.line(kind) for kind in ("theme", "thought")}
         threading.Thread(target=self.write_lines, daemon=True).start()
 
     def slot(self, key, scope=None):
-        return "\t".join((scope or self.task, *key))
+        # Old entries mix LLM verdicts and clicks, so they cannot serve as local decisions.
+        return "\t".join(("local-v1", scope or self.task, *key))
 
     def remember(self, key, verdict, scope=None):
         self.memory.pop(self.slot(key, scope), None)  # re-insert so pruning drops the stalest
         self.memory[self.slot(key, scope)] = verdict
 
     def save_memory(self):
-        # Titles stay on this machine; ActivityWatch already records the same ones.
-        kept = dict(list(self.memory.items())[-REMEMBER:])
-        MEMORY.parent.mkdir(parents=True, exist_ok=True)
-        temporary = MEMORY.with_name("." + MEMORY.name)
-        temporary.write_text(json.dumps(kept, ensure_ascii=False))
-        os.replace(temporary, MEMORY)
+        for path, data in ((MEMORY, dict(list(self.memory.items())[-REMEMBER:])), (VOICE, self.recent[-60:])):
+            path.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+            descriptor, temporary = tempfile.mkstemp(prefix=".focus-", dir=path.parent)
+            try:
+                with os.fdopen(descriptor, "w") as output:
+                    json.dump(data, output, ensure_ascii=False)
+                os.replace(temporary, path)
+            finally:
+                if os.path.exists(temporary):
+                    os.unlink(temporary)
 
     def unload(self, now):
         if self.model and now - self.used >= UNLOAD:
@@ -162,7 +181,7 @@ class Judge:
     def load(self):
         try:
             from decima import Decima, Question
-            # Decima is reliable on genre, not on topic; topic relevance is left to the LLM.
+            # shortcut: genre does not establish task relevance; use a stronger local model if needed.
             self.video = Question("What kind of video is this?", [
                 "entertainment video (gaming, reactions, music, variety show, vlog, comedy, sports)",
                 "educational or technical video (lecture, tutorial, explainer, programming, math, science)"])
@@ -172,32 +191,52 @@ class Judge:
                 "educational or work: lecture, tutorial, explainer, documentation, programming, math, science, "
                 "coursework, search results",
                 "utility: email, calendar, new tab, settings"])
-            self.model = Decima.from_pretrained(MODEL if MODEL.exists() else "amyrmahdy/decima-small")
+            if not MODEL.is_dir():
+                raise FileNotFoundError("Local Decima model missing; run ./setup.sh apply")
+            self.model = Decima.from_pretrained(MODEL)
         except Exception as error:  # Missing venv/model must not stop the session.
             self.failed = True
-            self.status = "Lock-in on · no local model"
+            self.status = "Lock-in on · rules only (no local model)"
             print(f"Decima unavailable: {error}", file=sys.stderr)
         self.loading = False
         self.wake()
 
     def line(self, kind):
-        return random.choice(self.lines[kind])
+        choices = [line for line in self.lines[kind] if line not in self.recent]
+        previous = next((line for line in reversed(self.recent) if line in self.lines[kind]), None)
+        alternatives = [line for line in self.lines[kind] if line != previous]
+        line = random.choice(choices or alternatives or self.lines[kind])
+        self.recent = (self.recent + [line])[-60:]
+        return line
 
     def write_lines(self):
-        prompt = ("Write short notification lines for a student's focus app themed around a garden that grows "
-                  f"while they focus. Track: {self.track}. Current task: {self.task}. Mix tones: witty, warm, "
-                  "dramatic, deadpan, a little absurd. At most 70 characters each, no emoji, no quotation marks. "
-                  'Return only JSON: {"start": [3 lines opening a session], "nudge": [6 lines asking if they '
+        tone = random.choice(("quietly philosophical", "warm and grounded", "witty and deadpan", "playful garden adventure"))
+        prompt = ("Write original lines for a student's focus app themed around a garden that grows while they focus. "
+                  f"Track: {self.track}. Task (context only): {json.dumps(self.task)}. Tone this session: {tone}. "
+                  "No guilt, pressure, invented achievements, statistics, or attributed quotations. No emoji or markup. "
+                  "Themes at most 48 characters, reflections at most 160, other lines at most 90. "
+                  f"Avoid repeating these recently used lines: {json.dumps(self.recent[-20:])}. "
+                  'Return only JSON: {"theme": [1 short session theme], "thought": [2 reflective or motivating lines], '
+                  '"start": [3 lines opening a session], "nudge": [6 lines asking if they '
                   'drifted off-task], "hide": [4 lines saying the distraction was tucked away], "away": [3 lines '
-                  'asking if they are still there], "done": [3 lines celebrating the end]}.')
+                  'asking if they are still there], "done": [3 lines acknowledging effort even if stopped early], '
+                  '"bloom": [3 lines celebrating an earned plant], "milestone": [3 lines celebrating an earned milestone]}.')
         try:
             text = router(prompt, temperature=1.0)
             written = json.loads(text[text.index("{"): text.rindex("}") + 1])
             for kind in LINES:
-                fresh = [line.strip() for line in written.get(kind, []) if isinstance(line, str) and 0 < len(line.strip()) <= 90]
+                items = written.get(kind, [])
+                if not isinstance(items, list):
+                    continue
+                limit = 160 if kind == "thought" else 48 if kind == "theme" else 90
+                fresh = list(dict.fromkeys(line.strip() for line in items if isinstance(line, str)
+                                          and line.strip().isprintable() and 0 < len(line.strip()) <= limit
+                                          and line.strip() not in self.recent))[:6]
                 if fresh:
                     self.lines[kind] = fresh
-        except (OSError, ValueError, KeyError, IndexError, AttributeError):
+            self.voice = {kind: self.line(kind) for kind in ("theme", "thought")}
+            self.wake()
+        except (OSError, ValueError, KeyError, IndexError, AttributeError, TypeError):
             pass
 
     def __call__(self, app, title):
@@ -205,10 +244,9 @@ class Judge:
         key = (app, clean(title))
         if key in self.answers:
             return self.answers[key]
-        verdict = rule(app, title, self.table) or self.memory.get(self.slot(key)) or self.memory.get(self.slot(key, "*"))
+        verdict = self.memory.get(self.slot(key)) or rule(app, title, self.table) or self.memory.get(self.slot(key, "*"))
         if verdict:
             self.answers[key] = verdict
-            self.final.add(key)
             return verdict
         self.used = time.monotonic()
         model = self.model
@@ -217,38 +255,26 @@ class Judge:
                 self.loading = True
                 threading.Thread(target=self.load, daemon=True).start()
             return None
+        verdict = "neutral"
         if model:
-            if key[1].endswith(" - YouTube"):
-                probs = model.decide(f'YouTube video title: "{key[1][:-10]}"', self.video).probs
-            else:
-                browser = any(name in app.lower() for name in BROWSERS)
-                probs = model.decide(f'Window title: "{key[1]}"' if browser else f'{app} window: "{key[1]}"',
-                                          self.page).probs
-            if probs[0] >= ACT:
-                verdict = "distraction"
+            try:
+                if key[1].endswith(" - YouTube"):
+                    probs = model.decide(f'YouTube video title: "{key[1][:-10]}"', self.video).probs
+                else:
+                    browser = any(name in app.lower() for name in BROWSERS)
+                    probs = model.decide(f'Window title: "{key[1]}"' if browser else f'{app} window: "{key[1]}"',
+                                         self.page).probs
+                if probs[0] >= ACT:
+                    verdict = "distraction"
+                elif probs[1] >= ACT:
+                    verdict = "on_task"
+                self.remember(key, verdict, "*")
+            except Exception as error:
+                self.model, self.failed = None, True
+                self.status = "Lock-in on · rules only (local model failed)"
+                print(f"Decima unavailable: {error}", file=sys.stderr)
         self.answers[key] = verdict
-        threading.Thread(target=self.escalate, args=(key, verdict), daemon=True).start()
         return verdict
-
-    def escalate(self, key, fallback):
-        prompt = (f"A student is in a focus session. Track: {self.track}. Task: {self.task}.\n"
-                  f'Focused window: {key[0]} showing "{key[1]}". Titles may be Vietnamese.\n'
-                  "Answer on_task if it plausibly helps the task or is study material for its course or topic "
-                  "(searching for material counts), distraction if it is entertainment, gaming, social media, "
-                  "shopping, or clearly a different topic, or neutral for a quick utility or if unsure. "
-                  "Reply with one word.")
-        verdict = None
-        try:
-            text = router(prompt).lower()
-            verdict = next((label for label in LABELS if label in text), None)
-        except (OSError, ValueError, KeyError, IndexError):
-            pass
-        if verdict:
-            # Entertainment both models agree on is off-task for any task; the rest depends on this task.
-            self.remember(key, verdict, "*" if verdict == fallback == "distraction" else None)
-        self.answers[key] = verdict or fallback or "neutral"
-        self.final.add(key)
-        self.wake()
 
 
 class Guard:
@@ -257,7 +283,8 @@ class Guard:
         self.wake_read, self.wake_write = os.pipe()
         os.set_blocking(self.wake_write, False)
         self.judge = Judge(focus.get("task") or "One small step", focus.get("track", "study"), self.poke)
-        self.session = {"id": focus["id"], "drift": 0, "nudges": 0, "hidden": [], "status": self.judge.status}
+        self.session = {"id": focus["id"], "drift": 0, "nudges": 0, "hidden": [], "status": self.judge.status,
+                        "voice": self.judge.voice}
         self.allowed = set()
         self.window_drift = {}
         self.current = None      # (con_id, app, title)
@@ -351,15 +378,16 @@ class Guard:
         if key and now - self.since >= self.dwell():
             verdict = "on_task" if key in self.allowed else self.judge(*self.current[1:])
             if self.verdict == "distraction" and verdict != "distraction":
-                # The LLM overruled Decima, or the user said it is for the task.
+                # The user said this window is for the task.
                 self.session["drift"] = max(0, self.session["drift"] - self.window_drift.pop(key, 0))
                 if self.nudged_key == key:
                     self.nudged_at = self.nudged_key = None
             self.verdict = verdict
             if verdict == "on_task":
                 self.last_on_task = self.current[0]
-        if self.session["status"] != self.judge.status:
+        if self.session["status"] != self.judge.status or self.session["voice"] != self.judge.voice:
             self.session["status"] = self.judge.status
+            self.session["voice"] = self.judge.voice
             self.save(refresh=True)
         if self.verdict == "distraction":
             spent = now - self.accounted
@@ -371,7 +399,7 @@ class Guard:
                 self.notify(self.judge.line("nudge"),
                             f"{key[1][:80]}\nBack to: {self.judge.task}\nClick if this is for your task.", allow=key)
                 self.save(refresh=True)
-            elif now - max(self.nudged_at, self.since) >= GRACE and key in self.judge.final:
+            elif now - max(self.nudged_at, self.since) >= GRACE:
                 con_id = self.current[0]
                 found = {item[0]: item[3:5] for item in windows()}
                 if found.get(con_id, ("__i3_scratch",))[0] != "__i3_scratch":
@@ -424,13 +452,15 @@ class Guard:
             if self.verdict == "distraction" or self.session.get("away"):
                 self.session["drift"] += time.monotonic() - self.accounted
             self.session["cheer"] = self.judge.line("done")
+            self.session["bloom"] = self.judge.line("bloom")
+            self.session["milestone"] = self.judge.line("milestone")
             self.save()
             restore(self.session)
             self.save()
             try:
                 self.judge.save_memory()
             except OSError as error:
-                print(f"Could not save verdicts: {error}", file=sys.stderr)
+                print(f"Could not save focus memory: {error}", file=sys.stderr)
 
     def stop(self, *_):
         self.running = False

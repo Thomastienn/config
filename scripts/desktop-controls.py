@@ -145,9 +145,11 @@ def focus_panel_status():
     result["feedback"] = state.get("feedback", "")
     guard = read_json(guard_path(), {})
     result["guard"] = ""
+    result["voice"] = {"theme": "", "thought": ""}
     if result["mode"] == "focus" and guard.get("id") == state.get("id"):
         result["guard"] = (f'{guard["status"]} · {guard["nudges"]} {"nudge" if guard["nudges"] == 1 else "nudges"}'
                            f' · {guard["drift"] // 60} min drift')
+        result["voice"] = guard.get("voice", result["voice"])
     result["can_check_in"] = bool(state.get("credited") and state.get("session_mode") == "focus"
                                   and any(item["id"] == state.get("id") for item in result["history"]))
     result["win"] = next((item["win"] for item in result["history"] if item["id"] == state.get("id")), "")
@@ -197,7 +199,8 @@ def focus_reset(done=False):
             guard = read_json(guard_path(), {})
             if guard.get("id") == state.get("id"):
                 state["drift"] = int(guard.get("drift", 0))
-                state["cheer"] = str(guard.get("cheer", ""))[:90]
+                for kind in ("cheer", "bloom", "milestone"):
+                    state[kind] = str(guard.get(kind, ""))[:90]
                 if guard.get("hidden"):
                     subprocess.run([sys.executable, str(Path(__file__).with_name("focus_guard.py")), "restore"],
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
@@ -212,9 +215,9 @@ def focus_reset(done=False):
                 if reward["drift"]:
                     message += f' {100 * seconds // (seconds + reward["drift"])}% focused; drift does not grow the garden.'
                 if reward["plants"]:
-                    message += " A new plant bloomed!"
+                    message += " " + (state.get("bloom") or "A new plant bloomed!")
                 if reward["milestones"]:
-                    message += " " + " · ".join(reward["milestones"])
+                    message += " " + (state.get("milestone") or "New milestone.") + " " + " · ".join(reward["milestones"])
                 state["feedback"] = message
             elif state.get("session_mode") == "break":
                 state["feedback"] = "Break finished. Ready for one small step?" if done else "Break stopped. Your garden is safe."

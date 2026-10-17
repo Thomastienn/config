@@ -31,29 +31,32 @@ Every focus session (not breaks) runs a guard alongside the timer:
   step. Rules place terminals, editors, PDF viewers, and mail; ChatGPT, Claude,
   Gemini, and Perplexity count as on-task. The bare YouTube feed gets 90 seconds to
   search for material before it counts as a distraction.
-- **Two models:** every other window, including each YouTube video or search title,
-  is checked by [Decima-small](https://huggingface.co/amyrmahdy/decima-small), a local
-  122M decision model (about 20 ms). It only answers "entertainment or educational?",
-  where it is reliable; at 70% or more entertainment it allows an instant nudge.
-  Larger open decision models (Von, GLiNER2-large, GLiClass-large) were tested on
-  real titles and did worse.
-  The 9router `free` model then decides relevance to your task in the background (a
-  few seconds): study material and searches for it are on-task; entertainment and
-  clearly different topics are distractions. Its answer overrules Decima, and a
-  window is hidden only after it agrees. If 9router is unreachable, Decima's
-  verdict stands.
+- **Local decisions:** every other window, including each YouTube video or search
+  title, is checked by [Decima-small](https://huggingface.co/amyrmahdy/decima-small),
+  the local content classifier. At 70% or more entertainment it counts as a
+  distraction; at 70% or more educational/work content it counts as on-task.
+  Utilities and uncertain results stay neutral. Decima judges content type, so
+  educational material unrelated to your next step can still be allowed. 9router
+  has no part in window verdicts, nudging, hiding, or time accounting.
 - **Ladder:** the first distraction gets a nudge. Click it if the window is for
   your task: it is allowed for the session. Staying 20 more seconds, or a later
   distraction, hides that window and returns focus to your last on-task window.
-  Overruled or allowed windows have their drift refunded.
-- **Memory:** 9router verdicts and your clicks are remembered across sessions for
-  the same next step, so repeats are settled instantly without either model.
-  Entertainment both models agreed on is remembered for every task.
+  Allowed windows have their drift refunded.
+- **Memory:** Decima's content verdicts are remembered across tasks; your clicks
+  override them for the same next step. Repeats are settled without inference.
+  Old verdicts from the two-model system are ignored because they mix remote
+  decisions and user clicks without recording which was which. Those windows
+  are judged again locally, and old task exceptions may need another click.
 - **Away:** five idle minutes on a neutral window prompts a check-in and counts as
   drift. Idle time on an on-task window (reading, a lecture) is trusted.
-- **Voice:** at session start, 9router writes a fresh set of start, nudge, hide,
-  check-in, and finish lines for your task; each notification picks one at random.
-  Built-in lines are used until they arrive or if 9router is unavailable.
+- **Voice:** one background request to 9router per session writes a theme,
+  reflective lines, notifications, and bloom/milestone celebrations for your task.
+  Tone varies between philosophical, warm, deadpan, and playful. The Focus page
+  shows the theme and one reflection; it changes between sessions, not every tick.
+  The last 60 used lines are remembered locally, and the request includes the
+  newest 20 to discourage repeats. Built-in alternatives work while waiting or
+  offline; a finite fallback collection will eventually repeat. Generated wording
+  never awards progress or changes achievement requirements.
 - **End:** hidden windows return to their workspaces. Dropdown/floating windows
   stay in the scratchpad, where they normally live.
 
@@ -69,12 +72,14 @@ defaults and match lowercase substrings of the window class or title:
  "on_task_titles": ["d2l"], "neutral_titles": ["whatsapp"]}
 ```
 
-Without the Decima environment the page says "no local model" and 9router decides
-alone. Only window class and title are judged, and only during focus sessions.
-Decima runs locally; 9router receives the title, track, and next step and forwards
-them to its configured provider. Remembered verdicts (window class, title, and next
-step; the newest 5000) stay in `~/.local/state/thomas-desktop/focus-verdicts.json`.
-Delete that file to forget them.
+Without the Decima environment the page says "rules only (no local model)";
+known-app rules and remembered decisions still work, and unknown windows stay
+neutral. Only window class and title are judged, and only during focus sessions.
+Those window details stay local. 9router receives the track, next step, and recent
+notification/reflective wording and forwards them to its configured provider.
+Remembered verdicts (the newest 5000) stay in
+`~/.local/state/thomas-desktop/focus-verdicts.json`; used wording stays in the
+adjacent `focus-voice.json`. Delete either file to forget its history.
 
 Your plant grows one stage per **10 accumulated focus minutes**, blooming at
 **50 minutes**. Small partial sessions carry forward, including seconds. A bloom
