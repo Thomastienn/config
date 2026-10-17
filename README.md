@@ -79,11 +79,14 @@ file back to its original path. Do not delete an entire config directory.
 | `docs/productivity.md` | PDF search, command alerts, focus, audio, and AFK usage |
 | `docs/focus-garden.md` | Study/coding garden, optional reminders, private records, and research |
 
-Focus Garden makes lock-in decisions locally with Decima and known-app rules.
-Optional 9router writing adds varied themes, reflections, and reward messages;
-window titles stay local. Setup installs the pinned Decima environment and model
-through full `./setup.sh apply`. 9router is a separately managed optional tool;
-without it, built-in wording is used. See [Focus Garden](docs/focus-garden.md).
+Focus Garden uses selected work windows/exact Brave pages, five-minute typed
+check-ins, and temporary resource approvals. Install its local browser extension
+once through **Load unpacked** at `~/thomas_config/brave/focus-guard`, then click
+its toolbar icon. `./setup.sh apply --configs-only` registers the native host;
+full `apply` installs the pinned Decima environment/model on a fresh machine.
+Reload Eww/i3 configuration for the new controls and emergency shortcut.
+9router remains optional, supplying varied writing only. Page URLs, window titles,
+and check-in answers stay local. See [Focus Garden](docs/focus-garden.md).
 
 To save appearance changes made through desktop settings, run `./setup.sh capture`,
 review `git diff`, then commit. Capture reads only the keys already listed in

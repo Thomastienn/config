@@ -57,12 +57,15 @@ height and each page scrolls when needed. Click outside or use the close button
 to dismiss it. Opening it again returns to Controls.
 
 Click **Focus** in Polybar, or press **Super+Ctrl+F**, to open
-[Focus Garden](focus-garden.md). Choose Study or Coding and start 5, 10, or 25
-minutes immediately. Each track remembers its own optional next step. Routine
-notifications wait; command results and critical alerts remain visible. Stop
-anytime and keep measured time. Lock-in hides distracting apps, nudges then hides
-off-task windows such as unrelated YouTube (study videos stay), and plants grow
-only from on-task minutes, with no decay or lost streaks. Wins, breaks, and daily reminders are optional.
+[Focus Garden](focus-garden.md). Choose Study or Coding, give one next action,
+select work windows/exact Brave pages, then start 5, 10, or 25 minutes. The local
+Brave extension must be paired first. Required typed check-ins arrive every five
+minutes; unanswered prompts pause credit. New resource access needs a reason and
+a ten-second wait, and expires after five minutes. Normal ending has a ten-second
+wait; **Emergency end** or **Super+Ctrl+Shift+F** is immediate. Routine notifications
+wait while command results and critical alerts remain visible. Plants grow from
+credited time, with no decay or lost streaks. Wins, breaks, and reminders remain
+optional. See the guide for extension installation and strict-mode limits.
 **Save a thought** stores a note for your next break; notes remain until cleared.
 The panel shows the latest 20; all notes are stored in
 `~/.local/state/thomas-desktop/focus-notes.json`.

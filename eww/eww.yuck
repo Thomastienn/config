@@ -6,7 +6,7 @@
 (defvar qs_page 0)
 (defvar focus_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
-(defvar focus '{"active":false,"mode":"idle","task":"","minutes":10,"remaining":"","label":"Focus","track":"study","action":"","stage":0,"growth":0,"growth_text":"10 min to next growth","plants":0,"total_minutes":0,"today_minutes":0,"week":[],"week_days":0,"study_minutes":0,"coding_minutes":0,"milestones":[],"history":[],"reminder":{"enabled":false,"days":[1,2,3,4,5],"time":"18:00"},"error":"","feedback":"","guard":"","voice":{"theme":"","thought":""},"can_check_in":false,"win":"","notes":[],"reminder_schedule":"Mon, Tue, Wed, Thu, Fri at 18:00"}')
+(defvar focus '{"active":false,"mode":"idle","task":"","minutes":10,"remaining":"","label":"Focus","track":"study","action":"","stage":0,"growth":0,"growth_text":"10 min to next growth","plants":0,"total_minutes":0,"today_minutes":0,"week":[],"week_days":0,"study_minutes":0,"coding_minutes":0,"milestones":[],"history":[],"reminder":{"enabled":false,"days":[1,2,3,4,5],"time":"18:00"},"error":"","feedback":"","guard":"","voice":{"theme":"","thought":""},"attention":"working","needs_checkin":false,"can_approve":false,"can_check_in":false,"win":"","notes":[],"reminder_schedule":"Mon, Tue, Wed, Thu, Fri at 18:00"}')
 (defpoll focus_clock :interval "1s" :run-while {focus.active && focus_page == 0}
   :initial '{"remaining":"00:00"}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py focus-live")
@@ -181,13 +181,20 @@
                :text {focus.active ? focus_clock.remaining : "Ready when you are"})
         (label :class "muted" :xalign 0
                :text {focus.active ? (focus.mode == "break" ? "Taking a breath" : "${focus.track == 'study' ? 'Study' : 'Coding'} · one small step") : focus.growth_text})
-        (label :visible {focus.active && focus.guard != ""} :class "garden-count" :xalign 0 :text {focus.guard})
+        (label :visible {focus.active && focus.guard != ""} :class "garden-count" :xalign 0
+               :wrap true :wrap-mode "wordchar" :width 360 :text {focus.guard})
         (progress :class "garden-progress" :value {focus.growth})
         (label :class "garden-count" :xalign 0 :text "${focus.plants} ${focus.plants == 1 ? 'plant' : 'plants'} collected · ${focus.total_minutes} min")))
     (box :visible {focus.active && focus.mode == "focus" && focus.voice.theme != ""}
          :orientation "v" :space-evenly false :spacing 12
       (label :class "section-label" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.voice.theme})
       (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.voice.thought}))
+    (box :visible {focus.active && focus.mode == "focus"} :orientation "v" :space-evenly false :spacing 12
+      (button :visible {focus.attention == "approval" || focus.attention == "ending"}
+              :class "compact-btn" :onclick "${desktop_cmd} focus-resume"
+              "Cancel wait & return")
+      (button :visible {focus.can_approve && focus.attention == "working"} :class "compact-btn"
+              :onclick "${desktop_cmd} focus-approve" "Request 5 minutes for hidden window"))
     (box :visible {!focus.active && focus.feedback != ""} :class "focus-feedback" :orientation "v" :space-evenly false :spacing 16
       (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.feedback})
       (box :spacing 16 :space-evenly true :active {focus.error == ""}
@@ -216,8 +223,12 @@
       (button :timeout "10s" :class "compact-btn start-btn" :onclick "${desktop_cmd} focus-start 10" "Start 10 min")
       (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-start 25" "25 min"))
     (box :spacing 16 :space-evenly true
-      (button :timeout "1h" :class "compact-btn" :onclick "${desktop_cmd} park" "Park a thought")
-      (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-stop" {focus.mode == "break" ? "End break" : "Stop & save time"}))
+      (button :timeout "1h" :class "compact-btn"
+              :onclick "${desktop_cmd} ${focus.needs_checkin ? 'focus-resume' : 'park'}"
+              {focus.needs_checkin ? "Answer check-in" : "Park a thought"})
+      (box :orientation "v" :spacing 8
+        (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-stop" {focus.mode == "break" ? "End break" : "End session…"})
+        (button :class "focus-link" :visible {focus.mode == "focus"} :onclick "${desktop_cmd} focus-stop --emergency" "Emergency end · no wait")))
 ))
 
 (defwidget garden-progress-page []

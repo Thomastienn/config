@@ -8,6 +8,7 @@ import json
 import math
 import os
 from pathlib import Path
+import select
 import shutil
 import signal
 import subprocess
@@ -18,6 +19,7 @@ from uuid import uuid4
 
 import afk
 import focus_progress as garden
+import focus_browser as browser
 
 
 def capture(args):
@@ -64,9 +66,13 @@ def notify(title, body="", critical=False):
 def prompt(placeholder, previous=""):
     subprocess.run([str(Path(__file__).resolve().parents[1] / "eww/scripts/qs.sh"), "close"],
                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    result = subprocess.run(["rofi", "-dmenu", "-filter", previous, "-format", "f", "-theme-str",
+    result = subprocess.run(["rofi", "-dmenu", "-filter", previous, "-format", "f",
+                             "-kb-custom-1", "Alt+Escape", "-theme-str",
                              'listview { lines: 0; } entry { placeholder: "' + placeholder + '"; }'],
                             input="", capture_output=True, text=True)
+    if result.returncode == 10:
+        capture(["systemctl", "--user", "--no-block", "stop", "thomas-focus.service"])
+        return None
     if result.returncode == 1:
         return None
     if result.returncode:
@@ -146,10 +152,13 @@ def focus_panel_status():
     guard = read_json(guard_path(), {})
     result["guard"] = ""
     result["voice"] = {"theme": "", "thought": ""}
+    result.update(attention="working", needs_checkin=False, can_approve=False)
     if result["mode"] == "focus" and guard.get("id") == state.get("id"):
-        result["guard"] = (f'{guard["status"]} · {guard["nudges"]} {"nudge" if guard["nudges"] == 1 else "nudges"}'
-                           f' · {guard["drift"] // 60} min drift')
+        result["guard"] = f'{guard["status"]} · {guard["drift"] // 60} min drift · {guard.get("waiting", 0) // 60} min paused'
         result["voice"] = guard.get("voice", result["voice"])
+        for key in ("attention", "needs_checkin", "can_approve"):
+            if key in guard:
+                result[key] = guard[key]
     result["can_check_in"] = bool(state.get("credited") and state.get("session_mode") == "focus"
                                   and any(item["id"] == state.get("id") for item in result["history"]))
     result["win"] = next((item["win"] for item in result["history"] if item["id"] == state.get("id")), "")
@@ -199,11 +208,19 @@ def focus_reset(done=False):
             guard = read_json(guard_path(), {})
             if guard.get("id") == state.get("id"):
                 state["drift"] = int(guard.get("drift", 0))
+                if state.get("strict"):
+                    state["elapsed"] = min(state["elapsed"], max(0, int(guard.get("accounted", state["started"]) - state["started"])))
+                    state["focused"] = int(guard.get("focused", 0))
+                    state["waiting"] = int(guard.get("waiting", 0))
+                    state["checkins"] = int(guard.get("checkins", 0))
+                    state["failure"] = guard.get("failure") or state.get("failure", "")
                 for kind in ("cheer", "bloom", "milestone"):
                     state[kind] = str(guard.get(kind, ""))[:90]
                 if guard.get("hidden"):
                     subprocess.run([sys.executable, str(Path(__file__).with_name("focus_guard.py")), "restore"],
                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
+            elif state.get("strict"):
+                state["focused"], state["waiting"] = 0, state["elapsed"]
             write_json(focus_path(), state)
         if not state.get("credited"):
             reward = garden.credit(state)
@@ -213,12 +230,16 @@ def focus_reset(done=False):
                 message = (state.get("cheer", "") + f' {seconds // 60}m {seconds % 60:02d}s of '
                            f'{state["track"].title().lower()} saved.').strip()
                 if reward["drift"]:
-                    message += f' {100 * seconds // (seconds + reward["drift"])}% focused; drift does not grow the garden.'
+                    message += f' {100 * seconds // (seconds + reward["drift"])}% credited outside pauses; drift does not grow the garden.'
+                if reward.get("waiting"):
+                    message += f' {reward["waiting"]}s paused for check-ins or controls.'
                 if reward["plants"]:
                     message += " " + (state.get("bloom") or "A new plant bloomed!")
                 if reward["milestones"]:
                     message += " " + (state.get("milestone") or "New milestone.") + " " + " · ".join(reward["milestones"])
                 state["feedback"] = message
+                if state.get("failure"):
+                    state["feedback"] += " Lock In ended: " + state["failure"]
             elif state.get("session_mode") == "break":
                 state["feedback"] = "Break finished. Ready for one small step?" if done else "Break stopped. Your garden is safe."
             write_json(focus_path(), state)
@@ -237,31 +258,84 @@ def focus_reset(done=False):
             refresh_focus()
 
 
+def choose_work():
+    from focus_guard import windows, BROWSERS
+
+    snapshot = browser.request("snapshot")
+    choices, labels = [], []
+    for con_id, app, title, _workspace, _floating, _focused in windows():
+        if any(name in app.lower() for name in (*BROWSERS, "eww", "rofi", "i3bar", "polybar", "conky", "dunst")):
+            continue
+        choices.append(("window", con_id))
+        labels.append("Window · " + app + " · " + " ".join(title.split()))
+    for tab in snapshot["tabs"]:
+        choices.append(("page", tab["url"]))
+        labels.append("Page · " + " ".join(tab["title"].split()) + " · " + tab["url"])
+    if not choices:
+        raise RuntimeError("Open your work windows/pages first, then start Lock In.")
+    result = subprocess.run(["rofi", "-dmenu", "-sync", "-multi-select", "-no-custom", "-format", "i", "-p", "Choose work resources",
+                             "-kb-custom-1", "Alt+Escape",
+                             "-mesg", "Shift+Enter selects multiple. Enter starts. New access needs a reason and a 10-second wait."],
+                            input="\n".join(labels), capture_output=True, text=True)
+    if result.returncode in (1, 10):
+        return None
+    if result.returncode:
+        raise RuntimeError("Could not choose work resources")
+    selected = [choices[int(index)] for index in result.stdout.splitlines() if index.isdecimal() and int(index) < len(choices)]
+    if not selected:
+        raise ValueError("Choose at least one work resource.")
+    return {"work_windows": [value for kind, value in selected if kind == "window"],
+            "work_xids": {str(value): windows.transient[value][0] for kind, value in selected if kind == "window"},
+            "pages": [value for kind, value in selected if kind == "page"]}
+
+
 def focus_start(minutes, mode="focus", ask=False):
     if minutes not in (5, 10, 25) or mode not in ("focus", "break"):
         raise ValueError("Choose a 5, 10, or 25 minute session.")
     previous = read_json(focus_path(), {})
+    if previous.get("mode") in ("focus", "break"):
+        raise RuntimeError("End the current session first.")
     data = garden.load()
     task = data["actions"][data["track"]]
-    if ask:
+    if mode == "focus":
+        browser.request("snapshot")
+    if mode == "focus" and (ask or not task.strip()):
         task = prompt("One tiny next action…", task)
         if task is None:
             return
-    capture(["systemctl", "--user", "stop", "thomas-focus.service"])
-    focus_reset()
-    started = time.monotonic()
-    write_json(focus_path(), {"id": str(uuid4()), "track": data["track"],
-                              "date": datetime.now().astimezone().date().isoformat(),
-                              "boot": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
-                              "started": started, "mode": mode, "task": task or "One small step", "minutes": minutes,
-                              "focus_minutes": minutes if mode == "focus" else previous.get("focus_minutes", 10),
-                              "deadline": started + minutes * 60})
-    try:
-        capture(["systemctl", "--user", "start", "thomas-focus.service"])
-    except (OSError, subprocess.SubprocessError):
+    if mode == "focus" and not task.strip():
+        raise ValueError("Give this session one concrete next action.")
+    resources = {}
+    if mode == "focus":
+        # Check pairing before opening a chooser; this never weakens a failed start.
+        subprocess.run([str(Path(__file__).resolve().parents[1] / "eww/scripts/qs.sh"), "close"],
+                       stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        resources = choose_work()
+        if resources is None:
+            return
+    descriptor = os.open(afk.directory() / "focus-command.lock", os.O_CREAT | os.O_RDWR, 0o600)
+    with os.fdopen(descriptor, "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        if focus_status()["active"]:
+            raise RuntimeError("Another focus session started while choosing resources.")
+        if mode == "focus" and task != data["actions"][data["track"]]:
+            with garden.edit() as current:
+                current["actions"][data["track"]] = task
+        capture(["systemctl", "--user", "stop", "thomas-focus.service"])
         focus_reset()
-        raise
-    refresh_focus()
+        started = time.monotonic()
+        write_json(focus_path(), {"id": str(uuid4()), "track": data["track"], "strict": mode == "focus", **resources,
+                                  "date": datetime.now().astimezone().date().isoformat(),
+                                  "boot": Path("/proc/sys/kernel/random/boot_id").read_text().strip(),
+                                  "started": started, "mode": mode, "task": task or "One small step", "minutes": minutes,
+                                  "focus_minutes": minutes if mode == "focus" else previous.get("focus_minutes", 10),
+                                  "deadline": started + minutes * 60})
+        try:
+            capture(["systemctl", "--user", "start", "thomas-focus.service"])
+        except (OSError, subprocess.SubprocessError):
+            focus_reset()
+            raise
+        refresh_focus()
 
 
 def focus_run():
@@ -290,12 +364,22 @@ def focus_run():
     display = None
     display_watch = None
     guard = None
+    guard_watch = None
     timers = []
 
     def display_closed(_pid, status):
         nonlocal display_watch
         display_watch = None
         display.returncode = os.waitstatus_to_exitcode(status)
+        stop()
+
+    def guard_closed(_pid, status):
+        nonlocal guard_watch
+        guard_watch = None
+        guard.returncode = os.waitstatus_to_exitcode(status)
+        if guard.returncode:
+            state["failure"] = "Lock In guard stopped unexpectedly."
+            write_json(focus_path(), state)
         stop()
 
     try:
@@ -307,13 +391,20 @@ def focus_run():
         display = subprocess.Popen(["xprop", "-root", "-spy"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
         display_watch = GLib.child_watch_add(display.pid, display_closed)
         if state["mode"] == "focus":
+            browser.request("start", session=state["id"], pages=state["pages"], task=state["task"],
+                            ends_at=(time.time() + state["minutes"] * 60) * 1000)
+            state["started"] = time.monotonic()
+            state["deadline"] = state["started"] + state["minutes"] * 60
             state["pause_before"] = int(capture(["dunstctl", "get-pause-level"]))
             state["pause_set"] = max(50, state["pause_before"])
             write_json(focus_path(), state)
             capture(["dunstctl", "set-pause-level", str(state["pause_set"])])
             python = Path.home() / ".virtualenvs/focus-guard/bin/python"
             guard = subprocess.Popen([str(python if python.exists() else sys.executable),
-                                      str(Path(__file__).with_name("focus_guard.py"))], stdout=subprocess.DEVNULL)
+                                      str(Path(__file__).with_name("focus_guard.py"))], stdout=subprocess.PIPE)
+            if not select.select([guard.stdout], [], [], 5)[0] or guard.stdout.readline().strip() != b"ready":
+                raise RuntimeError("Lock In guard did not become ready; no unguarded time will be credited.")
+            guard_watch = GLib.child_watch_add(guard.pid, guard_closed)
         update_focus_bar()
         refresh_focus()
         timers.append(GLib.timeout_add_seconds(1, update_focus_bar))
@@ -324,6 +415,8 @@ def focus_run():
         try:
             if display_watch is not None:
                 GLib.source_remove(display_watch)
+            if guard_watch is not None:
+                GLib.source_remove(guard_watch)
             # The completion source removes itself when it fires.
             for timer in timers[:1] if finished else timers:
                 GLib.source_remove(timer)
@@ -334,7 +427,14 @@ def focus_run():
                 guard.terminate()
                 guard.wait(timeout=10)
         finally:
-            focus_reset(done=finished)
+            try:
+                if state["mode"] == "focus":
+                    try:
+                        browser.request("stop", session=state["id"])
+                    except (OSError, ValueError, RuntimeError):
+                        pass
+            finally:
+                focus_reset(done=finished)
     if finished and not refresh_focus():
         terminal = read_json(focus_path(), {})
         notify("Break finished" if state["mode"] == "break" else "Small session finished",
@@ -471,7 +571,14 @@ def main(args):
     elif action == "focus-break":
         focus_start(5, "break", ask=False)
     elif action == "focus-stop":
-        capture(["systemctl", "--user", "stop", "thomas-focus.service"])
+        state = read_json(focus_path(), {})
+        if "--emergency" in args or not state.get("strict") or state.get("mode") != "focus":
+            capture(["systemctl", "--user", "--no-block", "stop", "thomas-focus.service"])
+        else:
+            browser.request("control", session=state["id"], action="end")
+    elif action in ("focus-resume", "focus-approve"):
+        state = read_json(focus_path(), {})
+        browser.request("control", session=state.get("id", ""), action="resume" if action == "focus-resume" else "approve_window")
     elif action == "focus-run":
         focus_run()
     elif action == "focus-reset":
@@ -520,14 +627,8 @@ def main(args):
 
 if __name__ == "__main__":
     try:
-        if len(sys.argv) > 1 and sys.argv[1] in ("focus-start", "focus-continue", "focus-break", "focus-stop",
-                                                "focus-track", "focus-edit", "focus-reminder"):
-            descriptor = os.open(afk.directory() / "focus-command.lock", os.O_CREAT | os.O_RDWR, 0o600)
-            with os.fdopen(descriptor, "w") as lock:
-                fcntl.flock(lock, fcntl.LOCK_EX)
-                main(sys.argv[1:])
-        else:
-            main(sys.argv[1:])
+        # Human prompts never hold the session lock; emergency stop must remain reachable.
+        main(sys.argv[1:])
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         print(str(error), file=sys.stderr)
         try:

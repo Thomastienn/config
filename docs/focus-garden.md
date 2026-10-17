@@ -12,74 +12,97 @@ collapsed sections. It fits the display; each page scrolls when needed.
 
 ## A small loop
 
-1. Choose **Study** or **Coding**. Each remembers a separate next action. Editing
-   it uses Rofi and is optional; the session buttons start immediately.
-2. Start **5**, **10** (the default), or **25 minutes**. Routine notifications pause.
-   Park distracting thoughts for later, or stop and save measured time anytime.
-3. At the end, see time saved and garden growth. If the popup is closed, one
-   notification gives the result. There is no completion sound or surprise modal.
-4. Optionally keep a small win, leave your next step, continue, or take a five-minute
-   break. Study suggests explaining one idea from memory and then checking notes;
-   Coding asks what changed or what you learned. Rewards never require an answer.
+1. Choose **Study** or **Coding**, then **5**, **10**, or **25 minutes**. A concrete
+   next action is required; each track remembers its own. Open the work windows
+   and signed-in browser pages you will need before starting.
+2. In Rofi, select your work windows and exact Brave pages. Use Shift+Enter for
+   multiple selections, then Enter. Cancelling changes nothing. The timer starts
+   only after the paired browser extension acknowledges enforcement.
+3. Work within those resources. Every five minutes before the session ends, Rofi
+   asks for a short typed check-in. Study asks for one recalled idea; Coding asks
+   for a concrete change or next action. Type `/stuck` to choose a smaller step.
+4. At the end, see credited time and garden growth. Optional wins, saved next
+   steps, and five-minute breaks remain available. Closing Focus leaves the
+   session running. No completion sound is played.
 
 ## Lock-in
 
-Every focus session (not breaks) runs a guard alongside the timer:
+The guard runs only during focus sessions; breaks have no restrictions.
 
-- **Start:** Discord, Sober/Roblox, and Steam windows move to the i3 scratchpad.
-- **Watch:** after 8 seconds on a window, it is judged against your track and next
-  step. Rules place terminals, editors, PDF viewers, and mail; ChatGPT, Claude,
-  Gemini, and Perplexity count as on-task. The bare YouTube feed gets 90 seconds to
-  search for material before it counts as a distraction.
-- **Local decisions:** every other window, including each YouTube video or search
-  title, is checked by [Decima-small](https://huggingface.co/amyrmahdy/decima-small),
-  the local content classifier. At 70% or more entertainment it counts as a
-  distraction; at 70% or more educational/work content it counts as on-task.
-  Utilities and uncertain results stay neutral. Decima judges content type, so
-  educational material unrelated to your next step can still be allowed. 9router
-  has no part in window verdicts, nudging, hiding, or time accounting.
-- **Ladder:** the first distraction gets a nudge. Click it if the window is for
-  your task: it is allowed for the session. Staying 20 more seconds, or a later
-  distraction, hides that window and returns focus to your last on-task window.
-  Allowed windows have their drift refunded.
-- **Memory:** Decima's content verdicts are remembered across tasks; your clicks
-  override them for the same next step. Repeats are settled without inference.
-  Old verdicts from the two-model system are ignored because they mix remote
-  decisions and user clicks without recording which was which. Those windows
-  are judged again locally, and old task exceptions may need another click.
-- **Away:** five idle minutes on a neutral window prompts a check-in and counts as
-  drift. Idle time on an on-task window (reading, a lecture) is trusted.
-- **Voice:** one background request to 9router per session writes a theme,
-  reflective lines, notifications, and bloom/milestone celebrations for your task.
-  Tone varies between philosophical, warm, deadpan, and playful. The Focus page
-  shows the theme and one reflection; it changes between sessions, not every tick.
-  The last 60 used lines are remembered locally, and the request includes the
-  newest 20 to discourage repeats. Built-in alternatives work while waiting or
-  offline; a finite fallback collection will eventually repeat. Generated wording
-  never awards progress or changes achievement requirements.
-- **End:** hidden windows return to their workspaces. Dropdown/floating windows
-  stay in the scratchpad, where they normally live.
+- **Chosen resources:** selected desktop windows stay approved even when their
+  filenames change. Their file/save dialogs are allowed too. Work apps, AI chats,
+  educational pages, and remembered classifications are not automatic exceptions.
+  Rofi, Focus, audio controls, and authentication dialogs remain usable.
+- **Exact pages:** approval includes the path and query string. Different YouTube
+  video IDs, searches, and SPA routes require new access. Normal `#section`
+  anchors remain allowed; `#/` and `#!/` application routes are checked separately.
+  The extension blocks unapproved top-level HTTP(S) navigation across normal
+  windows of the paired Brave profile. Already-loaded tabs open an approval gate
+  without closing or reloading the original tab. Unapproved tabs are temporarily
+  muted; only mute changes owned by the extension are restored.
+- **Fast return:** an unapproved desktop window stops earning time immediately.
+  After two seconds it moves to the scratchpad, returning focus to approved work.
+  Reopening or rapidly switching windows does not erase drift. Known distraction
+  apps are hidden at the start unless deliberately selected as work.
+- **New access:** use the browser gate's **Request 5 minutes** button, or Focus's
+  **Request 5 minutes for hidden window**. Type a task-related reason, then wait
+  ten seconds. The exact page or window is approved for five minutes. There are
+  no permanent click-through exceptions. Other browser profiles and other browsers
+  are not supported work resources; use the paired Brave profile. For local PDFs,
+  choose a desktop viewer window. Sign-in redirects also need approval, so sign
+  in before starting when possible.
+- **Check-ins:** the prompt takes keyboard focus. Esc dismisses it but leaves
+  credit paused; **Answer check-in** in Focus opens it again. Replies stay in
+  memory and are discarded after handling. Responses are not graded, and the
+  guard cannot verify thoughts or understanding. A new checkpoint is scheduled
+  five minutes after answering. The countdown continues during pauses.
+- **Ending:** **End session** asks for a reason and waits ten seconds; Focus's
+  **Cancel wait & return** cancels an approval/end wait. **Emergency end** in Focus
+  or the browser gate, **Super+Ctrl+Shift+F**, or **Alt+Escape** in a Rofi prompt
+  ends immediately. Sleep, sign-out, and session completion also clean up.
+- **Recovery:** loss of the guard, i3, browser bridge, or extension ends the
+  session with only accounted time credited. Browser restrictions are removed;
+  hidden tiled windows return to their workspaces. Floating/dropdown windows
+  stay in the scratchpad, where they normally live. A browser worker restart
+  finishes the session rather than resuming unacknowledged restrictions.
+- **Local model:** Decima classifies content for feedback during approval; it
+  cannot grant access outside the selected resources. A missing model leaves the
+  explicit approvals enforced. Old remembered verdicts cannot grant access.
+- **Voice:** one background request to 9router supplies varied session themes,
+  reflections, notifications, and bloom/milestone wording. Recent used lines
+  discourage repeats; built-in alternatives work offline. Generated writing
+  never controls access or awards progress.
 
-Drift is subtracted from the session. The garden grows only from on-task time, and
-feedback and history show the focus percentage. The Focus page shows nudges and
-drift while a session runs.
+Drift and time waiting on prompts/controls are kept separate and excluded from
+plant growth. Credit uses measured intervals rather than mouse activity. A quiet
+reading window still reaches its scheduled checkpoint. Five minutes is a practical
+starting cadence, not an established optimum or a guarantee against zoning out.
 
-Add your own entries in `~/.config/thomas-desktop/focus-rules.json`; lists extend the
-defaults and match lowercase substrings of the window class or title:
+### Install the Brave extension once
 
-```json
-{"block_apps": ["spotify"], "on_task_apps": ["anki"],
- "on_task_titles": ["d2l"], "neutral_titles": ["whatsapp"]}
-```
+1. Run `./setup.sh apply --configs-only` (full `apply` on a fresh machine). Setup
+   links the native host and registers only this extension's stable ID, preserving
+   unrelated Brave configuration. Python, Rofi, Brave, and the local model are
+   already covered by the normal installation route.
+2. Open `brave://extensions`, enable **Developer mode**, choose **Load unpacked**,
+   and select `~/thomas_config/brave/focus-guard`. Pin it, then click its toolbar
+   icon to connect. This uses the existing profile; no profile data is copied.
+3. Reload Eww and i3 configuration when convenient for the new controls and
+   emergency shortcut. Setup does not restart the desktop. Reload the unpacked
+   extension after pulling updates to its files.
 
-Without the Decima environment the page says "rules only (no local model)";
-known-app rules and remembered decisions still work, and unknown windows stay
-neutral. Only window class and title are judged, and only during focus sessions.
-Those window details stay local. 9router receives the track, next step, and recent
-notification/reflective wording and forwards them to its configured provider.
-Remembered verdicts (the newest 5000) stay in
-`~/.local/state/thomas-desktop/focus-verdicts.json`; used wording stays in the
-adjacent `focus-voice.json`. Delete either file to forget its history.
+If pairing is unavailable, starting Lock In reports the installation step; it
+never silently starts a weaker session. Only one normal Brave profile is paired
+at a time. No incognito support, site-wide research passes, or phone blocking is
+included. This is a self-commitment aid, not protection against deliberate bypass.
+
+The browser bridge uses native messaging and a user-only Unix socket, with no
+HTTP listener. Page URLs, window titles, and check-in answers stay on this machine.
+9router receives only the session's original track/next action and recent generated
+wording, which it forwards to its configured provider. Replies and resource lists
+are not added to Git. URLs and selected windows exist only in private runtime
+state; check-in text is not retained. Classified titles and generated-line history
+remain in the private `focus-verdicts.json` and `focus-voice.json` state files.
 
 Your plant grows one stage per **10 accumulated focus minutes**, blooming at
 **50 minutes**. Small partial sessions carry forward, including seconds. A bloom
@@ -125,17 +148,16 @@ Manual changes to Dunst's pause level during a session are preserved. An unexpec
 reboot retains completed records but does not invent credit for an unfinished timer.
 Timer time is a record of the session, not a measurement of attention or learning.
 
-There is no garden daemon, continuous animation, or background sync. The lock-in
-guard exists only during focus sessions and sleeps until an i3 window event or its
-next deadline (dwell, grace, or the earliest moment idle time could reach five
-minutes). It holds about 20 MB; Decima loads for the first window rules and memory
-cannot settle (about 500 MB) and unloads after five minutes without a new title.
-`./setup.sh apply` installs its pinned environment in `~/.virtualenvs/focus-guard`
-and model in `~/.local/share/thomas-desktop/decima-small`. Polybar uses IPC, with a
-one-time state hook on restart. The running session
+There is no garden polling daemon, continuous animation, or background sync.
+The guard sleeps until an i3/browser event, a prompt response, or its next deadline.
+The browser owns a small native host while its extension is connected; the host
+waits on messages without periodic polling. Decima loads for approval feedback
+when needed and unloads after five minutes without a new title. Full setup installs
+its pinned environment in `~/.virtualenvs/focus-guard` and model in
+`~/.local/share/thomas-desktop/decima-small`. Polybar uses IPC. The running session
 updates its clock once a second; the popup's lightweight clock runs only while an
-active timer is visible. Garden/history are recalculated on opening or a change.
-Picom and the desktop appearance keep their existing settings.
+active timer is visible. Garden/history refresh on opening or a change. Picom and
+the desktop appearance keep their existing settings.
 
 ## Research and design decisions
 
@@ -148,8 +170,10 @@ lengths, growth thresholds, and the three-day aim are practical defaults.
   evidence. The garden supplies a small, predictable sign of progress alongside
   the activity itself. [Woolley et al., 2025](https://knowledge.uchicago.edu/records/0mq7t-kax65).
 - **Keep control with the learner.** A meta-analysis of student motivation supports
-  the relevance of autonomy and competence. Short starts, optional prompts, and
-  stopping without loss preserve choice. [Bureau et al., 2022](https://doi.org/10.3102/00346543211042426).
+  the relevance of autonomy and competence. Short starts, an immediate emergency exit, and
+  preserving earned progress retain choice. Required checkpoints and ten-second
+  approval/end waits are deliberate commitment settings, not findings of this study.
+  [Bureau et al., 2022](https://doi.org/10.3102/00346543211042426).
 - **Show accumulated progress.** A meta-analysis of 138 randomized studies found
   that interventions promoting progress monitoring improved goal attainment on
   average. Visible minutes and weekly dots apply that principle; plant artwork is
@@ -168,9 +192,10 @@ lengths, growth thresholds, and the three-day aim are practical defaults.
   activity without resetting earned progress. [Lally et al., 2010](https://doi.org/10.1002/ejsp.674),
   [Silverman & Barasch, 2023](https://doi.org/10.1093/jcr/ucac029).
 - **Make the win relevant to learning.** A classroom meta-analysis of 222 studies
-  found benefits from quizzing/retrieval practice. The optional Study check-in
-  encourages recall followed by checking, rather than treating timer completion
-  as proof of understanding. It is not a spaced-repetition system.
+  found benefits from quizzing/retrieval practice. The Study prompts encourage
+  recall rather than treating timer completion as proof of understanding; checking
+  course notes afterwards remains the learner's responsibility. It is not a
+  spaced-repetition system.
   [Yang et al., 2021](https://pubmed.ncbi.nlm.nih.gov/33683913/).
 - **Offer rest without promises.** A microbreak meta-analysis found small benefits
   for vigor and fatigue; the overall performance effect was not significant.

@@ -127,6 +127,7 @@ for_window [class="^Eww$" title="^Eww - flyout$"] floating enable, border pixel 
 bindsym $mod+t exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/quick-task.py
 # shortcut: Focus Garden
 bindsym $mod+Ctrl+f exec --no-startup-id $HOME/thomas_config/eww/scripts/qs.sh focus
+bindsym $mod+Ctrl+Shift+f exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py focus-stop --emergency
 for_window [class="^Eww$" title="^Eww - focus$"] floating enable, border pixel 0, exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py focus-refresh
 # shortcut: Dropdown terminal
 bindsym $mod+grave exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/dropdown-terminal.py
