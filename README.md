@@ -85,8 +85,11 @@ once through **Load unpacked** at `~/thomas_config/brave/focus-guard`, then clic
 its toolbar icon. `./setup.sh apply --configs-only` registers the native host;
 full `apply` installs the pinned Decima environment/model on a fresh machine.
 Reload Eww/i3 configuration for the new controls and emergency shortcut.
-9router remains optional, supplying varied writing only. Page URLs, window titles,
-and check-in answers stay local. See [Focus Garden](docs/focus-garden.md).
+Select multiple resources by clicking their checkboxes, then Start. 9router supplies
+varied writing and reviews new access requests during their ten-second wait. It
+receives the task, resource title, page host/path, and approval reason; check-in
+answers stay local. If review is unavailable, chosen work remains usable but new
+requests stay blocked. See [Focus Garden](docs/focus-garden.md).
 
 To save appearance changes made through desktop settings, run `./setup.sh capture`,
 review `git diff`, then commit. Capture reads only the keys already listed in

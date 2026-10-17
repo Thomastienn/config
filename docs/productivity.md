@@ -61,8 +61,10 @@ Click **Focus** in Polybar, or press **Super+Ctrl+F**, to open
 select work windows/exact Brave pages, then start 5, 10, or 25 minutes. The local
 Brave extension must be paired first. Required typed check-ins arrive every five
 minutes; unanswered prompts pause credit. New resource access needs a reason and
-a ten-second wait, and expires after five minutes. Normal ending has a ten-second
-wait; **Emergency end** or **Super+Ctrl+Shift+F** is immediate. Routine notifications
+a ten-second model review, and expires after five minutes if granted. Unrelated
+or unreviewed requests stay blocked. Click rows to check multiple resources, then
+Start. Normal ending has a ten-second wait; **Emergency end** or
+**Super+Ctrl+Shift+F** is immediate. Routine notifications
 wait while command results and critical alerts remain visible. Plants grow from
 credited time, with no decay or lost streaks. Wins, breaks, and reminders remain
 optional. See the guide for extension installation and strict-mode limits.

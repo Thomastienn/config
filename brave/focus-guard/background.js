@@ -1,7 +1,7 @@
 import {canonical, allowed, rules} from './policy.js';
 
 const gateURL = chrome.runtime.getURL('gate.html');
-let port, state = null, chain = Promise.resolve();
+let port, state = null, chain = Promise.resolve(), connectionError = '';
 const pending = new Map(), gates = new Map();
 let activity = {allowed: false, title: '', gate: false};
 
@@ -64,7 +64,8 @@ async function gate(tab, attempted) {
   if (!state || tab.url === gateURL) return;
   tab = await chrome.tabs.get(tab.id).catch(() => null);
   if (!tab?.active || (!attempted && !tab.url)) return;
-  pending.set(tab.windowId, {tabId: tab.id, url: attempted || tab.url, title: tab.title || 'Unapproved page'});
+  pending.set(tab.windowId, {tabId: tab.id, url: attempted || tab.url,
+    title: attempted && attempted !== tab.url ? 'New page (not loaded yet)' : tab.title || 'Unapproved page'});
   let gateTab;
   const id = gates.get(tab.windowId);
   if (id !== undefined) gateTab = await chrome.tabs.get(id).catch(() => null);
@@ -161,12 +162,17 @@ async function command(message) {
 
 function connect() {
   if (port) return;
+  connectionError = '';
   port = chrome.runtime.connectNative('org.thomas.focus');
   port.onMessage.addListener(message => enqueue(async () => {
     try { const result = await command(message); emit({id: message.id, ok: true, ...result}); }
     catch (error) { emit({id: message.id, ok: false, error: error.message}); }
   }));
-  port.onDisconnect.addListener(() => { port = null; enqueue(() => stop()).catch(() => {}); });
+  port.onDisconnect.addListener(() => {
+    connectionError = chrome.runtime.lastError?.message || 'Desktop connection closed. Click the Lock In toolbar icon to reconnect.';
+    port = null;
+    enqueue(() => stop()).catch(() => {});
+  });
 }
 
 chrome.webNavigation.onBeforeNavigate.addListener(details => {
@@ -210,7 +216,7 @@ chrome.runtime.onMessage.addListener((message, sender, reply) => {
     const win = source.windowId;
     const resource = pending.get(win);
     switch (message.action) {
-      case 'view': return {active: !!state, task: state?.task, message: state?.message, title: resource?.title, url: resource?.url};
+      case 'view': return {active: !!state, connected: !!port, error: connectionError, task: state?.task, message: state?.message, title: resource?.title, url: resource?.url};
       case 'request':
         if (state && resource && /^https?:/.test(resource.url || '')) emit({event: 'approval', session: state.session, ...resource});
         return {};

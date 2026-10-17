@@ -274,8 +274,12 @@ def choose_work():
     if not choices:
         raise RuntimeError("Open your work windows/pages first, then start Lock In.")
     result = subprocess.run(["rofi", "-dmenu", "-sync", "-multi-select", "-no-custom", "-format", "i", "-p", "Choose work resources",
+                             "-me-select-entry", "", "-me-accept-entry", "", "-me-accept-custom", "MousePrimary",
                              "-kb-custom-1", "Alt+Escape",
-                             "-mesg", "Shift+Enter selects multiple. Enter starts. New access needs a reason and a 10-second wait."],
+                             "-theme-str", 'mainbox { children: [inputbar, message, listview, button-start]; }\n'
+                             'button-start {\ncontent: "Start with selected resources";\naction: "kb-accept-entry";\n'
+                             'expand: false; padding: 12px; background-color: @selected-bg; text-color: @accent; border-radius: 10px; }',
+                             "-mesg", "Click or Shift+Enter to check/uncheck resources. Select every page/window you need, then Start or Enter."],
                             input="\n".join(labels), capture_output=True, text=True)
     if result.returncode in (1, 10):
         return None

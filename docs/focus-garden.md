@@ -15,9 +15,11 @@ collapsed sections. It fits the display; each page scrolls when needed.
 1. Choose **Study** or **Coding**, then **5**, **10**, or **25 minutes**. A concrete
    next action is required; each track remembers its own. Open the work windows
    and signed-in browser pages you will need before starting.
-2. In Rofi, select your work windows and exact Brave pages. Use Shift+Enter for
-   multiple selections, then Enter. Cancelling changes nothing. The timer starts
-   only after the paired browser extension acknowledges enforcement.
+2. In Rofi, check every work window and exact Brave page you need. Click a row or
+   press Shift+Enter to check/uncheck it, then click **Start with selected resources**
+   or press Enter. Multiple pages and windows can be selected together. Cancelling
+   changes nothing. The timer starts only after the paired browser extension
+   acknowledges enforcement.
 3. Work within those resources. Every five minutes before the session ends, Rofi
    asks for a short typed check-in. Study asks for one recalled idea; Coding asks
    for a concrete change or next action. Type `/stuck` to choose a smaller step.
@@ -44,9 +46,15 @@ The guard runs only during focus sessions; breaks have no restrictions.
   After two seconds it moves to the scratchpad, returning focus to approved work.
   Reopening or rapidly switching windows does not erase drift. Known distraction
   apps are hidden at the start unless deliberately selected as work.
+  Paired Brave windows stay in their existing tiled/floating layout while the
+  extension gates pages. A page-title update pauses credit until browser state
+  catches up, without moving the browser into the scratchpad.
 - **New access:** use the browser gate's **Request 5 minutes** button, or Focus's
   **Request 5 minutes for hidden window**. Type a task-related reason, then wait
-  ten seconds. The exact page or window is approved for five minutes. There are
+  ten seconds while 9router reviews the task, resource, and reason. Relevant requests
+  receive five minutes; unrelated requests stay blocked with an explanation.
+  A failed, invalid, or late review grants nothing; return to chosen work or retry.
+  Cancelling discards the request, including any later model reply. There are
   no permanent click-through exceptions. Other browser profiles and other browsers
   are not supported work resources; use the paired Brave profile. For local PDFs,
   choose a desktop viewer window. Sign-in redirects also need approval, so sign
@@ -65,9 +73,12 @@ The guard runs only during focus sessions; breaks have no restrictions.
   hidden tiled windows return to their workspaces. Floating/dropdown windows
   stay in the scratchpad, where they normally live. A browser worker restart
   finishes the session rather than resuming unacknowledged restrictions.
-- **Local model:** Decima classifies content for feedback during approval; it
-  cannot grant access outside the selected resources. A missing model leaves the
-  explicit approvals enforced. Old remembered verdicts cannot grant access.
+  A tiled window shown manually from the scratchpad is restored to tiling too.
+- **Models:** Decima classifies content locally for feedback. 9router checks task
+  relevance for new requests during the ten-second wait; genre or an educational
+  label alone cannot grant access. A missing local model does not remove enforcement.
+  Old remembered verdicts cannot grant access. Initial chosen resources remain approved
+  for the session without a remote review.
 - **Voice:** one background request to 9router supplies varied session themes,
   reflections, notifications, and bloom/milestone wording. Recent used lines
   discourage repeats; built-in alternatives work offline. Generated writing
@@ -95,14 +106,21 @@ If pairing is unavailable, starting Lock In reports the installation step; it
 never silently starts a weaker session. Only one normal Brave profile is paired
 at a time. No incognito support, site-wide research passes, or phone blocking is
 included. This is a self-commitment aid, not protection against deliberate bypass.
+The toolbar page shows whether its desktop connection is available. Clicking the
+extension alone does not start blocking: start Lock In from Focus Garden and select
+your work resources first. **Connected** with no active session is normal.
 
 The browser bridge uses native messaging and a user-only Unix socket, with no
-HTTP listener. Page URLs, window titles, and check-in answers stay on this machine.
-9router receives only the session's original track/next action and recent generated
-wording, which it forwards to its configured provider. Replies and resource lists
-are not added to Git. URLs and selected windows exist only in private runtime
-state; check-in text is not retained. Classified titles and generated-line history
-remain in the private `focus-verdicts.json` and `focus-voice.json` state files.
+HTTP listener. 9router receives the original track/next action and recent generated
+wording for voice. For each new access request, it also receives the resource title,
+app name, page hostname/path (without query, fragment, or credentials), and typed
+approval reason, forwarding these to its configured provider. Check-in replies,
+smaller steps, page contents, and the full selected resource list are not sent.
+Approval request text is not written to history; provider retention is separate.
+Replies and resource lists are not added to Git. Full URLs and selected windows
+exist only in private runtime state; check-in text is not retained. Classified titles
+and generated-line history remain in the private `focus-verdicts.json` and
+`focus-voice.json` state files.
 
 Your plant grows one stage per **10 accumulated focus minutes**, blooming at
 **50 minutes**. Small partial sessions carry forward, including seconds. A bloom
