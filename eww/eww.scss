@@ -163,6 +163,8 @@ scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-
   button:disabled { opacity: 0.5; }
 }
 
+.qs-panel scrolledwindow > viewport { margin-right: 16px; }
+
 .focus-card {
   * { font-size: 18px; }
   .focus-title { font-size: 32px; font-weight: bold; color: $mint; }
