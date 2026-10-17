@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Toggle Firefox's regular profile, pausing its process group while hidden."""
+"""Toggle Firefox's regular profile in the scratchpad while keeping it running."""
 
 import fcntl
 import json
 import os
 from pathlib import Path
-import re
-import signal
 import subprocess
 import time
 
@@ -14,15 +12,14 @@ MARK = "browser-scratchpad"
 CLASS = "firefox"
 
 
-def browser_windows(node, hidden=False):
-    hidden = hidden or node.get("name") == "__i3_scratch"
+def browser_windows(node):
     windows = {}
     properties = node.get("window_properties", {})
     if (node.get("window") and (properties.get("class") or "").lower() == CLASS
             and properties.get("window_role") == "browser"):
-        windows[node["id"]] = dict(node, scratchpad_hidden=hidden)
+        windows[node["id"]] = node
     for child in node.get("nodes", []) + node.get("floating_nodes", []):
-        windows.update(browser_windows(child, hidden))
+        windows.update(browser_windows(child))
     return windows
 
 
@@ -42,43 +39,6 @@ def command(action):
         raise RuntimeError("i3 window command failed.")
 
 
-def browser_group(window):
-    result = subprocess.run(["xprop", "-id", str(window["window"]), "_NET_WM_PID"],
-                            capture_output=True, text=True, check=True)
-    match = re.search(r"=\s*(\d+)\s*$", result.stdout)
-    if not match:
-        raise RuntimeError("Could not identify the Firefox process.")
-    pid = int(match[1])
-    process = Path(f"/proc/{pid}")
-    executable = (process / "exe").resolve().name
-    # A dedicated group keeps stop/continue away from shells and other applications.
-    if (pid <= 1 or process.stat().st_uid != os.getuid()
-            or executable not in {"firefox", "firefox-bin", "firefox-esr"}
-            or os.getpgid(pid) != pid or os.getsid(pid) != pid):
-        return None
-    return pid
-
-
-def toggle(target, window):
-    group = browser_group(window)
-    if group is not None:
-        os.killpg(group, signal.SIGCONT)
-    command(f"[con_id={target}] scratchpad show")
-    windows = get_windows()
-    if target not in windows or not windows[target]["scratchpad_hidden"]:
-        return
-    if any(not other["scratchpad_hidden"] for other in windows.values()):
-        return  # The regular profile also has another window outside the scratchpad.
-    if group is None:
-        raise RuntimeError("Firefox was hidden but could not be paused safely. "
-                           "Quit Firefox normally and reopen it with Mod+G to give it a dedicated process group.")
-    try:
-        os.killpg(group, signal.SIGSTOP)
-    except BaseException:
-        os.killpg(group, signal.SIGCONT)
-        raise
-
-
 def main():
     runtime = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"))
     with (runtime / f"dropdown-browser-{os.getuid()}.lock").open("a") as lock:
@@ -89,7 +49,7 @@ def main():
         existing = get_windows()
         for target, window in existing.items():
             if MARK in window.get("marks", []):
-                toggle(target, window)
+                command(f"[con_id={target}] scratchpad show")
                 return
 
         process = subprocess.Popen(["firefox"], start_new_session=True)
