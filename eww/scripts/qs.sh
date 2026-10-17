@@ -42,7 +42,7 @@ garden_width() {
 }
 
 status() {
-    local vol vol_muted mic_muted bright engine kbd hz wifi gpu media playing
+    local vol vol_muted mic_muted bright engine kbd hz wifi gpu media playing battery
     vol=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\d+(?=%)' | head -1)
     pactl get-sink-mute @DEFAULT_SINK@ 2>/dev/null | grep -q yes && vol_muted=true || vol_muted=false
     pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null | grep -q yes && mic_muted=true || mic_muted=false
@@ -55,9 +55,11 @@ status() {
     media=$(playerctl metadata --format '{{artist}} - {{title}}' 2>/dev/null)
     [ "$media" = " - " ] && media=
     [ "$(playerctl status 2>/dev/null)" = Playing ] && playing=true || playing=false
-    printf '{"vol":%s,"vol_muted":%s,"mic_muted":%s,"bright":%s,"kbd":%s,"hz":%s,"wifi":%s,"gpu":%s,"media":%s,"playing":%s}\n' \
+    battery=$(/usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" status 2>/dev/null) ||
+        battery='{"enabled":false,"available":false,"detail":"Unavailable","issues":[]}'
+    printf '{"vol":%s,"vol_muted":%s,"mic_muted":%s,"bright":%s,"kbd":%s,"hz":%s,"wifi":%s,"gpu":%s,"media":%s,"playing":%s,"battery":%s}\n' \
         "$(num "$vol")" "$vol_muted" "$mic_muted" "$(num "$bright")" "$(json_str "$kbd")" "$(num "$hz")" \
-        "$(json_str "$wifi")" "$(json_str "${gpu^}")" "$(json_str "$media")" "$playing"
+        "$(json_str "$wifi")" "$(json_str "${gpu^}")" "$(json_str "$media")" "$playing" "$battery"
 }
 
 close() { "${EWW[@]}" close-all 2>/dev/null; }
@@ -98,6 +100,7 @@ case $1 in
     mic) pactl set-source-mute @DEFAULT_SOURCE@ toggle; polybar-msg action microphone hook 0 >/dev/null 2>&1 ;;
     kbd) "$PB/keyboard-switch.sh" >/dev/null 2>&1 ;;
     hz) "$PB/toggle-refresh-rate.sh" >/dev/null 2>&1 ;;
+    battery) /usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" toggle >/dev/null ;;
     wifi) close; setsid -f kitty -e nmtui >/dev/null 2>&1 ;;
     updates) close; setsid -f exo-open --launch TerminalEmulator >/dev/null 2>&1 ;;
     vol) pactl set-sink-volume @DEFAULT_SINK@ "$(num "${2%.*}")%" ;;
@@ -106,5 +109,5 @@ case $1 in
     bright) b=$(num "${2%.*}"); "${backlight[@]}" -q s "$(( b < 5 ? 5 : b ))%" ;;
     prev|next) playerctl "$1" ;;
     play) playerctl play-pause ;;
-    *) echo "usage: $0 status|toggle|focus|focus-open|focus-page N|close|page N|mic|kbd|hz|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
+    *) echo "usage: $0 status|toggle|focus|focus-open|focus-page N|close|page N|mic|kbd|hz|battery|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
 esac

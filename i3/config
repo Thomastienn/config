@@ -81,6 +81,7 @@ exec_always --no-startup-id feh --bg-scale $HOME/thomas_config/wallpapers/hopper
 exec_always --no-startup-id $HOME/thomas_config/picom/run.sh
 exec_always --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/i3-frame-hints.py
 exec_always --no-startup-id $HOME/thomas_config/conky/run.sh
+exec_always --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/battery-mode.py session-start
 exec_always --no-startup-id $HOME/thomas_config/scripts/touchpad.sh
 
 # Mint
@@ -101,7 +102,8 @@ exec --no-startup-id xidlehook \
   --socket "$XDG_RUNTIME_DIR/thomas-xidlehook.sock" \
   --not-when-audio \
   --not-when-fullscreen \
-  --timer 600 'betterlockscreen --lock dimblur' '' \
+  --timer 120 '/usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" idle-blank' '' \
+  --timer 480 'betterlockscreen --lock dimblur' '' \
   --timer 900 'systemctl suspend' ''
 
 # Dunst (Notification)

@@ -16,7 +16,7 @@
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
-  :initial '{"vol":0,"vol_muted":false,"mic_muted":false,"bright":0,"kbd":"--","hz":0,"wifi":"","gpu":"","media":"","playing":false}'
+  :initial '{"vol":0,"vol_muted":false,"mic_muted":false,"bright":0,"kbd":"--","hz":0,"wifi":"","gpu":"","media":"","playing":false,"battery":{"enabled":false,"available":false,"detail":"Loading…"}}'
   "$HOME/thomas_config/eww/scripts/qs.sh status")
 
 (defpoll updates :interval "1800s" :initial "…"
@@ -105,6 +105,12 @@
         (tile :icon "" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
         (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
               :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")))
+    (button :timeout "1m" :class "afk-toggle ${qs.battery.enabled ? 'afk-on' : ''}"
+            :tooltip {qs.battery.detail} :active {qs.battery.available}
+            :onclick "${qs_cmd} battery"
+      (box :space-evenly false :spacing 12
+        (label :hexpand true :xalign 0 :text "Battery Saver")
+        (label :text {qs.battery.enabled ? "On" : "Off"})))
     (button :timeout "10s" :class "afk-toggle ${desktop.afk ? 'afk-on' : ''}"
             :tooltip "Keep screen awake while lid is open. Lid close or sleep turns this off."
             :onclick "${afk_cmd} toggle"
@@ -124,7 +130,7 @@
       (box :orientation "v" :space-evenly false :hexpand true :spacing 8
         (label :class "settings-title" :xalign 0 :text "Quick settings")
         (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")}))
-      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
+      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")}))
     (box :class "settings-tabs" :space-evenly true :spacing 8
       (settings-tab :text "Controls" :index 0)
       (settings-tab :text "Audio" :index 1)
@@ -268,7 +274,7 @@
     (box :space-evenly false :spacing 24
       (box :orientation "v" :space-evenly false :hexpand true :spacing 8
         (label :class "focus-title" :xalign 0 :text "Focus Garden")
-        (label :class "muted" :xalign 0 :text "One small step grows something."))
+        (label :class "muted" :xalign 0 :text "One small step grows something.")))
     (box :class "settings-tabs" :space-evenly true :spacing 12
       (garden-tab :text "Focus" :index 0)
       (garden-tab :text "Progress" :index 1)

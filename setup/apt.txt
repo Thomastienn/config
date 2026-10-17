@@ -30,14 +30,17 @@ kitty
 libnotify-bin
 lm-sensors
 lxappearance
+mesa-utils
 nemo
 network-manager
+nvidia-prime
 openssh-client
 papirus-icon-theme
 pavucontrol
 pkg-config
 policykit-1-gnome
 playerctl
+pkexec
 polybar
 poppler-utils
 procps
@@ -52,6 +55,7 @@ ripgrep
 rofi
 rsync
 suckless-tools
+tlp
 unzip
 x11-utils
 x11-xserver-utils

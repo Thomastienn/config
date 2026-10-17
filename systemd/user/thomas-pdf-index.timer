@@ -1,5 +1,6 @@
 [Unit]
 Description=Refresh PDF content search every fifteen minutes
+ConditionPathExists=!%t/thomas-battery-mode/active
 
 [Timer]
 OnStartupSec=2min

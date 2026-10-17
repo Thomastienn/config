@@ -2,6 +2,12 @@
 
 # Updates check with error handling and timeout
 
+cache="${XDG_CACHE_HOME:-$HOME/.cache}/thomas-config/updates-count"
+if [[ -f ${XDG_RUNTIME_DIR:-/run/user/$UID}/thomas-battery-mode/active ]]; then
+    if [[ -r $cache ]]; then cat "$cache"; else echo ' Deferred'; fi
+    exit 0
+fi
+
 get_updates() {
     local mint_updates=0
     local flatpak_updates=0
@@ -34,3 +40,6 @@ elif (( UPDATES == 1 )); then
 else
     echo " $UPDATES"
 fi
+
+mkdir -p "$(dirname "$cache")"
+printf ' %s\n' "$UPDATES" > "$cache"

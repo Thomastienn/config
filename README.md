@@ -50,7 +50,9 @@ git pull --ff-only
 ```
 
 Most configs link directly to this checkout, so Git changes reach them at once.
-`--configs-only` reapplies links, desktop preferences, and user services. Run a
+`--configs-only` reapplies links, desktop preferences, user services, and the
+protected Battery Saver helper when its installed copy differs. That update
+can ask for sudo. Run a
 full `apply` when package manifests or source revisions change. Git commits and
 pushes remain explicit; there is no additional synchronization service.
 
@@ -89,6 +91,112 @@ APT, Homebrew, Flatpak, and optional development packages track available update
 this restores the workflow and appearance, not a byte-identical OS image.
 The source machine's retired PyPy 3.10 formula is deliberately excluded from
 fresh installs; install a currently supported PyPy separately if needed.
+
+## Battery Saver
+
+Click the battery or Wi-Fi area in Polybar, then switch **Battery Saver** in
+Quick Settings. It is manual, survives sleep and i3 reloads, and resets after
+reboot. The equivalent commands are:
+
+```sh
+python3 ~/thomas_config/scripts/battery-mode.py on
+python3 ~/thomas_config/scripts/battery-mode.py off
+python3 ~/thomas_config/scripts/battery-mode.py toggle
+python3 ~/thomas_config/scripts/battery-mode.py status
+```
+
+The mode selects 60 Hz on supported internal panels without changing resolution,
+lowers brightness to at most 20%, turns off keyboard lighting, disables CPU turbo,
+prefers CPU energy saving and a supported quiet firmware profile, and caps Intel
+CPU performance at 40% where supported. An existing lower CPU ceiling or brightness
+is preserved. The CPU ceiling limits performance, not CPU utilization or watts;
+CPU-heavy jobs can take longer. Picom's decorative effects are removed, while
+compositing and VSync stay enabled for reliable rendering.
+
+All managed Conky panels stop, including weather and calendar/tasks. Scheduled PDF
+indexing pauses; an already running index finishes, existing search still works,
+and Ctrl+R can request an index manually. Automatic update checks from the panel
+use a cached count, or show `Deferred`. Applications, ActivityWatch, clipboard,
+network connections, downloads, and active jobs continue running. Turning saver
+off restores only the panels and PDF timer that were running beforehand, along
+with captured settings except those subsequently adjusted by hand.
+
+After logging out/in once to activate the updated xidlehook configuration, saver
+blanks idle displays after two minutes. Audio, fullscreen applications, AFK mode,
+and logind idle inhibitors prevent this early blanking. Input wakes the screen;
+the existing ten-minute lock and twenty-five-minute suspend timing is unchanged.
+Disabled/unavailable DPMS or failed inhibitor checks leave the screen on. Refresh
+and brightness changes affect the internal panel only; idle blanking uses DPMS
+and therefore affects all displays.
+
+Installation is part of `./setup.sh apply`; an existing machine with TLP and
+pkexec already installed can use `./setup.sh apply --configs-only`. No desktop
+restart is required for the toggle: reload Eww to expose the new button. The new
+idle timer needs one logout/login. Setup starts a small
+event-driven user service for display changes and wake events; future i3 logins
+start it automatically. It has no periodic polling loop.
+
+TLP remains the sole power manager. The installer copies a fixed helper into
+root-owned `/usr/local/libexec`, installs a narrowly scoped Polkit action for the
+active local user, and links a dedicated TLP drop-in to a root-owned runtime file.
+The runtime file disappears at reboot. Existing TLP configuration and charging
+limits are preserved; explicit conflicting settings in `/etc/tlp.conf` are
+reported rather than overwritten. Stop any competing power manager deliberately
+before using this mode. System-file conflicts are backed up under
+`/var/backups/thomas-config/<time>/`; user configuration backups are unchanged.
+
+Check the button's tooltip or the JSON `status` output for unsupported controls,
+manual overrides, and restoration errors. Failed activation attempts roll back;
+if restoration is interrupted, run `off` again. Diagnostic Picom output is in
+`$XDG_RUNTIME_DIR/thomas-battery-mode/picom.log`. Normal appearance remains the
+default after reboot.
+
+The tooltip includes a passive NVIDIA runtime power state when available. It
+does not poll `nvidia-smi`, and an active GPU can be legitimate when a GPU app or
+a connected display needs it. Wireless/USB policies, GPU drivers, BIOS settings,
+and sleep/lid rules are unchanged. Actual battery savings require an unplugged
+measurement with a comparable workload; isolated tests do not establish runtime.
+
+### Optional Intel desktop and NVIDIA on-demand
+
+On a supported Intel/NVIDIA laptop, install the distribution's graphics drivers,
+then explicitly select hybrid graphics through setup:
+
+```sh
+./setup.sh apply --graphics on-demand
+# With dependencies already installed:
+./setup.sh apply --configs-only --graphics on-demand
+```
+
+Ordinary setup does not change graphics profiles. Selection uses `prime-select`
+and can update initramfs; it never logs out, restarts the desktop, or reboots.
+**Save your work, then log out and back in.** Check `glxinfo -B` for the default
+Intel renderer and `xrandr --listproviders` for the NVIDIA offload provider. A
+selected on-demand profile does not prove the running desktop has switched.
+
+Launch an OpenGL GPU application explicitly with:
+
+```sh
+__NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia application
+```
+
+For Vulkan/EGL, `__NV_PRIME_RENDER_OFFLOAD=1` is sufficient. CUDA applications use
+NVIDIA through their own device selection. Check the detected NVIDIA PCI device's
+`power/runtime_status` under `/sys/bus/pci/devices` after GPU applications exit:
+on battery, supported runtime power management should eventually report
+`suspended`. GPU-connected monitors and active GPU clients can prevent suspension.
+
+If logout/login does not activate the profile, report the pending state and reboot
+when convenient; setup does not force it. To return to NVIDIA desktop rendering:
+
+```sh
+./setup.sh apply --configs-only --graphics nvidia
+# Save work, then log out/in (or reboot if needed).
+```
+
+Hybrid selection persists across reboots independently of the manual Battery
+Saver toggle. Older saver snapshots remain restorable; new limits take effect
+on the next activation.
 
 ## Remaining machine-specific steps
 

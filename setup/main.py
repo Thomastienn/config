@@ -14,6 +14,8 @@ import subprocess
 import sys
 
 import tools
+import power
+import graphics
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
@@ -159,9 +161,14 @@ def services():
     environment = [key for key in ["DISPLAY", "XAUTHORITY"] if os.environ.get(key)]
     if environment:
         run(["systemctl", "--user", "import-environment", *environment])
+    if os.environ.get("DISPLAY") and power.FILES[0][1].is_file():
+        run(["systemctl", "--user", "start", "thomas-battery-mode.service"])
     if shutil.which("recollq") and shutil.which("recollindex"):
-        run(["systemctl", "--user", "enable", "--now", "thomas-pdf-index.timer"])
-        run(["systemctl", "--user", "start", "--no-block", "thomas-pdf-index.service"])
+        run(["systemctl", "--user", "enable", "thomas-pdf-index.timer"])
+        if not (Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) /
+                "thomas-battery-mode/active").exists():
+            run(["systemctl", "--user", "start", "thomas-pdf-index.timer"])
+            run(["systemctl", "--user", "start", "--no-block", "thomas-pdf-index.service"])
 
 
 def packages(extras):
@@ -199,7 +206,7 @@ def packages(extras):
 
 
 def check():
-    gaps = []
+    gaps = power.check()
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
@@ -267,7 +274,11 @@ def main():
     parser.add_argument("command", nargs="?", default="plan", choices=["plan", "apply", "link", "check", "capture"])
     parser.add_argument("--configs-only", action="store_true", help="skip packages, source builds and fonts")
     parser.add_argument("--extras", action="store_true", help="also install coursework/virtualization packages")
+    parser.add_argument("--graphics", choices=["on-demand", "nvidia"],
+                        help="explicitly select a PRIME profile during apply; activate at the next login")
     args = parser.parse_args()
+    if args.graphics and args.command != "apply":
+        parser.error("--graphics requires apply")
     if args.command == "plan":
         print("Target: Mint 22 / Ubuntu 24.04+, i3 on X11. Run as your normal user.")
         print("apply: APT + Brewfile + Flatpak apps, pinned desktop builds/fonts, links, desktop settings, user services.")
@@ -302,6 +313,9 @@ def main():
         tools.assets(HOME, CACHE)
     apply_links()
     if args.command == "apply":
+        power.install(run)
+        if args.graphics:
+            graphics.configure(args.graphics, run)
         settings()
         services()
     print("Setup applied. See README.md for activation and manual steps; desktop was not restarted.")

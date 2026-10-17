@@ -1,0 +1,8 @@
+[Unit]
+Description=Battery Saver display and wake events
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/battery-mode.py run
+Restart=on-failure
+RestartSec=5
