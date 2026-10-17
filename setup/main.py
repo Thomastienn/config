@@ -228,6 +228,8 @@ def check():
         gaps.extend("brew: " + name for name in desired if name not in installed)
     except (OSError, subprocess.SubprocessError):
         gaps.append("Homebrew inventory unavailable")
+    if not (HOME / ".virtualenvs/focus-guard/bin/python").exists() or not (HOME / ".local/share/thomas-desktop/decima-small/onnx/int8").is_dir():
+        gaps.append("Focus Garden lock-in model (Decima) not installed")
     if not list(firefox_links()):
         gaps.append("Firefox: create a default profile, then rerun setup.sh apply --configs-only")
     try:

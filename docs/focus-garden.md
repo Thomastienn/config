@@ -2,8 +2,8 @@
 
 Open **Focus** in Polybar or press **Super+Ctrl+F**. The popup is an i3 floating
 window: use Tab/Shift+Tab and Enter/Space, its close button, the same shortcut, or
-Super+Q. Closing it leaves the timer running. No application is opened or closed
-automatically when a session ends.
+Super+Q. Closing it leaves the timer running. No application is opened or closed;
+[lock-in](#lock-in) only hides distracting windows during a focus session.
 
 The window uses larger text and controls, with three direct pages: **Focus** for
 the current session, **Progress** for weekly activity and recent wins, and
@@ -21,6 +21,60 @@ collapsed sections. It fits the display; each page scrolls when needed.
 4. Optionally keep a small win, leave your next step, continue, or take a five-minute
    break. Study suggests explaining one idea from memory and then checking notes;
    Coding asks what changed or what you learned. Rewards never require an answer.
+
+## Lock-in
+
+Every focus session (not breaks) runs a guard alongside the timer:
+
+- **Start:** Discord, Sober/Roblox, and Steam windows move to the i3 scratchpad.
+- **Watch:** after 8 seconds on a window, it is judged against your track and next
+  step. Rules place terminals, editors, PDF viewers, and mail; ChatGPT, Claude,
+  Gemini, and Perplexity count as on-task. The bare YouTube feed gets 90 seconds to
+  search for material before it counts as a distraction.
+- **Two models:** every other window, including each YouTube video or search title,
+  is checked by [Decima-small](https://huggingface.co/amyrmahdy/decima-small), a local
+  122M decision model (about 20 ms). It only answers "entertainment or educational?",
+  where it is reliable; at 70% or more entertainment it allows an instant nudge.
+  Larger open decision models (Von, GLiNER2-large, GLiClass-large) were tested on
+  real titles and did worse.
+  The 9router `free` model then decides relevance to your task in the background (a
+  few seconds): study material and searches for it are on-task; entertainment and
+  clearly different topics are distractions. Its answer overrules Decima, and a
+  window is hidden only after it agrees. If 9router is unreachable, Decima's
+  verdict stands.
+- **Ladder:** the first distraction gets a nudge. Click it if the window is for
+  your task: it is allowed for the session. Staying 20 more seconds, or a later
+  distraction, hides that window and returns focus to your last on-task window.
+  Overruled or allowed windows have their drift refunded.
+- **Memory:** 9router verdicts and your clicks are remembered across sessions for
+  the same next step, so repeats are settled instantly without either model.
+  Entertainment both models agreed on is remembered for every task.
+- **Away:** five idle minutes on a neutral window prompts a check-in and counts as
+  drift. Idle time on an on-task window (reading, a lecture) is trusted.
+- **Voice:** at session start, 9router writes a fresh set of start, nudge, hide,
+  check-in, and finish lines for your task; each notification picks one at random.
+  Built-in lines are used until they arrive or if 9router is unavailable.
+- **End:** hidden windows return to their workspaces. Dropdown/floating windows
+  stay in the scratchpad, where they normally live.
+
+Drift is subtracted from the session. The garden grows only from on-task time, and
+feedback and history show the focus percentage. The Focus page shows nudges and
+drift while a session runs.
+
+Add your own entries in `~/.config/thomas-desktop/focus-rules.json`; lists extend the
+defaults and match lowercase substrings of the window class or title:
+
+```json
+{"block_apps": ["spotify"], "on_task_apps": ["anki"],
+ "on_task_titles": ["d2l"], "neutral_titles": ["whatsapp"]}
+```
+
+Without the Decima environment the page says "no local model" and 9router decides
+alone. Only window class and title are judged, and only during focus sessions.
+Decima runs locally; 9router receives the title, track, and next step and forwards
+them to its configured provider. Remembered verdicts (window class, title, and next
+step; the newest 5000) stay in `~/.local/state/thomas-desktop/focus-verdicts.json`.
+Delete that file to forget them.
 
 Your plant grows one stage per **10 accumulated focus minutes**, blooming at
 **50 minutes**. Small partial sessions carry forward, including seconds. A bloom
@@ -66,8 +120,14 @@ Manual changes to Dunst's pause level during a session are preserved. An unexpec
 reboot retains completed records but does not invent credit for an unfinished timer.
 Timer time is a record of the session, not a measurement of attention or learning.
 
-There is no garden daemon, idle focus poll, continuous animation, or background
-sync. Polybar uses IPC, with a one-time state hook on restart. The running session
+There is no garden daemon, continuous animation, or background sync. The lock-in
+guard exists only during focus sessions and sleeps until an i3 window event or its
+next deadline (dwell, grace, or the earliest moment idle time could reach five
+minutes). It holds about 20 MB; Decima loads for the first window rules and memory
+cannot settle (about 500 MB) and unloads after five minutes without a new title.
+`./setup.sh apply` installs its pinned environment in `~/.virtualenvs/focus-guard`
+and model in `~/.local/share/thomas-desktop/decima-small`. Polybar uses IPC, with a
+one-time state hook on restart. The running session
 updates its clock once a second; the popup's lightweight clock runs only while an
 active timer is visible. Garden/history are recalculated on opening or a change.
 Picom and the desktop appearance keep their existing settings.

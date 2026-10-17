@@ -6,7 +6,7 @@
 (defvar qs_page 0)
 (defvar focus_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
-(defvar focus '{"active":false,"mode":"idle","task":"","minutes":10,"remaining":"","label":"Focus","track":"study","action":"","stage":0,"growth":0,"growth_text":"10 min to next growth","plants":0,"total_minutes":0,"today_minutes":0,"week":[],"week_days":0,"study_minutes":0,"coding_minutes":0,"milestones":[],"history":[],"reminder":{"enabled":false,"days":[1,2,3,4,5],"time":"18:00"},"error":"","feedback":"","can_check_in":false,"win":"","notes":[],"reminder_schedule":"Mon, Tue, Wed, Thu, Fri at 18:00"}')
+(defvar focus '{"active":false,"mode":"idle","task":"","minutes":10,"remaining":"","label":"Focus","track":"study","action":"","stage":0,"growth":0,"growth_text":"10 min to next growth","plants":0,"total_minutes":0,"today_minutes":0,"week":[],"week_days":0,"study_minutes":0,"coding_minutes":0,"milestones":[],"history":[],"reminder":{"enabled":false,"days":[1,2,3,4,5],"time":"18:00"},"error":"","feedback":"","guard":"","can_check_in":false,"win":"","notes":[],"reminder_schedule":"Mon, Tue, Wed, Thu, Fri at 18:00"}')
 (defpoll focus_clock :interval "1s" :run-while {focus.active && focus_page == 0}
   :initial '{"remaining":"00:00"}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py focus-live")
@@ -175,6 +175,7 @@
                :text {focus.active ? focus_clock.remaining : "Ready when you are"})
         (label :class "muted" :xalign 0
                :text {focus.active ? (focus.mode == "break" ? "Taking a breath" : "${focus.track == 'study' ? 'Study' : 'Coding'} · one small step") : focus.growth_text})
+        (label :visible {focus.active && focus.guard != ""} :class "garden-count" :xalign 0 :text {focus.guard})
         (progress :class "garden-progress" :value {focus.growth})
         (label :class "garden-count" :xalign 0 :text "${focus.plants} ${focus.plants == 1 ? 'plant' : 'plants'} collected · ${focus.total_minutes} min")))
     (box :visible {!focus.active && focus.feedback != ""} :class "focus-feedback" :orientation "v" :space-evenly false :spacing 16

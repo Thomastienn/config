@@ -48,6 +48,10 @@ def focus_path():
     return afk.directory() / "focus.json"
 
 
+def guard_path():
+    return afk.directory() / "focus-guard.json"
+
+
 def notes_path():
     return Path(os.environ.get("XDG_STATE_HOME", Path.home() / ".local/state")) / "thomas-desktop/focus-notes.json"
 
@@ -139,6 +143,11 @@ def focus_panel_status():
         result["error"] = str(error)
     result.update(focus_status())
     result["feedback"] = state.get("feedback", "")
+    guard = read_json(guard_path(), {})
+    result["guard"] = ""
+    if result["mode"] == "focus" and guard.get("id") == state.get("id"):
+        result["guard"] = (f'{guard["status"]} · {guard["nudges"]} {"nudge" if guard["nudges"] == 1 else "nudges"}'
+                           f' · {guard["drift"] // 60} min drift')
     result["can_check_in"] = bool(state.get("credited") and state.get("session_mode") == "focus"
                                   and any(item["id"] == state.get("id") for item in result["history"]))
     result["win"] = next((item["win"] for item in result["history"] if item["id"] == state.get("id")), "")
@@ -185,13 +194,23 @@ def focus_reset(done=False):
             state["elapsed"] = max(0, min(state["minutes"] * 60,
                                          int(time.monotonic() - state.get("started", time.monotonic())))) if same_boot else 0
             state["ended_at"] = datetime.now().astimezone().isoformat()
+            guard = read_json(guard_path(), {})
+            if guard.get("id") == state.get("id"):
+                state["drift"] = int(guard.get("drift", 0))
+                state["cheer"] = str(guard.get("cheer", ""))[:90]
+                if guard.get("hidden"):
+                    subprocess.run([sys.executable, str(Path(__file__).with_name("focus_guard.py")), "restore"],
+                                   stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=10)
             write_json(focus_path(), state)
         if not state.get("credited"):
             reward = garden.credit(state)
             state["credited"] = True
             if reward:
                 seconds = reward["seconds"]
-                message = f'{seconds // 60}m {seconds % 60:02d}s of {state["track"].title().lower()} saved.'
+                message = (state.get("cheer", "") + f' {seconds // 60}m {seconds % 60:02d}s of '
+                           f'{state["track"].title().lower()} saved.').strip()
+                if reward["drift"]:
+                    message += f' {100 * seconds // (seconds + reward["drift"])}% focused; drift does not grow the garden.'
                 if reward["plants"]:
                     message += " A new plant bloomed!"
                 if reward["milestones"]:
@@ -267,6 +286,7 @@ def focus_run():
     signal.signal(signal.SIGINT, stop)
     display = None
     display_watch = None
+    guard = None
     timers = []
 
     def display_closed(_pid, status):
@@ -288,6 +308,9 @@ def focus_run():
             state["pause_set"] = max(50, state["pause_before"])
             write_json(focus_path(), state)
             capture(["dunstctl", "set-pause-level", str(state["pause_set"])])
+            python = Path.home() / ".virtualenvs/focus-guard/bin/python"
+            guard = subprocess.Popen([str(python if python.exists() else sys.executable),
+                                      str(Path(__file__).with_name("focus_guard.py"))], stdout=subprocess.DEVNULL)
         update_focus_bar()
         refresh_focus()
         timers.append(GLib.timeout_add_seconds(1, update_focus_bar))
@@ -304,6 +327,9 @@ def focus_run():
             if display is not None and display.poll() is None:
                 display.terminate()
                 display.wait(timeout=2)
+            if guard is not None and guard.poll() is None:
+                guard.terminate()
+                guard.wait(timeout=10)
         finally:
             focus_reset(done=finished)
     if finished and not refresh_focus():

@@ -60,8 +60,9 @@ Click **Focus** in Polybar, or press **Super+Ctrl+F**, to open
 [Focus Garden](focus-garden.md). Choose Study or Coding and start 5, 10, or 25
 minutes immediately. Each track remembers its own optional next step. Routine
 notifications wait; command results and critical alerts remain visible. Stop
-anytime and keep measured time. Plants grow with accumulated minutes, with no
-decay or lost streaks. Wins, breaks, and daily reminders are optional.
+anytime and keep measured time. Lock-in hides distracting apps, nudges then hides
+off-task windows such as unrelated YouTube (study videos stay), and plants grow
+only from on-task minutes, with no decay or lost streaks. Wins, breaks, and daily reminders are optional.
 **Save a thought** stores a note for your next break; notes remain until cleared.
 The panel shows the latest 20; all notes are stored in
 `~/.local/state/thomas-desktop/focus-notes.json`.

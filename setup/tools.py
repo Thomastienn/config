@@ -42,6 +42,22 @@ def install(home, cache, link):
                "blesh": prefix / "share/blesh/ble.sh", "i3lock-color": binaries / "i3lock",
                "betterlockscreen": binaries / "betterlockscreen"}
     for name, spec in specs.items():
+        if spec.get("kind") == "model":
+            venv = home / ".virtualenvs/focus-guard"
+            target = home / ".local/share/thomas-desktop" / name
+            marker = markers / name
+            expected = spec["rev"] + "\n" + (ROOT / "focus-requirements.txt").read_text()
+            if marker.exists() and marker.read_text() == expected and (venv / "bin/python").exists() and target.exists():
+                print(f"Already installed: {name}")
+                continue
+            run(["uv", "venv", "--allow-existing", "--python", "/usr/bin/python3", venv])
+            run(["uv", "pip", "install", "--python", venv / "bin/python", "-r", ROOT / "focus-requirements.txt"])
+            run([venv / "bin/python", "-c", "import sys; from huggingface_hub import snapshot_download; "
+                 "snapshot_download(sys.argv[1], revision=sys.argv[2], local_dir=sys.argv[3], "
+                 "allow_patterns=['config.json', 'onnx/int8/*', 'onnx/int8/tokenizer/*'])",
+                 spec["url"].removeprefix("https://huggingface.co/"), spec["rev"], target])
+            marker.write_text(expected)
+            continue
         if name == "nvim":
             target = home / ".config/nvim"
             if target.exists() or target.is_symlink():

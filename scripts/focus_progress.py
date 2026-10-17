@@ -43,8 +43,9 @@ def validate(data):
             date.fromisoformat(item["date"])
             datetime.fromisoformat(item["ended_at"])
             require(item["track"] in TRACKS)
-            require(type(item["seconds"]) is int and type(item["planned"]) is int
-                    and 0 <= item["seconds"] <= item["planned"] <= 1500)
+            drift = item.get("drift", 0)
+            require(type(item["seconds"]) is int and type(item["planned"]) is int and type(drift) is int
+                    and 0 <= drift and 0 <= item["seconds"] and item["seconds"] + drift <= item["planned"] <= 1500)
             require(isinstance(item["win"], str) and len(item["win"]) <= 300)
         reminder = data["reminder"]
         require(type(reminder["enabled"]) is bool)
@@ -120,9 +121,11 @@ def credit(state):
         if any(item["id"] == state["id"] for item in data["sessions"]):
             return None
         before = sum(item["seconds"] for item in data["sessions"])
-        seconds = max(0, min(state["elapsed"], state["minutes"] * 60))
+        measured = max(0, min(state["elapsed"], state["minutes"] * 60))
+        drift = max(0, min(int(state.get("drift", 0)), measured))
+        seconds = measured - drift
         record = {"id": state["id"], "date": state["date"], "track": state["track"],
-                  "seconds": seconds, "planned": state["minutes"] * 60,
+                  "seconds": seconds, "drift": drift, "planned": state["minutes"] * 60,
                   "ended_at": state["ended_at"], "win": ""}
         data["sessions"].append(record)
         total = before + seconds
@@ -138,7 +141,7 @@ def credit(state):
             if achieved and key not in data["milestones"]:
                 data["milestones"].append(key)
                 earned.append(MILESTONES[key])
-        return {"seconds": seconds, "plants": total // 3000 - before // 3000, "milestones": earned}
+        return {"seconds": seconds, "drift": drift, "plants": total // 3000 - before // 3000, "milestones": earned}
 
 
 def summary(data, show_bloom=False, today=None):
@@ -151,7 +154,8 @@ def summary(data, show_bloom=False, today=None):
     week = [{"label": (monday + timedelta(days=index)).strftime("%a"),
              "active": days.get((monday + timedelta(days=index)).isoformat(), 0) >= 300}
             for index in range(7)]
-    history = [{"id": item["id"], "text": f'{item["date"]} · {item["track"].title()} · {item["seconds"] // 60}m {item["seconds"] % 60:02d}s',
+    history = [{"id": item["id"], "text": f'{item["date"]} · {item["track"].title()} · {item["seconds"] // 60}m {item["seconds"] % 60:02d}s'
+                + (f' · {100 * item["seconds"] // (item["seconds"] + item["drift"])}% focused' if item.get("drift") else ""),
                 "win": item["win"]} for item in reversed(data["sessions"][-10:])]
     return {"track": data["track"], "action": data["actions"][data["track"]],
             "stage": 5 if blooming else remainder // 600,
