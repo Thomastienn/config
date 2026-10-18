@@ -10,7 +10,7 @@ cd ~/thomas_config
 Restart i3 once (`Super+Shift+R`) so xidlehook gains its control socket. This restarts
 the bar through the existing i3 configuration. Reload Eww when its flyout is closed:
 `eww -c ~/thomas_config/eww reload`. Reload notification rules with `dunstctl reload`.
-The installer starts only the PDF indexing timer; focus and AFK services run on demand.
+The installer starts only the PDF indexing timer; the AFK service runs on demand.
 
 ## PDF contents
 
@@ -44,36 +44,17 @@ New shell tabs load hooks automatically. For an existing ble.sh tab:
 source ~/thomas_config/scripts/command-finished.sh
 ```
 
-## Focus and audio
+## Quick settings and audio
 
 Click the existing Polybar status area to open Eww. The **Audio** page lists outputs
 and microphones; selecting one moves active streams as well as changing the default.
 Desktop-audio capture streams are preserved when changing microphones.
 
-The larger quick-settings panel has **Controls**, **Audio**, **Focus**, and **History**
+The larger quick-settings panel has **Controls**, **Audio**, and **History**
 pages. Select a page directly; there are no collapsed sections or nested scroll
 areas. Tab/Shift+Tab and Enter/Space work throughout. The panel fits the display
 height and each page scrolls when needed. Click outside or use the close button
 to dismiss it. Opening it again returns to Controls.
-
-Click **Focus** in Polybar, or press **Super+Ctrl+F**, to open
-[Focus Garden](focus-garden.md). Choose Study or Coding, give one next action,
-select work windows/exact Brave pages, then start 5, 10, or 25 minutes. The local
-Brave extension must be paired first. Required typed check-ins arrive every five
-minutes; unanswered prompts pause credit. New resource access needs a reason and
-a ten-second model review, and expires after five minutes if granted. Unrelated
-or unreviewed requests stay blocked. Click rows to check multiple resources, then
-Start. Normal ending has a ten-second wait; **Emergency end** or
-**Super+Ctrl+Shift+F** is immediate. Routine notifications
-wait while command results and critical alerts remain visible. Plants grow from
-credited time, with no decay or lost streaks. Wins, breaks, and reminders remain
-optional. See the guide for extension installation and strict-mode limits.
-**Save a thought** stores a note for your next break; notes remain until cleared.
-The panel shows the latest 20; all notes are stored in
-`~/.local/state/thomas-desktop/focus-notes.json`.
-
-The [Focus Garden guide](focus-garden.md#research-and-design-decisions) explains
-the research, practical defaults, and limits behind these choices.
 
 ## AFK
 
@@ -84,8 +65,8 @@ Manual lock and normal lid policy still work. Closing the lid, suspending, or en
 the service turns AFK off; it stays off after resume. Turning it off restarts the
 normal idle countdown. Screen-on power use increases; thermal controls are unchanged.
 
-If a service reports a problem, inspect `journalctl --user -u thomas-afk.service`
-or `journalctl --user -u thomas-focus.service`. `systemctl --user stop thomas-afk.service`
+If the service reports a problem, inspect `journalctl --user -u thomas-afk.service`.
+`systemctl --user stop thomas-afk.service`
 restores the saved display/idle settings, including after a worker crash.
 
 ## Checks

@@ -30,17 +30,6 @@ raise_flyout() {
     xdotool windowraise "${frame:-$window}"
 }
 
-garden_width() {
-    local width screen_width
-    width=$(xrandr --listmonitors 2>/dev/null | awk 'NR == 2 { split($3, size, "/"); print size[1] }')
-    [[ $width =~ ^[0-9]+$ ]] || width=1920
-    screen_width=$(xrandr --current 2>/dev/null | awk '/^Screen / { for (i=1; i<=NF; i++) if ($i == "current") { print $(i+1); exit } }')
-    if [[ $screen_width =~ ^[0-9]+$ ]] && ((screen_width < width)); then width=$screen_width; fi
-    width=$((width - 44))
-    ((width > 840)) && width=840
-    printf '%spx\n' "$width"
-}
-
 status() {
     local vol vol_muted mic_muted bright engine kbd hz wifi gpu media playing battery
     vol=$(pactl get-sink-volume @DEFAULT_SINK@ 2>/dev/null | grep -oP '\d+(?=%)' | head -1)
@@ -64,18 +53,6 @@ status() {
 
 close() { "${EWW[@]}" close-all 2>/dev/null; }
 
-focus_open() {
-    local height art_size=176 page=${1:-0}
-    [[ $page =~ ^[0-2]$ ]] || return 2
-    close
-    "${EWW[@]}" daemon >/dev/null 2>&1
-    /usr/bin/python3 "$HOME/thomas_config/scripts/desktop-controls.py" focus-refresh
-    height=$(panel_height 860)
-    ((${height%px} < 700)) && art_size=112
-    "${EWW[@]}" update focus_page="$page"
-    "${EWW[@]}" open focus --arg panel_height="$height" --arg panel_width="$(garden_width)" --arg art_size="$art_size"
-}
-
 case $1 in
     status) status ;;
     toggle)
@@ -86,16 +63,7 @@ case $1 in
                 "${EWW[@]}" open flyout --arg panel_height="$(panel_height)" &&
                 raise_flyout
         fi ;;
-    page) [[ $2 =~ ^[0-3]$ ]] || exit 2; "${EWW[@]}" update qs_page="$2" ;;
-    focus-page)
-        [[ $2 =~ ^[0-2]$ ]] || exit 2
-        "${EWW[@]}" update focus_page="$2"
-        # Refresh after mapping: Eww can restore old visibility on a page's first map.
-        /usr/bin/python3 "$HOME/thomas_config/scripts/desktop-controls.py" focus-refresh ;;
-    focus)
-        if "${EWW[@]}" active-windows 2>/dev/null | grep -q '^focus:'; then close
-        else focus_open; fi ;;
-    focus-open) focus_open "${2:-0}" ;;
+    page) [[ $2 =~ ^[0-2]$ ]] || exit 2; "${EWW[@]}" update qs_page="$2" ;;
     close) close ;;
     mic) pactl set-source-mute @DEFAULT_SOURCE@ toggle; polybar-msg action microphone hook 0 >/dev/null 2>&1 ;;
     kbd) "$PB/keyboard-switch.sh" >/dev/null 2>&1 ;;
@@ -109,5 +77,5 @@ case $1 in
     bright) b=$(num "${2%.*}"); "${backlight[@]}" -q s "$(( b < 5 ? 5 : b ))%" ;;
     prev|next) playerctl "$1" ;;
     play) playerctl play-pause ;;
-    *) echo "usage: $0 status|toggle|focus|focus-open|focus-page N|close|page N|mic|kbd|hz|battery|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
+    *) echo "usage: $0 status|toggle|close|page N|mic|kbd|hz|battery|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
 esac

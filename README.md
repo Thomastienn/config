@@ -76,20 +76,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `codex/` | Portable Codex preferences and global instructions |
 | `scripts/` | Runtime desktop helpers |
-| `docs/productivity.md` | PDF search, command alerts, focus, audio, and AFK usage |
-| `docs/focus-garden.md` | Study/coding garden, optional reminders, private records, and research |
-
-Focus Garden uses selected work windows/exact Brave pages, five-minute typed
-check-ins, and temporary resource approvals. Install its local browser extension
-once through **Load unpacked** at `~/thomas_config/brave/focus-guard`, then click
-its toolbar icon. `./setup.sh apply --configs-only` registers the native host;
-full `apply` installs the pinned Decima environment/model on a fresh machine.
-Reload Eww/i3 configuration for the new controls and emergency shortcut.
-Select multiple resources by clicking their checkboxes, then Start. 9router supplies
-varied writing and reviews new access requests during their ten-second wait. It
-receives the task, resource title, page host/path, and approval reason; check-in
-answers stay local. If review is unavailable, chosen work remains usable but new
-requests stay blocked. See [Focus Garden](docs/focus-garden.md).
+| `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
 To save appearance changes made through desktop settings, run `./setup.sh capture`,
 review `git diff`, then commit. Capture reads only the keys already listed in
@@ -261,7 +248,7 @@ on the next activation.
   back to a detected backlight. Touchpads are found by name instead of numeric ID.
 - ActivityWatch, Boomer, 9router, personal tools, and work repositories referenced
   by optional shortcuts/autostart are separate installs. Install those if needed.
-- Keep SSH keys, tokens, clipboard history, Taskwarrior data, focus notes, and
+- Keep SSH keys, tokens, clipboard history, Taskwarrior data, and
   coursework outside this repository. Back them up separately when migrating.
 - Verify physical lid/sleep behavior and actual audio routing on the new machine.
 

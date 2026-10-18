@@ -1,6 +1,5 @@
 {
   "bashrc": ".bashrc",
-  "scripts/focus_browser.py": ".local/bin/thomas-focus-browser",
   "bash_aliases": ".bash_aliases",
   "profile": ".profile",
   "blerc": ".blerc",

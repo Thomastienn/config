@@ -4,15 +4,9 @@
 (defvar qs_cmd "$HOME/thomas_config/eww/scripts/qs.sh")
 (defvar desktop_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py")
 (defvar qs_page 0)
-(defvar focus_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
-(defvar focus '{"active":false,"mode":"idle","task":"","minutes":10,"remaining":"","label":"Focus","track":"study","action":"","stage":0,"growth":0,"growth_text":"10 min to next growth","plants":0,"total_minutes":0,"today_minutes":0,"week":[],"week_days":0,"study_minutes":0,"coding_minutes":0,"milestones":[],"history":[],"reminder":{"enabled":false,"days":[1,2,3,4,5],"time":"18:00"},"error":"","feedback":"","guard":"","voice":{"theme":"","thought":""},"attention":"working","needs_checkin":false,"can_approve":false,"can_check_in":false,"win":"","notes":[],"reminder_schedule":"Mon, Tue, Wed, Thu, Fri at 18:00"}')
-(defpoll focus_clock :interval "1s" :run-while {focus.active && focus_page == 0}
-  :initial '{"remaining":"00:00"}'
-  "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py focus-live")
-
 (defpoll desktop :interval "1s"
-  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","focus":{"active":false,"mode":"idle","task":"","remaining":"","label":"","minutes":10},"afk":false,"notes":[],"note_count":0,"notifications":[],"history_available":false}'
+  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"notifications":[],"history_available":false}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
@@ -58,21 +52,6 @@
           (button :timeout "10s" :class "device ${device.selected ? 'selected' : ''}"
                   :tooltip {device.name} :onclick "${desktop_cmd} audio input ${device.id}"
             (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '● ' : '○ '}${device.name}")))))))
-
-(defwidget focus-controls []
-  (box :orientation "v" :space-evenly false :spacing 20
-    (label :class "section-label" :xalign 0 :text {desktop.focus.active ? desktop.focus.label : "One small step"})
-    (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480
-           :text {desktop.focus.task == "" ? "Choose one next action. Stopping is always okay." : desktop.focus.task})
-    (button :timeout "10s" :class "compact-btn primary-btn" :onclick "${qs_cmd} focus" "Open Focus Garden")
-    (button :timeout "1h" :class "compact-btn" :onclick "${desktop_cmd} park" "Save a thought for your break")
-    (label :class "section-label" :xalign 0 :text "Saved for later (${desktop.note_count})")
-    (label :visible {desktop.note_count == 0} :class "muted" :xalign 0 :text "No saved thoughts yet.")
-    (box :orientation "v" :space-evenly false :spacing 16
-      (for note in {desktop.notes}
-        (label :class "saved-note" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {note})))
-    (button :visible {desktop.note_count > 0} :class "compact-btn"
-            :onclick "${desktop_cmd} clear-notes" "Clear saved thoughts")))
 
 (defwidget notification-history []
   (box :orientation "v" :space-evenly false :spacing 20
@@ -134,12 +113,10 @@
     (box :class "settings-tabs" :space-evenly true :spacing 8
       (settings-tab :text "Controls" :index 0)
       (settings-tab :text "Audio" :index 1)
-      (settings-tab :text "Focus" :index 2)
-      (settings-tab :text "History" :index 3))
+      (settings-tab :text "History" :index 2))
     (stack :selected qs_page :transition "none" :same-size false :vexpand true
       (scroll :vexpand true :hscroll false (quick-controls))
       (scroll :vexpand true :hscroll false (audio-devices))
-      (scroll :vexpand true :hscroll false (focus-controls))
       (scroll :vexpand true :hscroll false (notification-history)))
     (box :class "footer" :space-evenly false :spacing 12
       (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
@@ -165,148 +142,3 @@
   :wm-ignore false
   :windowtype "dialog"
   (flyout))
-
-;; Managed dialog: i3 supplies keyboard focus, Tab navigation, and Super+Q.
-(defwidget garden-tab [text index]
-  (button :class "settings-tab ${focus_page == index ? 'selected' : ''}"
-          :onclick "${qs_cmd} focus-page ${index}" text))
-
-(defwidget garden-session [art_size]
-  (box :orientation "v" :space-evenly false :spacing 24
-    (box :class "garden-bed" :space-evenly false :spacing 32
-      (image :path "${EWW_CONFIG_DIR}/images/focus-${focus.stage}.svg"
-             :image-width art_size :image-height {art_size + 32})
-      (box :orientation "v" :space-evenly false :valign "center" :spacing 12 :hexpand true
-        (label :class "focus-time ${focus.active ? 'timer' : ''}" :xalign 0
-               :text {focus.active ? focus_clock.remaining : "Ready when you are"})
-        (label :class "muted" :xalign 0
-               :text {focus.active ? (focus.mode == "break" ? "Taking a breath" : "${focus.track == 'study' ? 'Study' : 'Coding'} · one small step") : focus.growth_text})
-        (label :visible {focus.active && focus.guard != ""} :class "garden-count" :xalign 0
-               :wrap true :wrap-mode "wordchar" :width 360 :text {focus.guard})
-        (progress :class "garden-progress" :value {focus.growth})
-        (label :class "garden-count" :xalign 0 :text "${focus.plants} ${focus.plants == 1 ? 'plant' : 'plants'} collected · ${focus.total_minutes} min")))
-    (box :visible {focus.active && focus.mode == "focus" && focus.voice.theme != ""}
-         :orientation "v" :space-evenly false :spacing 12
-      (label :class "section-label" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.voice.theme})
-      (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.voice.thought}))
-    (box :visible {focus.active && focus.mode == "focus"} :orientation "v" :space-evenly false :spacing 12
-      (button :visible {focus.attention == "approval" || focus.attention == "ending"}
-              :class "compact-btn" :onclick "${desktop_cmd} focus-resume"
-              "Cancel wait & return")
-      (button :visible {focus.can_approve && focus.attention == "working"} :class "compact-btn"
-              :onclick "${desktop_cmd} focus-approve" "Request 5 minutes for hidden window"))
-    (box :visible {!focus.active && focus.feedback != ""} :class "focus-feedback" :orientation "v" :space-evenly false :spacing 16
-      (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.feedback})
-      (box :spacing 16 :space-evenly true :active {focus.error == ""}
-        (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-continue" "Continue")
-        (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-break" "5 min break"))
-      (button :timeout "1h" :visible {focus.can_check_in} :class "focus-link" :halign "start" :active {focus.error == ""}
-              :tooltip "Reflect on this session. Your progress is already saved."
-              :onclick "${desktop_cmd} focus-edit win" {focus.win == "" ? "Keep a small win · optional" : "Edit your saved win"}))
-    (box :spacing 16 :space-evenly true :active {!focus.active && focus.error == ""}
-      (button :timeout "10s" :class "compact-btn ${focus.track == 'study' ? 'track-selected' : ''}"
-              :onclick "${desktop_cmd} focus-track study" "Study")
-      (button :timeout "10s" :class "compact-btn ${focus.track == 'coding' ? 'track-selected' : ''}"
-              :onclick "${desktop_cmd} focus-track coding" "Coding"))
-    (box :orientation "v" :space-evenly false :spacing 12
-      (label :class "section-label" :xalign 0 :text {focus.active ? "This small step" : "Your next small step"})
-      (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 680
-             :text {focus.active ? focus.task : (focus.action == "" ? "Open your notes or editor. Start anywhere." : focus.action)})
-      (button :timeout "1h" :class "focus-link" :halign "start" :active {focus.error == ""}
-              :onclick "${desktop_cmd} focus-edit action" {focus.active ? "Leave a next step for later" : "Edit next step · optional"}))
-))
-
-(defwidget garden-session-actions []
-  (stack :class "garden-actions" :selected {focus.active ? 1 : 0} :transition "none" :same-size false
-    (box :spacing 16 :space-evenly true :active {focus.error == ""}
-      (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-start 5" "5 min")
-      (button :timeout "10s" :class "compact-btn start-btn" :onclick "${desktop_cmd} focus-start 10" "Start 10 min")
-      (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-start 25" "25 min"))
-    (box :spacing 16 :space-evenly true
-      (button :timeout "1h" :class "compact-btn"
-              :onclick "${desktop_cmd} ${focus.needs_checkin ? 'focus-resume' : 'park'}"
-              {focus.needs_checkin ? "Answer check-in" : "Park a thought"})
-      (box :orientation "v" :spacing 8
-        (button :timeout "10s" :class "compact-btn" :onclick "${desktop_cmd} focus-stop" {focus.mode == "break" ? "End break" : "End session…"})
-        (button :class "focus-link" :visible {focus.mode == "focus"} :onclick "${desktop_cmd} focus-stop --emergency" "Emergency end · no wait")))
-))
-
-(defwidget garden-progress-page []
-  (box :orientation "v" :space-evenly false :spacing 28
-    (box :class "focus-week" :orientation "v" :space-evenly false :spacing 16
-      (box :space-evenly false
-        (label :class "section-label" :hexpand true :xalign 0 :text "This week")
-        (label :class "garden-count" :text "${focus.week_days}/3 days"))
-      (box :space-evenly true :spacing 12
-        (for day in {focus.week}
-          (box :orientation "v" :space-evenly false :spacing 8
-            (label :class "week-dot ${day.active ? 'grown' : ''}" :text {day.active ? "●" : "○"})
-            (label :class "muted" :text {day.label}))))
-      (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680
-             :text "5 min makes a day. Missed days take nothing away."))
-    (box :orientation "v" :space-evenly false :spacing 12
-      (label :class "section-label" :xalign 0 :text "Your collection · ${focus.plants} ${focus.plants == 1 ? 'plant' : 'plants'}")
-      (label :xalign 0 :text "Study ${focus.study_minutes} min · Coding ${focus.coding_minutes} min")
-      (label :visible {arraylength(focus.milestones) == 0} :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680
-             :text "Your first five minutes is the first milestone.")
-      (box :orientation "v" :space-evenly false :spacing 10
-        (for milestone in {focus.milestones}
-          (label :class "garden-count" :xalign 0 :text "✦ ${milestone}"))))
-    (box :orientation "v" :space-evenly false :spacing 20
-      (label :class "section-label" :xalign 0 :text "Recent sessions & wins")
-      (label :visible {arraylength(focus.history) == 0} :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680
-             :text "A fresh patch. Begin with five or ten minutes.")
-      (box :orientation "v" :space-evenly false :spacing 20
-        (for session in {focus.history}
-          (box :class "garden-history" :orientation "v" :space-evenly false :spacing 10
-            (label :class "muted" :xalign 0 :text {session.text})
-            (label :visible {session.win != ""} :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {session.win})))))))
-
-(defwidget garden-notes-page []
-  (box :orientation "v" :space-evenly false :spacing 32
-    (box :orientation "v" :space-evenly false :spacing 16
-      (label :class "section-label" :xalign 0 :text "Gentle reminder · ${focus.reminder.enabled ? 'on' : 'off'}")
-      (label :class "muted" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680
-             :text {focus.reminder.enabled ? "${focus.reminder_schedule}. Skips focus, breaks, lock, and days you already began." : "Optional. Choose your days and local time. One nudge, with no catch-up."})
-      (box :space-evenly false :spacing 16
-        (button :timeout "1h" :class "compact-btn" :active {focus.error == ""}
-                :onclick "${desktop_cmd} focus-reminder on" "Choose days & time")
-        (button :timeout "10s" :visible {focus.reminder.enabled} :class "compact-btn"
-                :onclick "${desktop_cmd} focus-reminder off" "Turn reminder off")))
-    (box :orientation "v" :space-evenly false :spacing 20
-      (box :space-evenly false :spacing 16
-        (label :class "section-label" :hexpand true :xalign 0 :text "Parked thoughts")
-        (button :timeout "1h" :class "focus-link" :onclick "${desktop_cmd} park" "Park a thought"))
-      (label :visible {arraylength(focus.notes) == 0} :class "muted" :xalign 0 :text "Nothing parked. Your next step is here.")
-      (box :orientation "v" :space-evenly false :spacing 20
-        (for note in {focus.notes}
-          (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {note})))
-      (button :visible {arraylength(focus.notes) > 0} :class "compact-btn" :halign "start"
-              :onclick "${desktop_cmd} clear-notes" "Clear parked thoughts"))))
-
-(defwidget focus-garden [art_size]
-  (box :class "card focus-card" :orientation "v" :space-evenly false :spacing 24
-    (box :space-evenly false :spacing 24
-      (box :orientation "v" :space-evenly false :hexpand true :spacing 8
-        (label :class "focus-title" :xalign 0 :text "Focus Garden")
-        (label :class "muted" :xalign 0 :text "One small step grows something.")))
-    (box :class "settings-tabs" :space-evenly true :spacing 12
-      (garden-tab :text "Focus" :index 0)
-      (garden-tab :text "Progress" :index 1)
-      (garden-tab :text "Notes & reminder" :index 2))
-    (label :visible {focus.error != ""} :class "focus-error" :xalign 0 :wrap true :wrap-mode "wordchar" :width 680 :text {focus.error})
-    (stack :selected focus_page :transition "none" :same-size false :vexpand true
-      (scroll :vexpand true :hscroll false (garden-session :art_size art_size))
-      (scroll :vexpand true :hscroll false (garden-progress-page))
-      (scroll :vexpand true :hscroll false (garden-notes-page)))
-    (stack :selected {focus_page == 0 ? 0 : 1} :transition "none" :same-size false
-      (garden-session-actions)
-      (box))))
-
-(defwindow focus [?panel_height ?panel_width ?art_size]
-  :monitor 0
-  :geometry (geometry :width {panel_width ?: "840px"} :height {panel_height ?: "860px"} :anchor "center")
-  :stacking "fg"
-  :wm-ignore false
-  :windowtype "dialog"
-  (focus-garden :art_size {art_size ?: 176}))

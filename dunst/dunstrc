@@ -89,10 +89,6 @@
     highlight = "#DBA0AA"
     timeout = 0
 
-[focus-messages]
-    appname = "Focus"
-    override_pause_level = 100
-
 [command-results]
     appname = "Command finished"
     override_pause_level = 60

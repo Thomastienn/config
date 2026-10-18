@@ -17,7 +17,6 @@ import tools
 import power
 import graphics
 import codex
-import focus
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
@@ -110,7 +109,6 @@ def apply_links():
         directory.chmod(0o700)
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
     codex.configuration(HOME, backup)
-    focus.configure(HOME, backup)
 
 
 def settings(capture=False):
@@ -210,7 +208,7 @@ def packages(extras):
 
 
 def check():
-    gaps = power.check() + codex.configuration(HOME) + focus.configure(HOME)
+    gaps = power.check() + codex.configuration(HOME)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
@@ -239,11 +237,6 @@ def check():
         gaps.extend("brew: " + name for name in desired if name not in installed)
     except (OSError, subprocess.SubprocessError):
         gaps.append("Homebrew inventory unavailable")
-    if not (HOME / ".virtualenvs/focus-guard/bin/python").exists() or not (HOME / ".local/share/thomas-desktop/decima-small/onnx/int8").is_dir():
-        gaps.append("Focus Garden lock-in model (Decima) not installed")
-    bridge = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) / "thomas-desktop/focus-browser.sock"
-    if not bridge.exists():
-        gaps.append("Lock In: open Brave, load brave/focus-guard and click its toolbar icon")
     if not list(firefox_links()):
         gaps.append("Firefox: create a default profile, then rerun setup.sh apply --configs-only")
     try:

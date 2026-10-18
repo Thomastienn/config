@@ -8,7 +8,6 @@
   "tpm": {"url": "https://github.com/tmux-plugins/tpm.git", "rev": "e261deb1b47614eed3400089ce7197dc68acc4eb"},
   "tmux-resurrect": {"url": "https://github.com/tmux-plugins/tmux-resurrect.git", "rev": "cff343cf9e81983d3da0c8562b01616f12e8d548"},
   "tmux-continuum": {"url": "https://github.com/tmux-plugins/tmux-continuum.git", "rev": "0698e8f4b17d6454c71bf5212895ec055c578da0"},
-  "decima-small": {"url": "https://huggingface.co/amyrmahdy/decima-small", "rev": "14d09cabc1b4e23106ae4413eef852a568ced77b", "kind": "model"},
   "nvim": {"url": "https://github.com/Thomastienn/astronvimconfig.git", "rev": "47a98370567ac0828251516ac926c2acdfa780b1"},
   "codex-caveman": {"url": "https://github.com/JuliusBrussee/caveman.git", "rev": "HEAD", "kind": "skills", "skills": ["caveman", "cavecrew", "caveman-commit", "caveman-compress", "caveman-help", "caveman-review", "caveman-stats"]},
   "codex-find-skills": {"url": "https://github.com/vercel-labs/skills.git", "rev": "HEAD", "kind": "skills", "skills": ["find-skills"]},

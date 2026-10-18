@@ -96,7 +96,7 @@ $amber: #DEC28A;
   > title { padding: 6px 0; }
 }
 .section-label { font-weight: bold; color: $mint; }
-.muted, .saved-note { color: $dim; }
+.muted { color: $dim; }
 .device, .compact-btn, .afk-toggle {
   padding: 8px 10px;
   border-radius: 8px;
@@ -104,7 +104,6 @@ $amber: #DEC28A;
   &:hover, &:focus { background: $surface-hi; color: $mint; }
 }
 .device.selected { color: $mint; }
-.primary-btn { color: $mint; }
 .afk-toggle.afk-on {
   background: $amber;
   label { color: $ink; }
@@ -123,7 +122,7 @@ scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-
 
 
 // Quick settings: direct pages, larger controls, one scroll area per page.
-.qs-panel, .focus-card {
+.qs-panel {
   padding: 24px;
   * { font-size: 16px; }
   .settings-title { font-size: 24px; font-weight: bold; color: $fg; }
@@ -151,7 +150,7 @@ scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-
   .slider trough, .slider highlight { min-height: 8px; }
   .slider slider { min-width: 20px; min-height: 20px; margin: -6px 0; }
   .device, .compact-btn, .afk-toggle { padding: 14px; border-radius: 10px; }
-  .device.selected label, .primary-btn label { color: $mint; }
+  .device.selected label { color: $mint; }
   .afk-on label { color: $ink; }
   .section-label { font-size: 18px; }
   .media { padding: 12px 0; background: none; }
@@ -164,28 +163,3 @@ scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-
 }
 
 .qs-panel scrolledwindow > viewport { margin-right: 16px; }
-
-.focus-card {
-  * { font-size: 18px; }
-  .focus-title { font-size: 32px; font-weight: bold; color: $mint; }
-  .settings-tab label { font-size: 16px; }
-  .garden-bed { padding: 0 12px; }
-  .focus-time { font-size: 28px; font-weight: bold; color: $fg; }
-  .focus-time.timer { font-size: 48px; }
-  .garden-count { color: $mint; }
-  .garden-progress trough, .garden-progress progress { min-height: 8px; border-radius: 4px; }
-  .garden-progress trough { background: $border; }
-  .garden-progress progress { background: $mint; }
-  .compact-btn { padding: 16px 20px; }
-  .track-selected, .start-btn { background: $mint; font-weight: bold; label { color: $ink; } }
-  .track-selected:hover, .start-btn:hover { background: $fg; }
-  .section-label { font-size: 20px; }
-  .focus-link { padding: 8px 0; label { font-size: 16px; color: $lavender; } }
-  .focus-link:hover label { color: $fg; }
-  .focus-feedback { padding-top: 20px; border-top: 1px solid $border; }
-  .garden-actions { padding-top: 20px; border-top: 1px solid $border; }
-  .week-dot { color: $dim; font-size: 30px; }
-  .week-dot.grown { color: $mint; }
-  .garden-history { padding-bottom: 20px; border-bottom: 1px solid $border; }
-  .focus-error { color: $amber; background: $surface; padding: 16px; border-radius: 10px; }
-}
