@@ -262,11 +262,18 @@ start it automatically. It has no periodic polling loop.
 TLP remains the sole power manager. The installer copies a fixed helper into
 root-owned `/usr/local/libexec`, installs a narrowly scoped Polkit action for the
 active local user, and links a dedicated TLP drop-in to a root-owned runtime file.
-The runtime file disappears at reboot. Existing TLP configuration and charging
-limits are preserved; explicit conflicting settings in `/etc/tlp.conf` are
-reported rather than overwritten. Stop any competing power manager deliberately
-before using this mode. System-file conflicts are backed up under
-`/var/backups/thomas-config/<time>/`; user configuration backups are unchanged.
+The runtime file disappears at reboot and is never captured into Git.
+
+`setup/tlp.conf` captures the host's normal TLP preferences: Bluetooth off at
+startup and 80% charge-stop thresholds for BAT0/BAT1. Both `apply` and
+`apply --configs-only` install it as root-owned `/etc/tlp.conf`, backing up an
+existing different file under `/var/backups/thomas-config/<time>/`. Other TLP
+drop-ins remain in place; unspecified settings use the installed TLP defaults.
+Edit the repository copy and rerun setup to reproduce changes on each machine.
+Charge thresholds require hardware support; verify with `sudo tlp-stat -b` on a
+new laptop, since some drivers also require a start threshold. Stop any competing
+power manager deliberately before using Battery Saver. Explicit settings that
+conflict with its temporary overrides are reported rather than silently changed.
 
 Check the button's tooltip or the JSON `status` output for unsupported controls,
 manual overrides, and restoration errors. Failed activation attempts roll back;
@@ -333,7 +340,7 @@ on the next activation.
   battery/adapter names; refresh toggling uses the active resolution's supported rates.
   Brightness keeps the existing NVIDIA WMI preference when available and falls
   back to a detected backlight. Touchpads are found by name instead of numeric ID.
-- ActivityWatch, Boomer, 9router, personal tools, and work repositories referenced
+- ActivityWatch, Boomer, personal tools, and work repositories referenced
   by optional shortcuts/autostart are separate installs. Install those if needed.
 - Keep SSH keys, tokens, clipboard history, Taskwarrior data, and
   coursework outside this repository. Back them up separately when migrating.
