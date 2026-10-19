@@ -13,6 +13,8 @@ ROOT = Path('/run/thomas-battery-mode')
 STATE = ROOT / 'power.json'
 CONFIG = ROOT / 'tlp.conf'
 LINK = Path('/etc/tlp.d/99-thomas-battery-mode.conf')
+# Brave watches only /etc; tmpfiles.d removes this at boot like the /run state.
+BRAVE = Path('/etc/brave/policies/managed/thomas-battery-mode.json')
 SYS = Path('/sys')
 TLP = '/usr/sbin/tlp'
 
@@ -112,6 +114,7 @@ def restore(state, force=False):
     state['phase'] = 'restoring'
     save(STATE, json.dumps(state))
     CONFIG.unlink(missing_ok=True)
+    BRAVE.unlink(missing_ok=True)
     manual, errors = {}, []
     for name, value in state['values'].items():
         path = Path(name)
@@ -167,6 +170,10 @@ def switch(action, uid):
         wrong = [name for name, value in values.items() if read(Path(name)) != value['applied']]
         if wrong:
             raise RuntimeError('Power settings did not apply; check explicit /etc/tlp.conf overrides: ' + ', '.join(wrong))
+        if Path('/opt/brave.com/brave').is_dir():
+            BRAVE.parent.mkdir(mode=0o755, parents=True, exist_ok=True)
+            # 2 = Energy Saver whenever unplugged; Brave has no always-on value.
+            BRAVE.write_text('{"BatterySaverModeAvailability": 2}\n')
         state['phase'] = 'enabled'
         save(STATE, json.dumps(state))
     except (OSError, RuntimeError, subprocess.SubprocessError) as error:

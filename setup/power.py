@@ -10,6 +10,7 @@ FILES = [
     (ROOT / 'battery-power.py', Path('/usr/local/libexec/thomas-battery-power'), 0o755),
     (ROOT / 'polkit/org.thomas.battery-mode.policy',
      Path('/usr/share/polkit-1/actions/org.thomas.battery-mode.policy'), 0o644),
+    (ROOT / 'battery-mode.tmpfiles.conf', Path('/etc/tmpfiles.d/thomas-battery-mode.conf'), 0o644),
 ]
 LINK = Path('/etc/tlp.d/99-thomas-battery-mode.conf')
 TARGET = Path('/run/thomas-battery-mode/tlp.conf')

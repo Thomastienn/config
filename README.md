@@ -227,7 +227,14 @@ is preserved. The ceiling is 40% of maximum turbo, so it can sit below base cloc
 clock. It limits performance, not CPU utilization or watts; CPU-heavy jobs can
 take longer. Limits also stay on while charging until Battery Saver is switched
 off. Picom's decorative effects are removed, while compositing and VSync stay
-enabled for reliable rendering.
+enabled for reliable rendering; fullscreen windows such as video bypass the
+compositor after one second.
+
+Brave (deb install) gets Energy Saver through a managed policy while the mode is
+on, so `brave://settings/performance` shows "Managed by your organization" and
+Energy Saver only acts when unplugged. Turning saver off, or rebooting, removes
+the policy and returns Brave to its own setting. Brave watches its policy
+directory; if `brave://policy` still shows the old state, use **Reload policies**.
 
 All managed Conky panels stop, including weather and calendar/tasks. Scheduled PDF
 indexing pauses; an already running index finishes, existing search still works,

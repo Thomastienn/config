@@ -25,6 +25,9 @@ existing Cozy Mint appearance and workflows unless a change is requested.
   the installation route and repeat-run behavior using an isolated environment;
   working on the current machine alone is insufficient. Document unavoidable
   manual steps in `README.md` and report any fresh-machine checks not performed.
+- This machine is the main host. Finish each feature by applying it live here
+ too (install root-owned copies, reload affected helpers); `setup.sh` is how
+ other machines sync to this host, not a step left for Thomas.
 - Git already provides synchronization. Do not add background sync, automatic
   commits/pushes, or another dotfile manager. After pulling, rerun setup to apply
   installation/settings changes; linked config files update directly.

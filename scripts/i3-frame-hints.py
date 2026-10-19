@@ -42,8 +42,11 @@ def main():
                    X.ConfigureNotify, X.DestroyNotify)
         try:
             while True:
-                event = connection.next_event()
-                if event.type in changes:
+                # Workspace switches and resizes arrive as bursts; rescan once per burst.
+                changed = connection.next_event().type in changes
+                while connection.pending_events():
+                    changed |= connection.next_event().type in changes
+                if changed:
                     previous = update_hints(connection, previous)
         finally:
             connection.close()
