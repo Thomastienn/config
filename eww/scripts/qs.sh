@@ -56,6 +56,8 @@ close() { "${EWW[@]}" close-all 2>/dev/null; }
 case $1 in
     status) status ;;
     toggle)
+        # Start immediately: client commands otherwise each retry a missing daemon for a second.
+        "${EWW[@]}" daemon >/dev/null 2>&1 || exit 1
         if "${EWW[@]}" active-windows 2>/dev/null | grep -q '^flyout'; then close
         else
             close
