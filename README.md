@@ -222,9 +222,12 @@ The mode selects 60 Hz on supported internal panels without changing resolution,
 lowers brightness to at most 20%, turns off keyboard lighting, disables CPU turbo,
 prefers CPU energy saving and a supported quiet firmware profile, and caps Intel
 CPU performance at 40% where supported. An existing lower CPU ceiling or brightness
-is preserved. The CPU ceiling limits performance, not CPU utilization or watts;
-CPU-heavy jobs can take longer. Picom's decorative effects are removed, while
-compositing and VSync stay enabled for reliable rendering.
+is preserved. The ceiling is 40% of maximum turbo, so it can sit below base clock
+(about 1.9 GHz on an i7-12700H, base 2.3 GHz); `scaling_max_freq` still shows base
+clock. It limits performance, not CPU utilization or watts; CPU-heavy jobs can
+take longer. Limits also stay on while charging until Battery Saver is switched
+off. Picom's decorative effects are removed, while compositing and VSync stay
+enabled for reliable rendering.
 
 All managed Conky panels stop, including weather and calendar/tasks. Scheduled PDF
 indexing pauses; an already running index finishes, existing search still works,

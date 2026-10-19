@@ -345,12 +345,15 @@ def on():
         return
     if state:
         off()
-    if not helper_ready():
+    # Root power state outlives logout; re-applying the desktop then needs no pkexec.
+    elevate = not backend_active()
+    if elevate and not helper_ready():
         raise RuntimeError('Battery Saver needs the updated helper: run setup.sh apply')
     state = snapshot()
     save(state)
     try:
-        power('on')
+        if elevate:
+            power('on')
         for name, display in state['displays'].items():
             set_rate(name, display['mode'], display['applied'])
         for light in state['lights']:
@@ -431,6 +434,8 @@ def status():
                 except OSError:
                     issues.append('Power control unavailable')
                     break
+        else:
+            issues.append('CPU limits still on; toggle to turn off')
     elif enabled:
         issues.append('Power settings are not enabled')
     if ERROR.exists():
@@ -477,6 +482,7 @@ def run_session():
         pending = None
         try:
             locked(lambda: reconcile(resume))
+            ERROR.unlink(missing_ok=True)
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
             ERROR.write_text(str(error))
             print(str(error), file=sys.stderr, flush=True)
