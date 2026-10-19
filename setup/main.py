@@ -114,10 +114,11 @@ def apply_links():
 
 
 def settings(capture=False):
+    # Homebrew's GSettings can use a different backend from the actual desktop.
     path = ROOT / "desktop/settings.json"
     data = json.loads(path.read_text())
     try:
-        schemas = output(["gsettings", "list-schemas"]).splitlines()
+        schemas = output(["/usr/bin/gsettings", "list-schemas"]).splitlines()
     except (OSError, subprocess.SubprocessError):
         print("Pending: desktop settings need gsettings and a user session.")
         return
@@ -126,9 +127,9 @@ def settings(capture=False):
             continue
         for key, value in values.items():
             if capture:
-                values[key] = output(["gsettings", "get", schema, key])
+                values[key] = output(["/usr/bin/gsettings", "get", schema, key])
             else:
-                run(["gsettings", "set", schema, key, value])
+                run(["/usr/bin/gsettings", "set", schema, key, value])
     if capture:
         # Only keys already in the allowlist; never clipboard data or tab contents.
         for key in data["copyq"]:
@@ -253,11 +254,11 @@ def check():
         gaps.append("service: PDF index timer not enabled or user session unavailable")
     data = json.loads((ROOT / "desktop/settings.json").read_text())
     try:
-        schemas = output(["gsettings", "list-schemas"]).splitlines()
+        schemas = output(["/usr/bin/gsettings", "list-schemas"]).splitlines()
         for schema, values in data["gsettings"].items():
             if schema in schemas:
                 gaps.extend(f"setting: {schema} {key}" for key, value in values.items()
-                            if output(["gsettings", "get", schema, key]) != value)
+                            if output(["/usr/bin/gsettings", "get", schema, key]) != value)
         if os.environ.get("DISPLAY"):
             for key, value in data["copyq"].items():
                 actual = output(["copyq", "config", key])

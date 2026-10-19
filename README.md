@@ -92,6 +92,41 @@ this restores the workflow and appearance, not a byte-identical OS image.
 The source machine's retired PyPy 3.10 formula is deliberately excluded from
 fresh installs; install a currently supported PyPy separately if needed.
 
+## ChatGPT context shortcuts
+
+Keep a signed-in ChatGPT chat open in the Firefox scratchpad (`Super+G`). These
+shortcuts capture context before showing Firefox and paste into the current draft:
+
+| Shortcut | Context |
+| --- | --- |
+| `Super+Ctrl+G` | Highlighted text (X11 primary selection) |
+| `Super+Shift+G` | Screenshot of a region you select |
+| `Super+Alt+G` | Screenshot of the monitor containing the pointer |
+
+Type your question directly in ChatGPT afterward, then send it yourself. Existing
+draft text and attachments are preserved. `Super+G` still only toggles Firefox.
+Find these bindings by searching “ChatGPT” in `Super+F1`.
+
+`./setup.sh apply` installs the accessibility dependencies and enables desktop
+accessibility. On an existing machine with those packages installed, use
+`./setup.sh apply --configs-only`, then reload i3's configuration. Firefox uses
+your regular profile; sign-in stays local and is not copied by setup. No browser
+extension or API key is needed.
+
+Capture is on demand. Screenshots become image attachments rather than OCR text;
+attaching them uploads them to ChatGPT. Selected text is appended with a blank
+line separating it from an existing draft. Cancelling region selection changes
+neither the clipboard nor the browser. Successful captures replace the clipboard;
+normal CopyQ history behavior still applies.
+
+The helper verifies a ChatGPT page and a unique editable multiline prompt through
+Linux accessibility before pasting. If Firefox shows another website, login,
+multiple editable message fields, or an inaccessible prompt, it reports an error
+and leaves the captured context on the clipboard for manual pasting. It does not
+change tabs, start a new conversation, or submit a message. If accessibility is
+unavailable, check the desktop accessibility setting and reopen Firefox when
+convenient. ChatGPT website changes can require updating the prompt locator.
+
 ## Codex
 
 `codex/config.toml` stores portable model, reasoning, UI, MCP, marketplace and

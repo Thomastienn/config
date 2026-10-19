@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Toggle Firefox's regular profile in the scratchpad while keeping it running."""
 
+import argparse
 import fcntl
 import json
 import os
@@ -12,14 +13,16 @@ MARK = "browser-scratchpad"
 CLASS = "firefox"
 
 
-def browser_windows(node):
+def browser_windows(node, workspace=None):
     windows = {}
+    if node.get("type") == "workspace":
+        workspace = node["name"]
     properties = node.get("window_properties", {})
     if (node.get("window") and (properties.get("class") or "").lower() == CLASS
             and properties.get("window_role") == "browser"):
-        windows[node["id"]] = node
+        windows[node["id"]] = dict(node, workspace=workspace)
     for child in node.get("nodes", []) + node.get("floating_nodes", []):
-        windows.update(browser_windows(child))
+        windows.update(browser_windows(child, workspace))
     return windows
 
 
@@ -39,7 +42,7 @@ def command(action):
         raise RuntimeError("i3 window command failed.")
 
 
-def main():
+def main(show=False):
     runtime = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"))
     with (runtime / f"dropdown-browser-{os.getuid()}.lock").open("a") as lock:
         try:
@@ -49,8 +52,9 @@ def main():
         existing = get_windows()
         for target, window in existing.items():
             if MARK in window.get("marks", []):
-                command(f"[con_id={target}] scratchpad show")
-                return
+                action = "focus" if show and window["workspace"] != "__i3_scratch" else "scratchpad show"
+                command(f"[con_id={target}] {action}")
+                return window["window"]
 
         process = subprocess.Popen(["firefox"], start_new_session=True)
         for _ in range(100):
@@ -62,14 +66,20 @@ def main():
                 target = window["id"]
                 command(f"[con_id={target}] mark --add {MARK}, floating enable, move scratchpad")
                 command(f"[con_id={target}] scratchpad show, resize set 60 ppt 75 ppt, move position center")
-                return
+                return window["window"]
             if process.poll() not in (None, 0):
                 raise RuntimeError("Firefox could not start. Check that firefox opens normally.")
         raise RuntimeError("Firefox did not open within ten seconds. Try again.")
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--show", action="store_true", help="Show and focus without hiding; print the X11 window ID")
+    args = parser.parse_args()
     try:
-        main()
+        window = main(args.show)
+        if args.show and window:
+            print(window)
     except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
         subprocess.run(["notify-send", "-u", "critical", "Window action failed", str(error)])
+        raise SystemExit(1)
