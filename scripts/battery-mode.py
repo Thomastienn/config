@@ -239,29 +239,43 @@ def gpu_detail():
 def refresh_visuals():
     pidfile = RUNTIME / 'picom-run.pid'
     if pidfile.exists():
+        from Xlib import X, display as xdisplay
+        from Xlib.error import DisplayConnectionError, XError
+
+        try:
+            connection = xdisplay.Display()
+        except DisplayConnectionError as error:
+            raise RuntimeError('Cannot verify the Picom compositor: ' + str(error)) from error
         logfile = ROOT / 'picom.log'
-        with logfile.open('ab') as log:
-            supervisor = subprocess.Popen([str(REPO / 'picom/run.sh')], stdout=log, stderr=log,
-                                          start_new_session=True)
-        expected = str(REPO / 'picom' / ('battery.conf' if ACTIVE.exists() else 'picom.conf'))
-        deadline = time.monotonic() + 5
-        while time.monotonic() < deadline:
-            try:
-                children = (Path('/proc') / str(supervisor.pid) / 'task' / str(supervisor.pid) / 'children').read_text().split()
-                for pid in children:
-                    command = (Path('/proc') / pid / 'cmdline').read_bytes().split(b'\0')
-                    if expected.encode() in command:
-                        time.sleep(0.25)
-                        if (Path('/proc') / pid / 'cmdline').read_bytes().split(b'\0') == command:
-                            break
-                else:
-                    time.sleep(0.1)
-                    continue
-                break
-            except FileNotFoundError:
+        try:
+            with logfile.open('ab') as log:
+                supervisor = subprocess.Popen([str(REPO / 'picom/run.sh')], stdout=log, stderr=log,
+                                              start_new_session=True)
+            expected = str(REPO / 'picom' / ('battery.conf' if ACTIVE.exists() else 'picom.conf'))
+            selection = connection.intern_atom('_NET_WM_CM_S' + str(connection.get_default_screen()))
+            pid_atom = connection.intern_atom('_NET_WM_PID')
+            deadline = time.monotonic() + 5
+            while time.monotonic() < deadline:
+                try:
+                    owner = connection.get_selection_owner(selection)
+                    owner_pid = owner.get_full_property(pid_atom, X.AnyPropertyType) if owner else None
+                    children = (Path('/proc') / str(supervisor.pid) / 'task' / str(supervisor.pid) / 'children').read_text().split()
+                    for pid in children:
+                        command = (Path('/proc') / pid / 'cmdline').read_bytes().split(b'\0')
+                        # A briefly alive process may still fail because another compositor owns the screen.
+                        if expected.encode() in command and owner_pid is not None and list(owner_pid.value) == [int(pid)]:
+                            time.sleep(0.25)
+                            if (connection.get_selection_owner(selection) == owner and
+                                    (Path('/proc') / pid / 'cmdline').read_bytes().split(b'\0') == command):
+                                return
+                except (FileNotFoundError, XError):
+                    pass
+                if supervisor.poll() is not None:
+                    break
                 time.sleep(0.1)
-        else:
-            raise RuntimeError('Picom did not start; see ' + str(logfile))
+            raise RuntimeError('Picom did not take over compositing; see ' + str(logfile))
+        finally:
+            connection.close()
 
 
 def power(action):
@@ -337,6 +351,7 @@ def off():
         restore_desktop(desktop)
     else:
         ACTIVE.unlink(missing_ok=True)
+        refresh_visuals()
 
 
 def on():

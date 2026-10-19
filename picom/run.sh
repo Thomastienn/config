@@ -5,13 +5,13 @@
 directory=$(dirname "$(readlink -f "$0")")
 runtime=${XDG_RUNTIME_DIR:-/run/user/$UID}
 pidfile="$runtime/picom-run.pid"
-# Serialize launches and replace only this supervisor's compositor.
+# Replace managed supervisors even if a stale PID file lost track of one.
 exec 9>"$runtime/picom-start.lock"
 flock 9
-if [[ -f $pidfile ]]; then
-    previous=$(cat "$pidfile")
-    if [[ $previous =~ ^[0-9]+$ ]] &&
+for previous in $(pgrep -u "$UID" -f '/picom/run.sh'); do
+    if [[ $previous != "$$" ]] &&
        [[ $(stat -c %u "/proc/$previous" 2>/dev/null) == "$UID" ]] &&
+       grep -zFxq "DISPLAY=${DISPLAY:-}" "/proc/$previous/environ" 2>/dev/null &&
        tr '\0' '\n' < "/proc/$previous/cmdline" 2>/dev/null |
            grep -Fxq -e "$directory/run.sh" -e "$HOME/thomas_config/picom/run.sh" -e "$HOME/.config/picom/run.sh"; then
         children=$(cat "/proc/$previous/task/$previous/children" 2>/dev/null)
@@ -23,12 +23,15 @@ if [[ -f $pidfile ]]; then
             fi
         done
     fi
-fi
+done
 echo $$ > "$pidfile"
 flock -u 9
 exec 9>&-
 cleanup() {
     [[ -n ${child:-} ]] && kill "$child" 2>/dev/null
+    # A departing supervisor must not unlink its replacement's PID file.
+    exec 9>"$runtime/picom-start.lock"
+    flock 9
     [[ $(cat "$pidfile" 2>/dev/null) == "$$" ]] && rm -f "$pidfile"
 }
 trap cleanup EXIT
