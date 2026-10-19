@@ -2,6 +2,7 @@
 bridge-utils
 cpu-checker
 latexmk
+libatomic1
 maven
 openjdk-21-jdk
 qemu-system-x86
@@ -10,3 +11,4 @@ texlive-latex-extra
 texlive-latex-recommended
 virt-manager
 virtinst
+zstd

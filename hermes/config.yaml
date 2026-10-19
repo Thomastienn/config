@@ -1,0 +1,130 @@
+# Portable preferences only. Setup merges these into the local config.yaml.
+# Credentials, accounts, approvals already granted, and runtime data stay local.
+model:
+  default: qwen3.5:9b
+  provider: custom
+  base_url: http://127.0.0.1:11434/v1
+agent:
+  max_turns: 90
+  clarify_timeout: 600
+  restart_drain_timeout: 180
+  reasoning_effort: medium
+  verbose: false
+  system_prompt: ''
+  disabled_toolsets: []
+display:
+  personality: none
+  skin: mono
+  compact: false
+  show_reasoning: false
+  tool_progress: all
+  tool_preview_length: 0
+  tool_progress_command: false
+  streaming: true
+  timestamps: false
+  show_cost: false
+  bell_on_complete: false
+  inline_diffs: true
+  interim_assistant_messages: true
+  cleanup_progress: false
+terminal:
+  backend: local
+  cwd: .
+  timeout: 180
+  lifetime_seconds: 300
+  persistent_shell: true
+  auto_source_bashrc: true
+approvals:
+  mode: manual
+  cron_mode: deny
+  destructive_slash_confirm: true
+  mcp_reload_confirm: true
+  timeout: 60
+platform_toolsets:
+  cli: [hermes-cli]
+  discord: [hermes-discord]
+  google_chat: [hermes-google_chat]
+  homeassistant: [hermes-homeassistant]
+  qqbot: [hermes-qqbot]
+  signal: [hermes-signal]
+  slack: [hermes-slack]
+  teams: [hermes-teams]
+  telegram: [hermes-telegram]
+  whatsapp: [hermes-whatsapp]
+  yuanbao: [hermes-yuanbao]
+memory:
+  memory_enabled: true
+  user_profile_enabled: true
+  memory_char_limit: 2200
+  user_char_limit: 1375
+  nudge_interval: 10
+  flush_min_turns: 6
+skills:
+  creation_nudge_interval: 15
+  inline_shell: false
+  inline_shell_timeout: 10
+  guard_agent_created: false
+  platform_disabled:
+    discord:
+      - architecture-diagram
+      - ascii-art
+      - ascii-video
+      - audiocraft-audio-generation
+      - baoyu-article-illustrator
+      - baoyu-comic
+      - baoyu-infographic
+      - claude-design
+      - comfyui
+      - design-md
+      - dspy
+      - evaluating-llms-harness
+      - excalidraw
+      - gif-search
+      - heartmula
+      - huggingface-hub
+      - humanizer
+      - ideation
+      - llama-cpp
+      - manim-video
+      - obliteratus
+      - p5js
+      - pixel-art
+      - popular-web-designs
+      - pretext
+      - segment-anything-model
+      - serving-llms-vllm
+      - sketch
+      - songsee
+      - songwriting-and-ai-music
+      - spotify
+      - touchdesigner-mcp
+      - weights-and-biases
+      - youtube-content
+compression:
+  enabled: true
+  threshold: 0.5
+  target_ratio: 0.2
+  protect_first_n: 3
+  protect_last_n: 20
+  hygiene_hard_message_limit: 400
+  abort_on_summary_failure: false
+browser:
+  engine: auto
+  command_timeout: 30
+  inactivity_timeout: 120
+  record_sessions: false
+security:
+  redact_secrets: true
+stt:
+  provider: local
+sessions:
+  write_json_snapshots: false
+session_reset:
+  mode: both
+  at_hour: 4
+  idle_minutes: 1440
+group_sessions_per_user: true
+telemetry:
+  shared_metrics:
+    enabled: false
+    send: false

@@ -23,7 +23,7 @@ links, GTK/GSettings/CopyQ preferences, Firefox styles, and PDF indexing service
 Source builds can take time. Rerun after a failure; successful builds are skipped.
 
 For the previous installer's coursework, Neovim Python tools, coding CLIs, and
-virtualization packages, use `./setup.sh apply --extras`. This also enables
+virtualization packages, Codex, and Hermes/Ollama, use `./setup.sh apply --extras`. This also enables
 libvirt and adds your user to its group; log out and back in for group changes.
 The desktop setup itself does not install hardware drivers or alter lid policy.
 
@@ -127,6 +127,48 @@ Its optional extension token stays only in the local config. Custom pet assets,
 saved command approvals, conversations, memories and other runtime data require
 a separate private backup. Restart Codex when convenient to load changed settings.
 See the [official configuration precedence](https://learn.chatgpt.com/docs/config-file/config-basic#configuration-precedence).
+
+## Hermes
+
+`hermes/config.yaml` holds portable preferences for the local `qwen3.5:9b`
+model, toolsets, terminal, display, memory limits, and manual command approvals.
+`link`, `apply`, and `apply --configs-only` merge these into
+`~/.hermes/config.yaml`, backing up changes and keeping local credentials,
+provider entries, Discord settings, and other unowned keys. The local config
+has mode `600`; YAML comments are not preserved. `check` reports differences
+without writing files. Settings changed through Hermes stay local until you
+deliberately update the repository defaults.
+
+`hermes/SOUL.md` links to `~/.hermes/SOUL.md`. It sets a concise personal-assistant
+voice, honors advice-only requests, and requires actual tool results before
+reporting saved memory, reminders, or completed actions. The personality overlay
+is set to `none`, so the previous surfer preset does not compete with it.
+This uses Hermes's [supported SOUL.md customization](https://hermes-agent.nousresearch.com/docs/user-guide/features/personality)
+and keeps its built-in tool guidance and model chat template. A prompt cannot
+guarantee tool accuracy; test important workflows with the actual local model.
+
+On a new machine, `./setup.sh apply --extras` installs missing Hermes using the
+official installer pinned and checksum-checked in `setup/sources.json`. Bundled
+skills come with Hermes; the existing optional Impeccable skill is restored via
+`hermes skills install impeccable` when missing. That skill follows its upstream
+version; existing skill copies are kept. Existing Hermes installations are not
+upgraded or replaced; use `hermes update` explicitly.
+
+If Ollama is missing, extras installs the official binaries (including GPU
+backends) through the [Homebrew Cask](https://github.com/Homebrew/homebrew-cask/blob/HEAD/Casks/o/ollama-binary.rb)
+recorded in `setup/hermes.Brewfile`. Setup does not start Ollama or change GPU drivers.
+Start the local server with `ollama serve` (or your existing service), then run
+`ollama pull qwen3.5:9b`. Model weights are downloaded separately and not stored in
+Git. If you use a different host or model, update the portable endpoint/model
+preferences before applying them there.
+
+The whole `.hermes` home stays local. Credentials (`.env`, `auth.json`), account
+allowlists, chats, learned memories, task/cron data, skill usage/archives, browser
+profiles, caches, tool binaries, and databases are not copied into this checkout.
+Use a separate private backup for that state and reconnect messaging accounts on
+new machines. No gateway is enabled or restarted by setup. Start a fresh Hermes
+session when convenient to load the prompt and preferences; a running gateway
+may need a manual restart.
 
 ## Battery Saver
 

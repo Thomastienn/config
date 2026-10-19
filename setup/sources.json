@@ -12,5 +12,13 @@
   "codex-caveman": {"url": "https://github.com/JuliusBrussee/caveman.git", "rev": "HEAD", "kind": "skills", "skills": ["caveman", "cavecrew", "caveman-commit", "caveman-compress", "caveman-help", "caveman-review", "caveman-stats"]},
   "codex-find-skills": {"url": "https://github.com/vercel-labs/skills.git", "rev": "HEAD", "kind": "skills", "skills": ["find-skills"]},
   "codex-humanizer": {"url": "https://github.com/blader/humanizer.git", "rev": "HEAD", "kind": "skills", "skills": ["humanizer"]},
-  "codex-impeccable": {"url": "https://github.com/pbakaus/impeccable.git", "rev": "HEAD", "kind": "skills", "skills": ["impeccable"]}
+  "codex-impeccable": {"url": "https://github.com/pbakaus/impeccable.git", "rev": "HEAD", "kind": "skills", "skills": ["impeccable"]},
+  "hermes": {
+    "url": "https://github.com/NousResearch/hermes-agent.git",
+    "rev": "1df95b0a8409a8a9c61c1eba91cbc163255a35fc",
+    "kind": "hermes",
+    "installer_url": "https://raw.githubusercontent.com/NousResearch/hermes-agent/1df95b0a8409a8a9c61c1eba91cbc163255a35fc/scripts/install.sh",
+    "installer_sha256": "20f44240ebada354a468104a6a6724d037afcb8883d4d09ddeb4815622c52d8b",
+    "skills": ["impeccable"]
+  }
 }

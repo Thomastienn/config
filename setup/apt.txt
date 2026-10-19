@@ -49,6 +49,7 @@ python3
 python3-gi
 python3-venv
 python3-xlib
+python3-yaml
 qt5-gtk-platformtheme
 recollcmd
 ripgrep

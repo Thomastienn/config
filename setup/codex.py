@@ -17,7 +17,7 @@ def merge(current, defaults):
     for key, value in defaults.items():
         if isinstance(value, dict):
             if not isinstance(current.setdefault(key, {}), dict):
-                raise ValueError(f"Codex setting {key} must be a table; kept local config")
+                raise ValueError(f"Configuration setting {key} must be a table; kept local config")
             merge(current[key], value)
         else:
             current[key] = value

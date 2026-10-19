@@ -42,8 +42,8 @@ def install(home, cache, link):
                "blesh": prefix / "share/blesh/ble.sh", "i3lock-color": binaries / "i3lock",
                "betterlockscreen": binaries / "betterlockscreen"}
     for name, spec in specs.items():
-        if spec.get("kind") == "skills":
-            continue  # Optional Codex skills are installed by setup/codex.py with --extras.
+        if spec.get("kind") in ("skills", "hermes"):
+            continue  # Optional assistant tools/skills are installed with --extras.
         if name == "nvim":
             target = home / ".config/nvim"
             if target.exists() or target.is_symlink():
