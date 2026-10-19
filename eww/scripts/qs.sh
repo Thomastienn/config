@@ -13,7 +13,8 @@ num() { [[ $1 =~ ^[0-9]+$ ]] && echo "$1" || echo 0; }
 
 panel_height() {
     local height screen_height
-    height=$(xrandr --listmonitors 2>/dev/null | awk 'NR == 2 { split($3, size, "x"); split(size[2], pixels, "/"); print pixels[1] }')
+    # Use cached monitor state; probing outputs can stall the first open.
+    height=$(xrandr --current --listmonitors 2>/dev/null | awk 'NR == 2 { split($3, size, "x"); split(size[2], pixels, "/"); print pixels[1] }')
     [[ $height =~ ^[0-9]+$ ]] || height=1080
     screen_height=$(xrandr --current 2>/dev/null | awk '/^Screen / { for (i=1; i<=NF; i++) if ($i == "current") { gsub(/,/, "", $(i+3)); print $(i+3); exit } }')
     if [[ $screen_height =~ ^[0-9]+$ ]] && ((screen_height < height)); then height=$screen_height; fi
