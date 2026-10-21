@@ -440,6 +440,12 @@ else
     bind -m vi-insert '"jj": vi-movement-mode'
 fi
 
+today() {
+    local dir="$HOME/daily_tasks/"
+    mkdir -p "$dir"
+    nvim "$dir/$(date +%F).md"
+}
+
 
 # Has to be at the end
 export SDKMAN_DIR="$HOME/.sdkman"
@@ -464,3 +470,6 @@ command -v thefuck >/dev/null && eval "$(thefuck --alias)"
 [ -f "$HOME/.rokit/env" ] && . "$HOME/.rokit/env"
 
 [ -f "$HOME/.ghcup/env" ] && . "$HOME/.ghcup/env" # ghcup-env
+
+
+export STM32_PRG_PATH=/home/thomas/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
