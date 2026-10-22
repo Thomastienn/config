@@ -10,6 +10,9 @@ import signal
 import subprocess
 import sys
 
+from Xlib import X, display, error
+from Xlib.ext import xtest
+
 
 def directory():
     path = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) / "thomas-desktop"
@@ -60,7 +63,7 @@ def update_bar(module, label):
         subprocess.run(["polybar-msg", "action", module, "send", label],
                        stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=1, check=True)
     except (OSError, subprocess.SubprocessError):
-        # A missing bar must not prevent idle-setting or notification recovery.
+        # A missing bar must not prevent cleanup.
         pass
 
 
@@ -70,44 +73,44 @@ def idle_control(action):
              "control", "--action", action])
 
 
-def snapshot(text):
-    screen = re.search(r"timeout:\s*(\d+)\s+cycle:\s*(\d+)", text)
-    dpms = re.search(r"Standby:\s*(\d+)\s+Suspend:\s*(\d+)\s+Off:\s*(\d+)", text)
-    if not screen:
-        raise RuntimeError("Could not read display idle settings; AFK was not enabled.")
-    return {"screen": list(map(int, screen.groups())),
-            "dpms": list(map(int, dpms.groups())) if dpms else None,
-            "dpms_enabled": "DPMS is Enabled" in text,
-            "display": os.environ.get("DISPLAY", ""),
-            "xauthority": os.environ.get("XAUTHORITY", "")}
-
-
 def reset():
     state = read_state()
     if not state:
         return
     state["active"] = False
     save(state)
-    env = dict(os.environ, DISPLAY=state["display"])
-    if state.get("xauthority"):
-        env["XAUTHORITY"] = state["xauthority"]
     errors = []
-    actions = [lambda: idle_control("Enable"),
-               lambda: command([str(Path.home() / ".cargo/bin/xidlehook-client"), "--socket",
-                                str(directory().parent / "thomas-xidlehook.sock"), "reset-idle"]),
-               lambda: command(["xset", "s", *map(str, state["screen"])], env=env)]
-    if state.get("dpms"):
-        actions.extend([lambda: command(["xset", "dpms", *map(str, state["dpms"])], env=env),
-                        lambda: command(["xset", "+dpms" if state["dpms_enabled"] else "-dpms"], env=env)])
-    for action in actions:
-        try:
-            action()
-        except (OSError, subprocess.SubprocessError) as error:
-            errors.append(str(error))
+    # Recover snapshots left by the previous display-settings implementation.
+    if "screen" in state:
+        env = dict(os.environ, DISPLAY=state["display"])
+        if state.get("xauthority"):
+            env["XAUTHORITY"] = state["xauthority"]
+        actions = [lambda: idle_control("Enable"),
+                   lambda: command([str(Path.home() / ".cargo/bin/xidlehook-client"), "--socket",
+                                    str(directory().parent / "thomas-xidlehook.sock"), "reset-idle"]),
+                   lambda: command(["xset", "s", *map(str, state["screen"])], env=env)]
+        if state.get("dpms"):
+            actions.extend([lambda: command(["xset", "dpms", *map(str, state["dpms"])], env=env),
+                            lambda: command(["xset", "+dpms" if state["dpms_enabled"] else "-dpms"], env=env)])
+        for action in actions:
+            try:
+                action()
+            except (OSError, subprocess.SubprocessError) as failure:
+                errors.append(str(failure))
     update_bar("afk", "")
     if errors:
         raise RuntimeError("AFK stopped, but idle settings need recovery: " + "; ".join(errors))
     (directory() / "afk.json").unlink(missing_ok=True)
+
+
+def nudge(connection):
+    pointer = connection.screen().root.query_pointer()
+    if pointer.mask & (X.Button1Mask | X.Button2Mask | X.Button3Mask | X.Button4Mask | X.Button5Mask):
+        return
+    x, y = pointer.root_x, pointer.root_y
+    xtest.fake_input(connection, X.MotionNotify, x=x - 1 if x else 1, y=y)
+    xtest.fake_input(connection, X.MotionNotify, x=x, y=y)
+    connection.sync()
 
 
 def run():
@@ -117,13 +120,14 @@ def run():
         raise RuntimeError("AFK needs an open laptop lid and a readable lid sensor.")
     if read_state():
         reset()
-    # Check the control socket before changing any display settings.
-    command([str(Path.home() / ".cargo/bin/xidlehook-client"), "--socket",
-             str(directory().parent / "thomas-xidlehook.sock"), "query"])
-    state = snapshot(command(["xset", "q"]))
-    state.update(active=False, pid=os.getpid())
+    connection = display.Display()
+    if not connection.has_extension("XTEST"):
+        connection.close()
+        raise RuntimeError("AFK needs the X11 XTEST extension for pointer movement.")
+    state = {"active": False, "pid": os.getpid()}
     save(state)
     loop = GLib.MainLoop()
+    failure = None
 
     def stop(*_):
         state["active"] = False
@@ -132,6 +136,19 @@ def run():
 
     def check_lid():
         if not lid_open() or display_watch.poll() is not None:
+            stop()
+            return False
+        return True
+
+    def keep_awake():
+        nonlocal failure
+        if not lid_open():
+            stop()
+            return False
+        try:
+            nudge(connection)
+        except (OSError, error.XError, error.ConnectionClosedError) as exception:
+            failure = exception
             stop()
             return False
         return True
@@ -147,21 +164,24 @@ def run():
     display_watch = subprocess.Popen(["xprop", "-root", "-spy"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     GLib.timeout_add(500, check_lid)
     try:
-        idle_control("Disable")
-        command(["xset", "s", "off"])
-        if state["dpms"]:
-            command(["xset", "-dpms"])
+        nudge(connection)
         state["active"] = True
         save(state)
         update_bar("afk", "AFK")
+        GLib.timeout_add_seconds(60, keep_awake)
         loop.run()
+        if failure is not None:
+            raise RuntimeError(f"AFK stopped after a pointer movement failure: {failure}") from failure
     finally:
         try:
             if display_watch.poll() is None:
                 display_watch.terminate()
             display_watch.wait(timeout=3)
         finally:
-            reset()
+            try:
+                connection.close()
+            finally:
+                reset()
 
 
 def toggle():
@@ -170,9 +190,6 @@ def toggle():
         return
     if not lid_open():
         raise RuntimeError("Open the laptop lid before enabling AFK.")
-    socket = directory().parent / "thomas-xidlehook.sock"
-    if not socket.is_socket():
-        raise RuntimeError("Restart i3 once to enable the new idle controls, then try AFK again.")
     command(["systemctl", "--user", "import-environment", "DISPLAY", "XAUTHORITY"])
     command(["systemctl", "--user", "start", "thomas-afk.service"])
 
@@ -192,8 +209,9 @@ if __name__ == "__main__":
             print(json.dumps(active()))
         else:
             raise ValueError("Unknown AFK action.")
-    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
-        print(str(error), file=sys.stderr)
+    except (OSError, ValueError, RuntimeError, subprocess.SubprocessError,
+            error.DisplayError, error.ConnectionClosedError, error.XError) as failure:
+        print(str(failure), file=sys.stderr)
         if len(sys.argv) > 1 and sys.argv[1] in ("toggle", "run"):
-            subprocess.run(["notify-send", "-u", "critical", "AFK could not change", html.escape(str(error))], timeout=5)
+            subprocess.run(["notify-send", "-u", "critical", "AFK could not change", html.escape(str(failure))], timeout=5)
         sys.exit(1)

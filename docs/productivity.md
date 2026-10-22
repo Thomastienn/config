@@ -7,8 +7,7 @@ cd ~/thomas_config
 ./setup.sh apply
 ```
 
-Restart i3 once (`Super+Shift+R`) so xidlehook gains its control socket. This restarts
-the bar through the existing i3 configuration. Reload Eww when its flyout is closed:
+Reload Eww when its flyout is closed:
 `eww -c ~/thomas_config/eww reload`. Reload notification rules with `dunstctl reload`.
 The installer starts only the PDF indexing timer; the AFK service runs on demand.
 
@@ -60,14 +59,18 @@ to dismiss it. Opening it again returns to Controls.
 
 **AFK · keep awake** is a manual toggle, with no expiry timer. A persistent amber
 **AFK** label appears in Polybar while enabled; click it to turn the mode off.
-It prevents idle locking, blanking, and suspend while the laptop lid is open.
+It prevents idle locking, blanking, and suspend while the laptop lid is open by
+nudging the pointer one pixel and back every minute. It skips nudges while a mouse
+button is held. Screen saver, DPMS, and idle-timer settings stay unchanged.
 Manual lock and normal lid policy still work. Closing the lid, suspending, or ending
-the service turns AFK off; it stays off after resume. Turning it off restarts the
-normal idle countdown. Screen-on power use increases; thermal controls are unchanged.
+the service turns AFK off; it stays off after resume. Turning it off lets the normal
+idle countdown continue from the last pointer movement. Screen-on power use
+increases; thermal controls are unchanged.
 
 If the service reports a problem, inspect `journalctl --user -u thomas-afk.service`.
 `systemctl --user stop thomas-afk.service`
-restores the saved display/idle settings, including after a worker crash.
+stops the nudges and clears the AFK indicator. Old saved display/idle settings are
+still restored when recovering state left by the previous implementation.
 
 ## Checks
 
