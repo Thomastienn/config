@@ -127,6 +127,36 @@ change tabs, start a new conversation, or submit a message. If accessibility is
 unavailable, check the desktop accessibility setting and reopen Firefox when
 convenient. ChatGPT website changes can require updating the prompt locator.
 
+## Polybar timer
+
+Open Eww Quick Settings by clicking the clock or status area, then choose
+**Controls → Timer & stopwatch**. Its menu starts one countdown or stopwatch at a
+time. The timer stays hidden from Polybar until started, then appears beside the
+clock. Paused and finished timers stay visible until cleared:
+
+- **Left click:** choose a countdown in minutes (presets or a custom value, up to
+  1440), start a stopwatch, pause/resume, or clear. Escape cancels the menu.
+- **Middle click:** pause or resume.
+- **Right click:** clear and hide the timer from Polybar.
+
+Countdown completion shows **Done** and sends a desktop notification. Seconds
+update only while running; paused and idle timers wait for state changes. Elapsed
+time includes suspend and ignores wall-clock changes. State stays private in
+`$XDG_RUNTIME_DIR/thomas-polybar-timer/` (normally `/run/user/<uid>/`), survives
+Polybar reloads, and resets on reboot. Polybar must be running to deliver an alert;
+an overdue countdown alerts when the bar next starts.
+
+`./setup.sh apply` already installs Python 3, PyGObject, Rofi, Polybar, and
+`notify-send`, and links this feature through the existing checkout and Polybar
+links. After pulling, close the Eww flyout, apply config links, then reload Eww
+and restart Polybar:
+
+```sh
+./setup.sh apply --configs-only
+eww -c ~/thomas_config/eww reload
+~/.config/polybar/shapes/launch.sh
+```
+
 ## Codex
 
 `codex/config.toml` stores portable model, reasoning, UI, MCP, marketplace and

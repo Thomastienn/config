@@ -75,6 +75,11 @@
     (slider-row :icon {qs.vol_muted ? "" : ""} :text {qs.vol_muted ? "Volume · muted" : "Volume"}
                 :value {qs.vol} :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
     (slider-row :icon "󰃟" :text "Brightness" :value {qs.bright} :cmd "${qs_cmd} bright {}")
+    (button :timeout "10s" :class "compact-btn" :onclick "${qs_cmd} timer"
+            :tooltip "Start a countdown or stopwatch. Active timers appear beside the clock."
+      (box :space-evenly false :spacing 12
+        (label :hexpand true :xalign 0 :text " Timer & stopwatch")
+        (label :text "Open ›")))
     (box :orientation "v" :space-evenly false :spacing 12
       (box :spacing 12 :space-evenly true
         (tile :icon {qs.mic_muted ? "" : ""} :text "Microphone" :detail {qs.mic_muted ? "Muted" : "On"}

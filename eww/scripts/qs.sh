@@ -73,6 +73,7 @@ case $1 in
     hz) "$PB/toggle-refresh-rate.sh" >/dev/null 2>&1 ;;
     battery) /usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" toggle >/dev/null ;;
     wifi) close; setsid -f kitty -e nmtui >/dev/null 2>&1 ;;
+    timer) close; setsid -f /usr/bin/python3 "$HOME/thomas_config/scripts/polybar-timer.py" menu >/dev/null 2>&1 ;;
     updates) close; setsid -f exo-open --launch TerminalEmulator >/dev/null 2>&1 ;;
     vol) pactl set-sink-volume @DEFAULT_SINK@ "$(num "${2%.*}")%" ;;
     mute) pactl set-sink-mute @DEFAULT_SINK@ toggle ;;
@@ -80,5 +81,5 @@ case $1 in
     bright) b=$(num "${2%.*}"); "${backlight[@]}" -q s "$(( b < 5 ? 5 : b ))%" ;;
     prev|next) playerctl "$1" ;;
     play) playerctl play-pause ;;
-    *) echo "usage: $0 status|toggle|close|page N|mic|kbd|hz|battery|wifi|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
+    *) echo "usage: $0 status|toggle|close|page N|mic|kbd|hz|battery|wifi|timer|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
 esac
