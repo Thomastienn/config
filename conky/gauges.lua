@@ -2,11 +2,22 @@ require('cairo')
 
 local metrics = {
     {label = 'CPU', variable = '${cpu cpu0}', color = {167/255, 204/255, 174/255}},
-    {label = 'Memory', variable = '${memperc}', color = {192/255, 175/255, 213/255}},
+    {label = 'GPU', color = {192/255, 175/255, 213/255}},
+    {label = 'RAM', variable = '${memperc}', color = {192/255, 175/255, 213/255}},
 }
 
+local telemetry = {}
+
+function conky_telemetry(cpu_temperature, gpu_usage, gpu_temperature)
+    telemetry.cpu_temperature = tonumber(cpu_temperature)
+    telemetry.gpu_usage = tonumber(gpu_usage)
+    telemetry.gpu_temperature = tonumber(gpu_temperature)
+    telemetry.sleeping = gpu_usage == 'sleep'
+    return ''
+end
+
 local histories = {
-    cpu = {height = 24, y = 234, color = metrics[1].color, values = {}},
+    cpu = {height = 24, y = 248, color = metrics[1].color, values = {}},
     download = {height = 22, bottom = 230, color = metrics[1].color, values = {}},
     upload = {height = 22, bottom = 173, color = metrics[2].color, values = {}},
 }
@@ -48,10 +59,15 @@ function conky_gauges()
     cairo_scale(context, window.width / 266, window.width / 266)
     cairo_set_line_width(context, 3)
     cairo_set_line_cap(context, CAIRO_LINE_CAP_ROUND)
+    local details = {
+        telemetry.cpu_temperature and string.format('%.0f°C', telemetry.cpu_temperature) or '--°C',
+        telemetry.gpu_temperature and string.format('%.0f°C', telemetry.gpu_temperature) or '--°C',
+        '',
+    }
     for index, metric in ipairs(metrics) do
-        local x, y, radius = 72 + (index - 1) * 120, 158, 32
-        local reading = conky_parse(metric.variable)
-        local value = tonumber(reading)
+        local x, y, radius = 52 + (index - 1) * 80, 158, 32
+        local value = telemetry.gpu_usage
+        if metric.variable then value = tonumber(conky_parse(metric.variable)) end
         cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.65)
         cairo_new_path(context)
         cairo_arc(context, x, y, radius, -math.pi/2, 3*math.pi/2)
@@ -64,9 +80,45 @@ function conky_gauges()
             cairo_stroke(context)
         end
         cairo_set_source_rgb(context, 238/255, 232/255, 220/255)
-        centered_text(context, value and reading .. '%' or '--', x, y, 14, CAIRO_FONT_WEIGHT_BOLD)
+        local reading = value and string.format('%.0f%%', value) or '--'
+        if metric.label == 'GPU' and telemetry.sleeping then reading = 'Sleep' end
+        centered_text(context, reading, x, metric.label == 'RAM' and y or y - 5,
+                      14, CAIRO_FONT_WEIGHT_BOLD)
         cairo_set_source_rgb(context, 171/255, 175/255, 164/255)
+        centered_text(context, details[index], x, y + 15, 8, CAIRO_FONT_WEIGHT_NORMAL)
         centered_text(context, metric.label, x, y + radius + 16, 9, CAIRO_FONT_WEIGHT_NORMAL)
+    end
+    cairo_set_source_rgb(context, 171/255, 175/255, 164/255)
+    centered_text(context, conky_parse('${mem}') .. ' / ' .. conky_parse('${memmax}'),
+                  212, 220, 7.5, CAIRO_FONT_WEIGHT_NORMAL)
+    local battery = conky_parse('${if_existing /sys/class/power_supply/BAT0}1${endif}') == '1'
+    local stacks = {
+        {label = 'Storage', variable = '${fs_used_perc /}', color = metrics[3].color},
+        {label = 'Battery', variable = '${battery_percent}', color = metrics[1].color},
+    }
+    for index, metric in ipairs(stacks) do
+        if index == 1 or battery then
+            local x = battery and 72 + (index - 1) * 120 or 132
+            local value = tonumber(conky_parse(metric.variable))
+            for segment = 0, 9 do
+                local y = 330 - (segment + 1) * 4.2
+                cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.65)
+                cairo_new_path(context)
+                cairo_rectangle(context, x - 13, y, 26, 3)
+                cairo_fill(context)
+                local fraction = value and math.min(1, math.max(0, value / 10 - segment)) or 0
+                if fraction > 0 then
+                    cairo_set_source_rgb(context, metric.color[1], metric.color[2], metric.color[3])
+                    cairo_rectangle(context, x - 13, y + 3 * (1 - fraction), 26, 3 * fraction)
+                    cairo_fill(context)
+                end
+            end
+            cairo_set_source_rgb(context, metric.color[1], metric.color[2], metric.color[3])
+            centered_text(context, metric.label, x, 275, 9, CAIRO_FONT_WEIGHT_NORMAL)
+            cairo_set_source_rgb(context, 238/255, 232/255, 220/255)
+            centered_text(context, value and string.format('%.0f%%', value) or '--',
+                          x, 343, 14, CAIRO_FONT_WEIGHT_BOLD)
+        end
     end
     for name, history in pairs(histories) do
         -- Conky increments its update counter between text evaluation and the draw hook.
