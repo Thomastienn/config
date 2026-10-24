@@ -461,8 +461,6 @@ if [ -d "$HOME/.wakatime" ]; then
     export PATH="$HOME/.wakatime:$PATH"
     eval "$(terminal-wakatime init)"
 fi
-export QT_QPA_PLATFORMTHEME=gtk3
-
 # Added by codebase-memory-mcp install
 export PATH="$HOME/.local/bin:$PATH"
 

@@ -36,11 +36,11 @@ bindsym XF86MonBrightnessDown exec --no-startup-id $HOME/thomas_config/scripts/b
 # SCREENSHOT
 # ================================================================
 # shortcut: Save full-screen screenshot
-bindsym Print exec flameshot full -p $HOME/Pictures
+bindsym Print exec env QT_QPA_PLATFORMTHEME=gtk3 flameshot full -p $HOME/Pictures
 # shortcut: Select screenshot region
-bindsym Shift+Print exec flameshot gui
+bindsym Shift+Print exec env QT_QPA_PLATFORMTHEME=gtk3 flameshot gui
 # shortcut: Copy screenshot
-bindsym Ctrl+Print exec flameshot screen -c
+bindsym Ctrl+Print exec env QT_QPA_PLATFORMTHEME=gtk3 flameshot screen -c
 
 # ================================================================
 # LOCKSCREEN

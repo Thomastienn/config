@@ -41,6 +41,11 @@ New terminal tabs load the shell configuration. Build installs take effect when
 the relevant program is next launched. Generate the lockscreen image once with
 `betterlockscreen -u ~/thomas_config/wallpapers/hoppers.png`.
 
+Qt 5 apps such as Flameshot use GTK file dialogs through `qt5-gtk-platformtheme`.
+The setting lives in `profile` so desktop apps inherit it after login. Flameshot's
+screenshot shortcuts also set it explicitly; reload i3's config to apply those
+without logging out. Other Qt apps need a new login to inherit the setting.
+
 ## After pulling on another machine
 
 ```sh

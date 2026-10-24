@@ -4,6 +4,8 @@ export PATH="$HOME/.local/bin:$HOME/.local/kitty.app/bin:$HOME/.cargo/bin:/home/
 export GTK_IM_MODULE=ibus
 export QT_IM_MODULE=ibus
 export XMODIFIERS=@im=ibus
+# Let Qt applications launched by i3 use the desktop's GTK file dialogs.
+export QT_QPA_PLATFORMTHEME=gtk3
 
 # ~/.profile: executed by the command interpreter for login shells.
 # This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
