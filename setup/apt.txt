@@ -27,6 +27,7 @@ i3
 ibus-unikey
 imagemagick
 jq
+kdenlive
 kitty
 libnotify-bin
 libglib2.0-bin

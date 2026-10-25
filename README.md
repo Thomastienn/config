@@ -46,6 +46,11 @@ The setting lives in `profile` so desktop apps inherit it after login. Flameshot
 screenshot shortcuts also set it explicitly; reload i3's config to apply those
 without logging out. Other Qt apps need a new login to inherit the setting.
 
+Kdenlive's application entry uses 96 DPI and a scale factor of 1 so it opens at
+100% from Rofi while the rest of the desktop keeps its configured scaling.
+Setup installs Kdenlive and links `setup/desktop/org.kde.kdenlive.desktop` into
+`~/.local/share/applications/`. Close and reopen Kdenlive after applying the link.
+
 ## After pulling on another machine
 
 ```sh
