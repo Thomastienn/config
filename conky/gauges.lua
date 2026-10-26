@@ -2,7 +2,7 @@ require('cairo')
 
 local metrics = {
     {label = 'CPU', variable = '${cpu cpu0}', color = {167/255, 204/255, 174/255}},
-    {label = 'GPU', color = {192/255, 175/255, 213/255}},
+    {label = 'GPU', color = {222/255, 194/255, 138/255}},
     {label = 'RAM', variable = '${memperc}', color = {192/255, 175/255, 213/255}},
 }
 
@@ -19,7 +19,7 @@ end
 local histories = {
     cpu = {height = 24, y = 248, color = metrics[1].color, values = {}},
     download = {height = 22, bottom = 230, color = metrics[1].color, values = {}},
-    upload = {height = 22, bottom = 173, color = metrics[2].color, values = {}},
+    upload = {height = 22, bottom = 173, color = metrics[3].color, values = {}},
 }
 
 function conky_history(name, variable, argument)
