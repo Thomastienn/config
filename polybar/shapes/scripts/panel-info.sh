@@ -1,8 +1,9 @@
 #!/bin/bash
+source "$HOME/thomas_config/theme.sh"
 # Panel info - fast secondary system info for polybar toggle panel
 # Using text labels for reliability
 
-SEP="%{F#5C6370}|%{F-}"
+SEP="%{F${THEME_PANEL_SEPARATOR}}|%{F-}"
 
 # Updates (cached)
 UPDATES_CACHE="/tmp/polybar-updates-cache"

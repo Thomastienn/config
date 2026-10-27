@@ -119,3 +119,4 @@ libxss-dev
 meson
 ninja-build
 uthash-dev
+fonts-lato

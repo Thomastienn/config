@@ -1,0 +1,10 @@
+/* Cozy Mint */
+
+* {
+  al:    #00000000;
+  bg:    {{colors.background}}FF;
+  bg1:   {{colors.surface}}FF;
+  bg2:   {{colors.muted}}FF;
+  bg3:   {{colors.selection}}FF;
+  fg:    {{colors.text}}FF;
+}

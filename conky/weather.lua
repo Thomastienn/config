@@ -1,9 +1,10 @@
+local theme = dofile(os.getenv('HOME') .. '/thomas_config/themes/.generated/palette.lua')
 require('cairo')
 
-local mint = {167/255, 204/255, 174/255}
-local cream = {238/255, 232/255, 220/255}
-local muted = {171/255, 175/255, 164/255}
-local rail = {93/255, 109/255, 94/255}
+local mint = theme.colors.primary
+local cream = theme.colors.text
+local muted = theme.colors.muted
+local rail = theme.colors.separator
 local state = {}
 
 function conky_weather(...)
@@ -15,7 +16,7 @@ end
 
 local function text(context, value, x, y, size, color, centered, bold)
     cairo_set_source_rgb(context, color[1], color[2], color[3])
-    cairo_select_font_face(context, 'ComicShannsMono Nerd Font', CAIRO_FONT_SLANT_NORMAL,
+    cairo_select_font_face(context, theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL,
                            bold and CAIRO_FONT_WEIGHT_BOLD or CAIRO_FONT_WEIGHT_NORMAL)
     cairo_set_font_size(context, size)
     if centered then

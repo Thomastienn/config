@@ -1,10 +1,1 @@
-/* Cozy Mint */
-
-* {
-  al:    #00000000;
-  bg:    #191B19FF;
-  bg1:   #272C27FF;
-  bg2:   #ABAFA4FF;
-  bg3:   #403849FF;
-  fg:    #EEE8DCFF;
-}
+../../../../themes/.generated/polybar/shapes/scripts/rofi/colors.rasi

@@ -3,6 +3,11 @@
 The desktop palette with a quiet dark sage-to-lavender gradient, mint accents,
 cream text and ComicShannsMono in Firefox's interface and new-tab page.
 
+The CSS and manifest are generated from the selected desktop TOML preset. Run
+setup before linking or loading them. Use `theme apply` to generate another
+palette, then restart Firefox when convenient. Change shared selectors under
+`themes/templates/firefox/`; generated files are overwritten on application.
+
 ## Local setup
 
 `userChrome.css` styles the browser interface. `userContent.css` styles only

@@ -1,0 +1,44 @@
+conky.config = {
+    alignment = 'top_left',
+    gap_x = 28,
+    gap_y = 52,
+    minimum_width = 330,
+    maximum_width = 330,
+    -- Shared with system.conf so both side panels end on one line.
+    minimum_height = 630,
+    border_inner_margin = 12,
+    border_outer_margin = 0,
+
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'override',
+    own_window_transparent = false,
+    own_window_colour = '{{hex.background}}',
+    own_window_argb_visual = true,
+    own_window_argb_value = 180,
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+
+    background = false,
+    double_buffer = true,
+    use_xft = true,
+    font = '{{fonts.ui}}:size=9',
+    default_color = '{{hex.text}}',
+    color1 = '{{hex.primary}}',
+    color3 = '{{hex.muted}}',
+    color4 = '{{hex.separator}}',
+    use_spacer = 'none',
+    extra_newline = false,
+    text_buffer_size = 16384,
+    update_interval = 60,
+    draw_borders = false,
+    draw_graph_borders = false,
+    draw_outline = false,
+    draw_shades = false,
+}
+
+conky.text = [[
+${color1}${font {{fonts.ui}}:bold:size=12}Upcoming${font}${color}
+${voffset 8}${execp python3 $HOME/thomas_config/conky/task_list.py}${font}${color}
+${voffset 20}${color1}${font {{fonts.ui}}:bold:size=11}Calendar${font}${color}
+${voffset 8}${font {{fonts.ui}}:size=8}${execpi 60 python3 $HOME/thomas_config/conky/task_calendar.py}${font}${color}
+]]

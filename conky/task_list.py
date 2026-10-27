@@ -1,8 +1,9 @@
 """Show Taskwarrior's date-only report with its terminal colors in Conky."""
 
-from pathlib import Path
 import re
 import subprocess
+
+from theme import palette
 
 
 COMMAND = [
@@ -15,10 +16,7 @@ COMMAND = [
 SGR = re.compile(r"\x1b\[([0-9;]*)m")
 # Keep extended foreground/background parameters together when reading SGR codes.
 OPERATIONS = re.compile(r"(?:38|48);(?:5;\d+|2;\d+;\d+;\d+)|\d+")
-ANSI_COLORS = dict((int(n), color.upper()) for n, color in re.findall(
-    r"^color(\d+)\s+#([0-9a-fA-F]{6})\s*$",
-    (Path(__file__).resolve().parents[1] / "kitty/current-theme.conf").read_text(), re.M,
-))
+ANSI_COLORS = {n: color[1:].upper() for n, color in enumerate(palette()["terminal"]["ansi"])}
 
 
 def indexed_color(n):
@@ -54,12 +52,14 @@ def color_codes(match):
 
 
 def render(report):
+    theme = palette()
+    colors, font = theme["colors"], theme["fonts"]["ui"]
     # Task descriptions must stay literal when execp parses the generated colors.
     lines = SGR.sub(color_codes, report.replace("$", "$$")).strip("\n").splitlines()
     if not lines:
         return "No pending tasks"
-    return ("${color #ABAFA4}${font ComicShannsMono Nerd Font:size=9}" + lines[0]
-            + "${color}\n${color #5D6D5E}${hr 1}${color}\n"
+    return (f"${{color {colors['muted']}}}${{font {font}:size=9}}" + lines[0]
+            + f"${{color}}\n${{color {colors['separator']}}}${{hr 1}}${{color}}\n"
             + "\n".join(lines[1:]) + "${color}")
 
 

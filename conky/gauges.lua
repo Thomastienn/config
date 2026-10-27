@@ -1,9 +1,11 @@
+local theme = dofile(os.getenv('HOME') .. '/thomas_config/themes/.generated/palette.lua')
+local c = theme.colors
 require('cairo')
 
 local metrics = {
-    {label = 'CPU', variable = '${cpu cpu0}', color = {167/255, 204/255, 174/255}},
-    {label = 'GPU', color = {222/255, 194/255, 138/255}},
-    {label = 'RAM', variable = '${memperc}', color = {192/255, 175/255, 213/255}},
+    {label = 'CPU', variable = '${cpu cpu0}', color = c.primary},
+    {label = 'GPU', color = c.warning},
+    {label = 'RAM', variable = '${memperc}', color = c.secondary},
 }
 
 local telemetry = {}
@@ -39,7 +41,7 @@ function conky_history_span()
 end
 
 local function centered_text(context, text, x, y, size, weight)
-    cairo_select_font_face(context, 'ComicShannsMono Nerd Font', CAIRO_FONT_SLANT_NORMAL, weight)
+    cairo_select_font_face(context, theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL, weight)
     cairo_set_font_size(context, size)
     local extents = cairo_text_extents_t:create()
     cairo_text_extents(context, text, extents)
@@ -68,7 +70,7 @@ function conky_gauges()
         local x, y, radius = 52 + (index - 1) * 80, 158, 32
         local value = telemetry.gpu_usage
         if metric.variable then value = tonumber(conky_parse(metric.variable)) end
-        cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.65)
+        cairo_set_source_rgba(context, c.border[1], c.border[2], c.border[3], 0.65)
         cairo_new_path(context)
         cairo_arc(context, x, y, radius, -math.pi/2, 3*math.pi/2)
         cairo_stroke(context)
@@ -79,16 +81,16 @@ function conky_gauges()
                       -math.pi/2 + 2*math.pi * math.min(value, 100)/100)
             cairo_stroke(context)
         end
-        cairo_set_source_rgb(context, 238/255, 232/255, 220/255)
+        cairo_set_source_rgb(context, c.text[1], c.text[2], c.text[3])
         local reading = value and string.format('%.0f%%', value) or '--'
         if metric.label == 'GPU' and telemetry.sleeping then reading = 'Sleep' end
         centered_text(context, reading, x, metric.label == 'RAM' and y or y - 5,
                       14, CAIRO_FONT_WEIGHT_BOLD)
-        cairo_set_source_rgb(context, 171/255, 175/255, 164/255)
+        cairo_set_source_rgb(context, c.muted[1], c.muted[2], c.muted[3])
         centered_text(context, details[index], x, y + 15, 8, CAIRO_FONT_WEIGHT_NORMAL)
         centered_text(context, metric.label, x, y + radius + 16, 9, CAIRO_FONT_WEIGHT_NORMAL)
     end
-    cairo_set_source_rgb(context, 171/255, 175/255, 164/255)
+    cairo_set_source_rgb(context, c.muted[1], c.muted[2], c.muted[3])
     centered_text(context, conky_parse('${mem}') .. ' / ' .. conky_parse('${memmax}'),
                   212, 220, 7.5, CAIRO_FONT_WEIGHT_NORMAL)
     local battery = conky_parse('${if_existing /sys/class/power_supply/BAT0}1${endif}') == '1'
@@ -102,7 +104,7 @@ function conky_gauges()
             local value = tonumber(conky_parse(metric.variable))
             for segment = 0, 9 do
                 local y = 330 - (segment + 1) * 4.2
-                cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.65)
+                cairo_set_source_rgba(context, c.border[1], c.border[2], c.border[3], 0.65)
                 cairo_new_path(context)
                 cairo_rectangle(context, x - 13, y, 26, 3)
                 cairo_fill(context)
@@ -115,7 +117,7 @@ function conky_gauges()
             end
             cairo_set_source_rgb(context, metric.color[1], metric.color[2], metric.color[3])
             centered_text(context, metric.label, x, 275, 9, CAIRO_FONT_WEIGHT_NORMAL)
-            cairo_set_source_rgb(context, 238/255, 232/255, 220/255)
+            cairo_set_source_rgb(context, c.text[1], c.text[2], c.text[3])
             centered_text(context, value and string.format('%.0f%%', value) or '--',
                           x, 343, 14, CAIRO_FONT_WEIGHT_BOLD)
         end
@@ -150,7 +152,7 @@ function conky_gauges()
                 end
             else
                 cairo_set_line_width(context, 1)
-                cairo_set_source_rgba(context, 70/255, 83/255, 74/255, 0.5)
+                cairo_set_source_rgba(context, c.border[1], c.border[2], c.border[3], 0.5)
                 cairo_new_path(context)
                 cairo_move_to(context, x, y + height)
                 cairo_line_to(context, x + width, y + height)

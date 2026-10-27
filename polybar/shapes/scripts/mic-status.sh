@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
+source "$HOME/thomas_config/theme.sh"
 
 # Get mic mute status with error handling
 
-icon="%{F#A7CCAE}%{F-}"
-icon_muted="%{F#DBA0AA}%{F-}"
+icon="%{F${THEME_PRIMARY}}%{F-}"
+icon_muted="%{F${THEME_ERROR}}%{F-}"
 
 status=$(pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null) || {
     echo "$icon --"

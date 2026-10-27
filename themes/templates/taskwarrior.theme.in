@@ -1,0 +1,2 @@
+# Keep the application's existing skin selection in the central preset.
+include {{terminal.taskwarrior}}

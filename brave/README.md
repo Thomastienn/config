@@ -1,7 +1,7 @@
 # Brave: Cozy Mint
 
-A color-only theme matching [theme.sh](../theme.sh) and the
-[Kitty palette](../kitty/current-theme.conf).
+A color-only theme generated from the [selected desktop preset](../themes/cozy-mint.toml).
+Run setup once before loading this folder so its generated manifest exists.
 
 ## Install
 
@@ -33,8 +33,10 @@ The `ntp_*` colors also support Chromium's standard new-tab page.
 
 ## Edit or remove
 
-Edit `theme.colors` in `manifest.json`; colors are RGB arrays, such as
-`[167, 204, 174]` for mint. Load this folder again to apply changes.
+Edit the selected TOML preset and run `theme apply`. `manifest.json` is a generated
+symlink; edit `themes/templates/brave/manifest.json.in` only to change its structure.
+Reload the theme through `brave://extensions`, or load this folder again to apply
+the generated colors. The switcher leaves the browser open.
 
 To remove the theme on Linux, open `brave://settings/appearance` and click
 **Use Classic**.

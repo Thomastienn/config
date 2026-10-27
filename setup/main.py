@@ -26,6 +26,9 @@ STATE = HOME / ".local/state/thomas-config"
 CACHE = HOME / ".cache/thomas-config"
 BACKUP = STATE / "backups" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
 
+sys.path.insert(0, str(REPO / "scripts"))
+import theme
+
 
 def run(args, **kwargs):
     print("+", shlex.join(str(arg) for arg in args), flush=True)
@@ -78,6 +81,13 @@ def configured_links():
     for source in sorted((REPO / "systemd/user").iterdir()):
         if source.suffix in (".service", ".timer"):
             yield source, HOME / ".config/systemd/user" / source.name
+    # Fresh setup can link nvim to its source checkout; never replace that parent.
+    nvim = (HOME / ".config/nvim").resolve()
+    loader = nvim / "lua/lazy_setup.lua"
+    if (nvim.is_relative_to(HOME) and loader.is_file() and 'import = "plugins"' in loader.read_text()
+            and 'AstroNvim/AstroNvim' in loader.read_text() and (nvim / "lua/plugins").is_dir()
+            and not any((nvim / p).is_symlink() for p in ["lua", "lua/plugins"])):
+        yield REPO / "themes/nvim.lua", nvim / "lua/plugins/zz-desktop-theme.lua"
 
 
 def firefox_links():
@@ -102,6 +112,8 @@ def firefox_links():
 
 
 def apply_links():
+    theme.apply(live=False)
+    theme.bridge()
     changes = []
     for source, target in [*configured_links(), *firefox_links()]:
         changes.extend(link(source, target))
@@ -111,12 +123,18 @@ def apply_links():
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
     codex.configuration(HOME, backup)
     hermes.configuration(HOME, backup)
+    if not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
+        print("Pending: Neovim theme bridge needs the managed AstroNvim configuration.")
 
 
 def settings(capture=False):
     # Homebrew's GSettings can use a different backend from the actual desktop.
     path = ROOT / "desktop/settings.json"
     data = json.loads(path.read_text())
+    appearance = theme.gsettings(theme.load()[0])
+    captured = {}
+    for schema, values in appearance.items():
+        data["gsettings"].setdefault(schema, {}).update(values)
     try:
         schemas = output(["/usr/bin/gsettings", "list-schemas"]).splitlines()
     except (OSError, subprocess.SubprocessError):
@@ -128,9 +146,15 @@ def settings(capture=False):
         for key, value in values.items():
             if capture:
                 values[key] = output(["/usr/bin/gsettings", "get", schema, key])
+                if key in appearance.get(schema, {}):
+                    captured.setdefault(schema, {})[key] = values[key]
             else:
                 run(["/usr/bin/gsettings", "set", schema, key, value])
     if capture:
+        theme.capture_settings(captured, codex.toml_text)
+        for schema, values in appearance.items():
+            for key in values:
+                data["gsettings"][schema].pop(key, None)
         # Only keys already in the allowlist; never clipboard data or tab contents.
         for key in data["copyq"]:
             try:
@@ -146,7 +170,11 @@ def settings(capture=False):
             print("Pending: run setup.sh apply --configs-only in the desktop to configure CopyQ.")
             return
         for key, value in data["copyq"].items():
-            run(["copyq", "config", key, value])
+            try:
+                run(["copyq", "config", key, value])
+            except (OSError, subprocess.SubprocessError):
+                print("Pending: open CopyQ, then rerun setup.sh apply --configs-only for its settings.")
+                break
 
 
 def services():
@@ -212,6 +240,7 @@ def packages(extras):
 
 def check():
     gaps = power.check() + codex.configuration(HOME) + hermes.configuration(HOME)
+    gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
@@ -253,6 +282,8 @@ def check():
     except (OSError, subprocess.SubprocessError):
         gaps.append("service: PDF index timer not enabled or user session unavailable")
     data = json.loads((ROOT / "desktop/settings.json").read_text())
+    for schema, values in theme.gsettings(theme.load()[0]).items():
+        data["gsettings"].setdefault(schema, {}).update(values)
     try:
         schemas = output(["/usr/bin/gsettings", "list-schemas"]).splitlines()
         for schema, values in data["gsettings"].items():
@@ -317,6 +348,9 @@ def main():
         tools.assets(HOME, CACHE)
         if args.extras:
             hermes.install(HOME, CACHE, run)
+    refresh_theme = bool(theme.check() + theme.bridge(check=True)) or theme.needs_activation()
+    if args.command == "apply":
+        theme.assets(theme.load()[0])
     apply_links()
     if args.command == "apply":
         if args.extras and not args.configs_only:
@@ -326,6 +360,8 @@ def main():
             graphics.configure(args.graphics, run)
         settings()
         services()
+        if refresh_theme:
+            theme.reload_desktop(theme.load()[0])
     print("Setup applied. See README.md for activation and manual steps; desktop was not restarted.")
     return 0
 

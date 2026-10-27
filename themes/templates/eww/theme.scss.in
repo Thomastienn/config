@@ -1,0 +1,12 @@
+// Cozy Mint: mint on warm charcoal, sage surfaces, lavender as a small accent.
+$bg: rgba({{rgb.background}}, 0.92);
+$surface: {{colors.surface}};
+$surface-hi: {{colors.shade4}};
+$border: {{colors.border}};
+$fg: {{colors.text}};
+$dim: {{colors.muted}};
+$mint: {{colors.primary}};
+$lavender: {{colors.secondary}};
+$ink: {{colors.background}};
+$amber: {{colors.warning}};
+$theme-font: "{{fonts.proportional}}";

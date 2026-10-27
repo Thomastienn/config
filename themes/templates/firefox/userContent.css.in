@@ -1,0 +1,32 @@
+/* Scope desktop colors to Firefox's home/new-tab pages. */
+@-moz-document url("about:home"), url("about:newtab") {
+  :root {
+    color-scheme: {{mode}} !important;
+    --newtab-background-color: {{colors.background}} !important;
+    --newtab-text-primary-color: {{colors.text}} !important;
+    --newtab-text-secondary-color: {{colors.muted}} !important;
+    --newtab-element-secondary-color: {{colors.surface}} !important;
+    --newtab-element-hover-color: {{colors.shade5}} !important;
+    --newtab-primary-action-background: {{colors.primary}} !important;
+    --newtab-primary-action-background-dimmed: {{colors.border}} !important;
+    --newtab-border-color: {{colors.border}} !important;
+    --newtab-search-icon-color: {{colors.primary}} !important;
+  }
+
+  body {
+    background: linear-gradient(125deg, {{colors.gradient_start}} 0%, {{colors.background}} 55%, {{colors.gradient_end}} 100%) fixed !important;
+    color: {{colors.text}} !important;
+    font-family: "{{fonts.ui}}", monospace !important;
+  }
+
+  .search-wrapper .search-handoff-button,
+  .search-wrapper input {
+    background-color: {{colors.surface}} !important;
+    color: {{colors.text}} !important;
+    border-color: {{colors.border}} !important;
+  }
+
+  .top-site-outer .tile {
+    background-color: {{colors.surface}} !important;
+  }
+}

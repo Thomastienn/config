@@ -14,8 +14,10 @@ install those through Mint Driver Manager or Ubuntu's driver tools. No driver
 version or sensor index is pinned to this machine. Python and Conky's Lua/Cairo
 support already come from `setup/apt.txt`; no extra Python packages are needed.
 
-After pulling, use `./setup.sh apply --configs-only` and reload the system panel
-to regenerate its themed runtime config. No logout is required.
+After pulling, use `./setup.sh apply --configs-only`. Changed themes refresh only
+the panels already running, respecting Battery Saver. Colors and fonts come from
+the selected `themes/*.toml` preset, including Lua gauges and calendar/task text.
+Use `theme apply` to reapply it without logging out.
 
 Weather data comes from [Open-Meteo](https://open-meteo.com/), under
 [CC BY 4.0](https://open-meteo.com/en/licence). Personal use needs no account,

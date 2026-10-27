@@ -3,6 +3,12 @@
 # Color files
 PFILE="$HOME/.config/polybar/shapes/colors.ini"
 RFILE="$HOME/.config/polybar/shapes/scripts/rofi/colors.rasi"
+
+# Generated colors belong to the selected desktop preset.
+if [[ -L $PFILE ]]; then
+    printf 'Use theme apply themes/NAME.toml to switch desktop colors.\n' >&2
+    exit 2
+fi
 WFILE="$HOME/.cache/wal/colors.sh"
 
 # Get colors

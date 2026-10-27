@@ -1,0 +1,9 @@
+gtk-theme-name="{{desktop.gtk2}}"
+gtk-icon-theme-name="{{desktop.gtk2_icons}}"
+gtk-font-name="{{fonts.gtk2}}"
+gtk-cursor-theme-name="{{desktop.cursor}}"
+gtk-cursor-theme-size={{desktop.cursor_size}}
+gtk-xft-antialias=1
+gtk-xft-hinting=1
+gtk-xft-hintstyle="hintfull"
+gtk-xft-rgba="rgb"

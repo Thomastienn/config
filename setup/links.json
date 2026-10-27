@@ -1,4 +1,5 @@
 {
+  "scripts/theme.py": ".local/bin/theme",
   "bashrc": ".bashrc",
   "bash_aliases": ".bash_aliases",
   "profile": ".profile",

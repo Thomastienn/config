@@ -13,6 +13,8 @@ import sys
 import tempfile
 import time
 
+from theme import palette
+
 
 def now():
     # Include suspend time without depending on wall-clock adjustments.
@@ -91,16 +93,17 @@ def change(action=None, minutes=None):
 def label(state):
     if not state:
         return ""
+    colors = palette()["colors"]
     value = seconds(state, now())
     if state["mode"] == "countdown" and value == 0:
-        return "%{F#DBA0AA} Done%{F-}"
+        return f"%{{F{colors['error']}}} Done%{{F-}}"
     value = math.ceil(value) if state["mode"] == "countdown" else int(value)
     hours, remainder = divmod(value, 3600)
     minutes, seconds_left = divmod(remainder, 60)
     text = f"{hours}:{minutes:02}:{seconds_left:02}" if hours else f"{minutes:02}:{seconds_left:02}"
     icon = "" if state["mode"] == "countdown" else ""
     if state["since"] is None:
-        return f"%{{F#ABAFA4}} {text}%{{F-}}"
+        return f"%{{F{colors['muted']}}} {text}%{{F-}}"
     return f"{icon} {text}"
 
 

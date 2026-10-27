@@ -11,99 +11,99 @@ fi
 # ================================================================
 
 # General text and defaults
-ble-face syntax_default="fg=#EEE8DC"       # Cream
-ble-face disabled="fg=#ABAFA4"             # Muted text
+ble-face syntax_default="fg=${THEME_TEXT}"       # Cream
+ble-face disabled="fg=${THEME_MUTED}"             # Muted text
 
 # Command structure
-ble-face syntax_command="fg=#A7CCAE,bold"   # Mint
-ble-face command_keyword="fg=#C0AFD5,bold" # Lavender
-ble-face command_builtin="fg=#A7CCAE"       # Mint
-ble-face command_builtin_dot="fg=#C0AFD5"  # Lavender
-ble-face command_alias="fg=#A7CCAE"         # Mint
-ble-face command_function="fg=#C0AFD5"     # Lavender
-ble-face syntax_function_name="fg=#C0AFD5"
-ble-face argument_option="fg=#A7CCAE"       # Mint
+ble-face syntax_command="fg=${THEME_PRIMARY},bold"   # Mint
+ble-face command_keyword="fg=${THEME_SECONDARY},bold" # Lavender
+ble-face command_builtin="fg=${THEME_PRIMARY}"       # Mint
+ble-face command_builtin_dot="fg=${THEME_SECONDARY}"  # Lavender
+ble-face command_alias="fg=${THEME_PRIMARY}"         # Mint
+ble-face command_function="fg=${THEME_SECONDARY}"     # Lavender
+ble-face syntax_function_name="fg=${THEME_SECONDARY}"
+ble-face argument_option="fg=${THEME_PRIMARY}"       # Mint
 
 # Variables
-ble-face syntax_varname="fg=#C0AFD5"       # Lavender
-ble-face varname_array="fg=#C0AFD5,bold"
-ble-face varname_hash="fg=#C0AFD5,bold"
-ble-face varname_expr="fg=#A7CCAE,bold"     # Mint
-ble-face varname_transform="fg=#A7CCAE"
-ble-face varname_export="fg=#A7CCAE,bold"   # Mint
-ble-face varname_readonly="fg=#A7CCAE"
-ble-face varname_number="fg=#DEC28A"       # Amber
-ble-face varname_empty="fg=#ABAFA4"
-ble-face varname_unset="fg=#ABAFA4"
-ble-face varname_new="fg=#C0AFD5"          # Lavender
+ble-face syntax_varname="fg=${THEME_SECONDARY}"       # Lavender
+ble-face varname_array="fg=${THEME_SECONDARY},bold"
+ble-face varname_hash="fg=${THEME_SECONDARY},bold"
+ble-face varname_expr="fg=${THEME_PRIMARY},bold"     # Mint
+ble-face varname_transform="fg=${THEME_PRIMARY}"
+ble-face varname_export="fg=${THEME_PRIMARY},bold"   # Mint
+ble-face varname_readonly="fg=${THEME_PRIMARY}"
+ble-face varname_number="fg=${THEME_WARNING}"       # Amber
+ble-face varname_empty="fg=${THEME_MUTED}"
+ble-face varname_unset="fg=${THEME_MUTED}"
+ble-face varname_new="fg=${THEME_SECONDARY}"          # Lavender
 
 # Syntax elements
-ble-face syntax_delimiter="fg=#A7CCAE"      # Mint
-ble-face syntax_brace="fg=#A7CCAE,bold"     # Mint
-ble-face syntax_quoted="fg=#EEE8DC"        # Cream (override green default)
-ble-face syntax_quotation="fg=#A7CCAE"      # Mint (override green default)
-ble-face syntax_escape="fg=#DEC28A"        # Amber
-ble-face syntax_expr="fg=#C0AFD5"          # Lavender
-ble-face syntax_glob="fg=#A7CCAE,bold"      # Mint
-ble-face syntax_tilde="fg=#C0AFD5"         # Lavender
-ble-face syntax_param_expansion="fg=#A7CCAE"
-ble-face syntax_history_expansion="fg=#191B19,bg=#A7CCAE"  # Black on mint
-ble-face syntax_document="fg=#EEE8DC"
-ble-face syntax_document_begin="fg=#A7CCAE,bold"
-ble-face syntax_comment="fg=#ABAFA4"       # Muted text
+ble-face syntax_delimiter="fg=${THEME_PRIMARY}"      # Mint
+ble-face syntax_brace="fg=${THEME_PRIMARY},bold"     # Mint
+ble-face syntax_quoted="fg=${THEME_TEXT}"        # Cream (override green default)
+ble-face syntax_quotation="fg=${THEME_PRIMARY}"      # Mint (override green default)
+ble-face syntax_escape="fg=${THEME_WARNING}"        # Amber
+ble-face syntax_expr="fg=${THEME_SECONDARY}"          # Lavender
+ble-face syntax_glob="fg=${THEME_PRIMARY},bold"      # Mint
+ble-face syntax_tilde="fg=${THEME_SECONDARY}"         # Lavender
+ble-face syntax_param_expansion="fg=${THEME_PRIMARY}"
+ble-face syntax_history_expansion="fg=${THEME_BACKGROUND},bg=${THEME_PRIMARY}"  # Black on mint
+ble-face syntax_document="fg=${THEME_TEXT}"
+ble-face syntax_document_begin="fg=${THEME_PRIMARY},bold"
+ble-face syntax_comment="fg=${THEME_MUTED}"       # Muted text
 
 # Commands (override green defaults)
-ble-face command_file="fg=#C0AFD5"         # Lavender (override green default)
-ble-face command_directory="fg=#A7CCAE,underline"  # Mint
-ble-face command_suffix="fg=#EEE8DC,bg=#403849"        # Light on gunmetal (override green bg)
-ble-face command_suffix_new="fg=#EEE8DC,bg=#DBA0AA"   # Light on red
+ble-face command_file="fg=${THEME_SECONDARY}"         # Lavender (override green default)
+ble-face command_directory="fg=${THEME_PRIMARY},underline"  # Mint
+ble-face command_suffix="fg=${THEME_TEXT},bg=${THEME_SELECTION}"        # Light on gunmetal (override green bg)
+ble-face command_suffix_new="fg=${THEME_TEXT},bg=${THEME_ERROR}"   # Light on red
 
 # Errors and warnings
-ble-face syntax_error="fg=#191B19,bg=#DBA0AA"        # Rose
-ble-face argument_error="fg=#191B19,bg=#DBA0AA"
-ble-face filename_warning="fg=#DEC28A,underline" # Amber
-ble-face filename_orphan="fg=#ABAFA4,underline"
-ble-face command_jobs="fg=#A7CCAE,bold"
+ble-face syntax_error="fg=${THEME_BACKGROUND},bg=${THEME_ERROR}"        # Rose
+ble-face argument_error="fg=${THEME_BACKGROUND},bg=${THEME_ERROR}"
+ble-face filename_warning="fg=${THEME_WARNING},underline" # Amber
+ble-face filename_orphan="fg=${THEME_MUTED},underline"
+ble-face command_jobs="fg=${THEME_PRIMARY},bold"
 
 # File and directory names
-ble-face filename_directory="fg=#A7CCAE,bold"       # Mint
-ble-face filename_directory_sticky="fg=#191B19,bg=#A7CCAE"
-ble-face filename_executable="fg=#C0AFD5"          # Lavender
-ble-face filename_link="fg=#A7CCAE,underline"       # Mint
-ble-face filename_other="fg=#EEE8DC"               # Cream
-ble-face filename_url="fg=#A7CCAE,underline"        # Mint
+ble-face filename_directory="fg=${THEME_PRIMARY},bold"       # Mint
+ble-face filename_directory_sticky="fg=${THEME_BACKGROUND},bg=${THEME_PRIMARY}"
+ble-face filename_executable="fg=${THEME_SECONDARY}"          # Lavender
+ble-face filename_link="fg=${THEME_PRIMARY},underline"       # Mint
+ble-face filename_other="fg=${THEME_TEXT}"               # Cream
+ble-face filename_url="fg=${THEME_PRIMARY},underline"        # Mint
 
 # Highlighting and UI
-ble-face region="bg=#403849,fg=#EEE8DC"                # Lavender selection bg, light text
-ble-face region_insert="bg=#A7CCAE,fg=#EEE8DC"         # Mint bg
-ble-face region_match="bg=#403849,fg=#EEE8DC"          # Lavender selection bg
-ble-face region_target="bg=#A7CCAE,fg=#191B19"          # Mint bg
-ble-face overwrite_mode="fg=#191B19,bg=#DEC28A"        # Amber
-ble-face vbell="bg=#A7CCAE"                        # Mint
-ble-face vbell_erase="bg=#ABAFA4"
-ble-face vbell_flash="fg=#A7CCAE,reverse"          # Mint (override green default)
-ble-face prompt_status_line="fg=#EEE8DC,bg=#403849"    # Light on gunmetal
+ble-face region="bg=${THEME_SELECTION},fg=${THEME_TEXT}"                # Lavender selection bg, light text
+ble-face region_insert="bg=${THEME_PRIMARY},fg=${THEME_TEXT}"         # Mint bg
+ble-face region_match="bg=${THEME_SELECTION},fg=${THEME_TEXT}"          # Lavender selection bg
+ble-face region_target="bg=${THEME_PRIMARY},fg=${THEME_BACKGROUND}"          # Mint bg
+ble-face overwrite_mode="fg=${THEME_BACKGROUND},bg=${THEME_WARNING}"        # Amber
+ble-face vbell="bg=${THEME_PRIMARY}"                        # Mint
+ble-face vbell_erase="bg=${THEME_MUTED}"
+ble-face vbell_flash="fg=${THEME_PRIMARY},reverse"          # Mint (override green default)
+ble-face prompt_status_line="fg=${THEME_TEXT},bg=${THEME_SELECTION}"    # Light on gunmetal
 
 # Additional file/directory faces (override green defaults)
-ble-face filename_pipe="fg=#A7CCAE,underline,bg=#272C27"      # Mint (override lime default)
-ble-face filename_socket="fg=#C0AFD5,underline,bg=#272C27"   # Lavender
-ble-face filename_character="fg=#EEE8DC,underline,bg=#272C27"
-ble-face filename_block="fg=#DEC28A,underline,bg=#272C27"    # Amber
-ble-face filename_setuid="fg=#191B19,underline,bg=#DEC28A"    # Black on copper
-ble-face filename_setgid="fg=#191B19,underline,bg=#C0AFD5"    # Black on pale steel
+ble-face filename_pipe="fg=${THEME_PRIMARY},underline,bg=${THEME_SURFACE}"      # Mint (override lime default)
+ble-face filename_socket="fg=${THEME_SECONDARY},underline,bg=${THEME_SURFACE}"   # Lavender
+ble-face filename_character="fg=${THEME_TEXT},underline,bg=${THEME_SURFACE}"
+ble-face filename_block="fg=${THEME_WARNING},underline,bg=${THEME_SURFACE}"    # Amber
+ble-face filename_setuid="fg=${THEME_BACKGROUND},underline,bg=${THEME_WARNING}"    # Black on copper
+ble-face filename_setgid="fg=${THEME_BACKGROUND},underline,bg=${THEME_SECONDARY}"    # Black on pale steel
 ble-face filename_ls_colors="underline"
 
 # Autocomplete menu
-ble-face auto_complete="bg=#272C27,fg=#ABAFA4"             # Dark bg, dim suggestion
-ble-face menu_filter_input="bg=#403849,fg=#EEE8DC,bold"     # Lavender selection bg, light text
-ble-face menu_filter_fixed="fg=#A7CCAE,bold"            # Mint
-ble-face menu_complete_match="fg=#A7CCAE,bold"          # Mint for matched text
-ble-face menu_complete_selected="bg=#A7CCAE,fg=#191B19,bold" # Mint bg, dark text
-ble-face cmdinfo_cd_cdpath="fg=#A7CCAE,bg=#403849"           # Mint on gunmetal
+ble-face auto_complete="bg=${THEME_SURFACE},fg=${THEME_MUTED}"             # Dark bg, dim suggestion
+ble-face menu_filter_input="bg=${THEME_SELECTION},fg=${THEME_TEXT},bold"     # Lavender selection bg, light text
+ble-face menu_filter_fixed="fg=${THEME_PRIMARY},bold"            # Mint
+ble-face menu_complete_match="fg=${THEME_PRIMARY},bold"          # Mint for matched text
+ble-face menu_complete_selected="bg=${THEME_PRIMARY},fg=${THEME_BACKGROUND},bold" # Mint bg, dark text
+ble-face cmdinfo_cd_cdpath="fg=${THEME_PRIMARY},bg=${THEME_SELECTION}"           # Mint on gunmetal
 
 # Blank line between commands; quiet rose exit mark
 bleopt prompt_ruler=empty-line
-bleopt exec_errexit_mark=$'\e[38;2;219;160;170m✘ %d\e[m'
+bleopt exec_errexit_mark="${THEME_COLOR5@E}✘ %d${THEME_RESET@E}"
 
 # Vi mode shown by cursor shape (bar insert, block normal) instead of a "-- INSERT --" line.
 # The vi keymap loads lazily, so its options only exist after load.

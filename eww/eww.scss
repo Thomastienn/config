@@ -1,18 +1,8 @@
-// Cozy Mint: mint on warm charcoal, sage surfaces, lavender as a small accent.
-$bg: rgba(25, 27, 25, 0.92);
-$surface: #272C27;
-$surface-hi: #303730;
-$border: #46534A;
-$fg: #EEE8DC;
-$dim: #ABAFA4;
-$mint: #A7CCAE;
-$lavender: #C0AFD5;
-$ink: #191B19;
-$amber: #DEC28A;
+@import "theme.scss";
 
 * {
   all: unset;
-  font-family: "ComicShannsMono Nerd Font Propo";
+  font-family: $theme-font;
   font-size: 13px;
   color: $fg;
 }

@@ -1,24 +1,11 @@
 {
   "gsettings": {
     "org.cinnamon.desktop.interface": {
-      "gtk-theme": "'Mint-Y-Dark-Teal'",
-      "icon-theme": "'Papirus-Dark'",
-      "cursor-theme": "'Bibata-Modern-Classic'",
-      "font-name": "'ComicShannsMono Nerd Font 10'",
       "text-scaling-factor": "1.0"
     },
-    "org.cinnamon.desktop.wm.preferences": {
-      "theme": "'Mint-Y'",
-      "titlebar-font": "'ComicShannsMono Nerd Font 10'"
-    },
+    "org.cinnamon.desktop.wm.preferences": {},
     "org.gnome.desktop.interface": {
-      "toolkit-accessibility": "true",
-      "gtk-theme": "'Mint-Y-Dark-Teal'",
-      "icon-theme": "'Papirus-Dark'",
-      "cursor-theme": "'Bibata-Modern-Classic'",
-      "font-name": "'ComicShannsMono Nerd Font 10'",
-      "monospace-font-name": "'ComicShannsMono Nerd Font 10'",
-      "color-scheme": "'prefer-dark'"
+      "toolkit-accessibility": "true"
     }
   },
   "copyq": {

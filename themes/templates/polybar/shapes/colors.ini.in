@@ -1,0 +1,40 @@
+;; ┌────────────────────────────────────────────────────────────┐
+;; │░█▀█░█▀█░█░░░█░█░█▀▄░█▀█░█▀▄░░░░░░░░░█▀▀░█▀█░█░░░█▀█░█▀▄░█▀▀│
+;; │░█▀▀░█░█░█░░░░█░░█▀▄░█▀█░█▀▄░░░░▀░░░░█░░░█░█░█░░░█░█░█▀▄░▀▀█│
+;; │░▀░░░▀▀▀░▀▀▀░░▀░░▀▀░░▀░▀░▀░▀░░░░▀░░░░▀▀▀░▀▀▀░▀▀▀░▀▀▀░▀░▀░▀▀▀│
+;; │░Created░By░Aditya░Shakya░@adi1090x░░░░░░░░░░░░░░░░░░░░░░░░░│
+;; └────────────────────────────────────────────────────────────┘
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
+
+[color]
+
+;; Use pywal.sh in scripts directory to use colors from an image/wallpaper.
+
+;; Cozy Mint, coordinated with the wallpaper
+; Floating islands: modules sit on sage capsules over a transparent bar
+background = {{colors.surface}}
+bar = #00000000
+ink = {{colors.background}}
+foreground = {{colors.text}}
+foreground-alt = {{colors.muted}}
+
+;; accent colors
+primary = {{colors.primary}}
+accent = {{colors.secondary}}
+muted = {{colors.muted}}
+urgent = {{colors.error}}
+warning = {{colors.warning}}
+separator = {{colors.separator}}
+
+;; Quiet sage groups instead of saturated blue blocks
+shade1 = {{colors.shade1}}
+shade2 = {{colors.surface}}
+shade3 = {{colors.shade3}}
+shade4 = {{colors.shade4}}
+shade5 = {{colors.shade5}}
+shade6 = {{colors.shade6}}
+shade7 = {{colors.shade7}}
+shade8 = {{colors.border}}
+
+;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_

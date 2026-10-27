@@ -27,19 +27,12 @@ virtualization packages, Codex, and Hermes/Ollama, use `./setup.sh apply --extra
 libvirt and adds your user to its group; log out and back in for group changes.
 The desktop setup itself does not install hardware drivers or alter lid policy.
 
-Select **i3** in your login manager after setup. On an existing i3 session, close
-the Eww flyout, reload Eww and Dunst, then restart i3 when convenient:
-
-```sh
-eww -c ~/thomas_config/eww reload
-dunstctl reload
-# Super+Shift+R restarts i3 and launches its desktop components.
-```
-
-Setup does not restart the running desktop or replace its active processes.
-New terminal tabs load the shell configuration. Build installs take effect when
-the relevant program is next launched. Generate the lockscreen image once with
-`betterlockscreen -u ~/thomas_config/wallpapers/hoppers.png`.
+Select **i3** in your login manager after setup. When the selected theme or its
+templates change, setup refreshes supported running desktop components without
+restarting the i3 session. It preserves Battery Saver and the running Conky panel
+selection. Browsers and existing shells are left open; setup reports their
+remaining reload steps. New terminal tabs load the shell configuration. Build
+installs take effect when the relevant program is next launched.
 
 Qt 5 apps such as Flameshot use GTK file dialogs through `qt5-gtk-platformtheme`.
 The setting lives in `profile` so desktop apps inherit it after login. Flameshot's
@@ -89,9 +82,10 @@ file back to its original path. Do not delete an entire config directory.
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
 To save appearance changes made through desktop settings, run `./setup.sh capture`,
-review `git diff`, then commit. Capture reads only the keys already listed in
-`setup/desktop/settings.json`; it does not dump the machine's dconf database.
-GTK files are linked and can be edited directly. Add new packages to their
+review `git diff`, then commit. Capture records the shared GTK selection, font,
+cursor and dark/light preference in the selected theme; unrelated allowlisted
+preferences stay in `setup/desktop/settings.json`. It does not dump dconf.
+Edit theme presets rather than generated GTK files. Add new packages to their
 manifest deliberately. Avoid blindly exporting `apt-mark showmanual`: this Mint
 installation marks thousands of base libraries and old kernels as manual.
 
@@ -101,6 +95,59 @@ APT, Homebrew, Flatpak, and optional development packages track available update
 this restores the workflow and appearance, not a byte-identical OS image.
 The source machine's retired PyPy 3.10 formula is deliberately excluded from
 fresh installs; install a currently supported PyPy separately if needed.
+
+## Desktop themes
+
+[`themes/cozy-mint.toml`](themes/cozy-mint.toml) is the first complete preset and
+the template for new ones. It preserves the existing appearance, including the
+different GTK 2 settings, terminal ANSI colors and Lato lockscreen fonts.
+
+```sh
+cd ~/thomas_config
+theme check                         # read-only check of selected preset and output
+theme apply                         # reapply the preset named by themes/active
+cp themes/cozy-mint.toml themes/halloween.toml
+$EDITOR themes/halloween.toml
+theme check themes/halloween.toml    # preview differences and missing assets
+theme apply themes/halloween.toml
+theme apply themes/cozy-mint.toml    # return to the regular theme
+```
+
+Only Cozy Mint is included. Presets live directly under `themes/`; use filenames
+such as `halloween.toml`. `theme apply FILE` changes the one-line `themes/active`
+selector after successful activation. Commit the preset and selector deliberately
+to share the choice. After pulling on another machine, `apply --configs-only`
+generates and applies that selection. There are no automatic commits or pushes.
+If selected assets are missing, activation stops before changing appearance;
+install them through the existing setup manifests first. Switching downloads
+nothing. `theme check` exits nonzero while generated output differs.
+
+The preset controls colors, wallpaper, fonts, GTK themes, icons, cursors, and
+existing bat/Taskwarrior skin names. Layouts, shortcuts, DPI and power behavior
+stay in the shared configuration. Login-screen and boot themes are outside this
+version. Applications that ignore system themes need their own integration.
+
+Native config paths remain stable through portable symlinks. Their generated
+targets live under `${XDG_STATE_HOME:-~/.local/state}/thomas-config/theme/`;
+`themes/.generated` is a local setup-managed link, excluded from Git. Change
+appearance in TOML and shared app structure in `themes/templates/`, then reapply.
+Do not edit generated files. JSON/shell/Lua palette consumers use the same data.
+Activation validates and stages all output, rolls back failed file writes, and
+reports any remaining app reloads. Separate applications cannot update atomically.
+
+The Neovim bridge is one setup-managed symlink in its existing `lua/plugins/`
+folder, even when Neovim lives in another repository. Keep that installed link
+untracked there; its source belongs to this repository. It reuses AstroTheme
+without changing its lockfile or pinned version. Restart Neovim once after the
+first setup to load the bridge. Later switches refresh on focus or through
+`:DesktopThemeReload`; without generated data the editor keeps its own theme.
+
+Firefox loads generated CSS on its next restart. Brave keeps its existing theme
+folder; reload that theme through `brave://extensions` after switching, or load
+the folder again if needed. Existing shells need a new tab/session for prompt,
+ble.sh and FZF changes. The switcher never restarts these applications. The
+lockscreen image cache rebuilds when wallpaper content changes. Terminal apps
+such as Codex can cache their startup colors; relaunch them if colors stay stale.
 
 ## ChatGPT context shortcuts
 

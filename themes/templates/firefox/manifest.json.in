@@ -1,0 +1,65 @@
+{
+  "manifest_version": 3,
+  "name": "{{name}} Gradient",
+  "version": "1.0.0",
+  "description": "Dark sage, cream text, mint accents and a subtle lavender gradient matching the Cozy Mint desktop.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "cozy-mint-gradient@thomas-config.local",
+      "strict_min_version": "156.0"
+    }
+  },
+  "theme": {
+    "images": {
+      "additional_backgrounds": [
+        { "linear-gradient": "110deg, {{colors.gradient_start}} 0%, {{colors.background}} 55%, {{colors.gradient_end}} 100%" }
+      ]
+    },
+    "colors": {
+      "frame": "{{colors.background}}",
+      "frame_inactive": "{{colors.background}}",
+      "toolbar": "rgba({{rgb.surface}}, 0.84)",
+      "toolbar_text": "{{colors.text}}",
+      "tab_selected": "{{colors.surface}}",
+      "tab_text": "{{colors.primary}}",
+      "tab_background_text": "{{colors.muted}}",
+      "tab_line": "{{colors.primary}}",
+      "tab_loading": "{{colors.secondary}}",
+      "icons": "{{colors.primary}}",
+      "icons_attention": "{{colors.secondary}}",
+      "toolbar_field": "{{colors.background}}",
+      "toolbar_field_text": "{{colors.text}}",
+      "toolbar_field_border": "{{colors.border}}",
+      "toolbar_field_focus": "{{colors.surface}}",
+      "toolbar_field_text_focus": "{{colors.text}}",
+      "toolbar_field_border_focus": "{{colors.secondary}}",
+      "toolbar_field_highlight": "{{colors.border}}",
+      "toolbar_field_highlight_text": "{{colors.text}}",
+      "toolbar_top_separator": "{{colors.border}}",
+      "toolbar_bottom_separator": "{{colors.background}}",
+      "toolbar_vertical_separator": "{{colors.border}}",
+      "button_background_hover": "rgba({{rgb.primary}}, 0.12)",
+      "button_background_active": "rgba({{rgb.primary}}, 0.2)",
+      "popup": "{{colors.surface}}",
+      "popup_text": "{{colors.text}}",
+      "popup_border": "{{colors.border}}",
+      "popup_highlight": "{{colors.border}}",
+      "popup_highlight_text": "{{colors.text}}",
+      "ntp_background": "{{colors.background}}",
+      "ntp_text": "{{colors.text}}",
+      "sidebar": "{{colors.background}}",
+      "sidebar_text": "{{colors.text}}",
+      "sidebar_border": "{{colors.border}}",
+      "sidebar_highlight": "{{colors.border}}",
+      "sidebar_highlight_text": "{{colors.text}}"
+    },
+    "properties": {
+      "additional_backgrounds_alignment": ["right top"],
+      "additional_backgrounds_tiling": ["no-repeat"],
+      "additional_backgrounds_size": ["100% 100%"],
+      "backgrounds_area": "top_toolbars",
+      "color_scheme": "{{mode}}",
+      "content_color_scheme": "{{mode}}"
+    }
+  }
+}

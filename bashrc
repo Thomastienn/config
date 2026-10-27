@@ -394,12 +394,9 @@ rmvenv() {
 }
 
 # bat (cat)
-export BAT_THEME="Monokai Extended"
+# BAT_THEME and FZF_DEFAULT_OPTS come from theme.sh.
 
 # fzf in Cozy Mint; key bindings come from blerc
-export FZF_DEFAULT_OPTS="--height=40% --layout=reverse --border=rounded --info=inline \
---color=fg:#EEE8DC,bg:-1,hl:#A7CCAE,fg+:#EEE8DC,bg+:#272C27,hl+:#A7CCAE \
---color=info:#ABAFA4,prompt:#A7CCAE,pointer:#C0AFD5,marker:#C0AFD5,spinner:#C0AFD5,header:#ABAFA4,border:#5D6D5E,gutter:-1"
 
 # zoxide
 command -v zoxide >/dev/null && eval "$(zoxide init bash)"

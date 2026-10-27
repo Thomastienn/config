@@ -1,6 +1,7 @@
 #!/bin/bash
+source "$HOME/thomas_config/theme.sh"
 
-icon_mute="%{F#ABAFA4}󰖁%{F-}"
+icon_mute="%{F${THEME_MUTED}}󰖁%{F-}"
 
 # Function to get and display status
 get_status() {
@@ -30,9 +31,9 @@ get_status() {
     elif [[ "$player" == *"firefox"* ]] || [[ "$player" == *"chrome"* ]]; then
         icon=""
     else
-        icon="%{F#A7CCAE}%{F-}"
+        icon="%{F${THEME_PRIMARY}}%{F-}"
     fi
-    icon="%{F#A7CCAE}%{F-}"
+    icon="%{F${THEME_PRIMARY}}%{F-}"
 
     # Show play/pause status
     if [ "$player_status" = "Playing" ]; then

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+source "$HOME/thomas_config/theme.sh"
 
 # Keyboard layout display with error handling
 
@@ -12,7 +13,7 @@ fi
 
 case $engine in
     Unikey)
-        echo "%{F#C0AFD5}VI%{F-}"
+        echo "%{F${THEME_SECONDARY}}VI%{F-}"
         ;;
     *us*)
         echo "US"

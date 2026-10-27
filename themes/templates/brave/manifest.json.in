@@ -1,0 +1,28 @@
+{
+  "manifest_version": 3,
+  "name": "{{name}}",
+  "version": "1.0.0",
+  "description": "Dark sage surfaces, cream text, and mint accents matching the Cozy Mint desktop palette.",
+  "theme": {
+    "colors": {
+      "frame": [{{rgb.background}}],
+      "frame_inactive": [{{rgb.background}}],
+      "background_tab": [{{rgb.background}}],
+      "background_tab_inactive": [{{rgb.background}}],
+      "toolbar": [{{rgb.surface}}],
+      "toolbar_text": [{{rgb.text}}],
+      "toolbar_button_icon": [{{rgb.primary}}],
+      "tab_text": [{{rgb.primary}}],
+      "tab_background_text": [{{rgb.muted}}],
+      "tab_background_text_inactive": [{{rgb.muted}}],
+      "bookmark_text": [{{rgb.text}}],
+      "omnibox_background": [{{rgb.background}}],
+      "omnibox_text": [{{rgb.text}}],
+      "button_background": [{{rgb.surface}}],
+      "ntp_background": [{{rgb.background}}],
+      "ntp_text": [{{rgb.text}}],
+      "ntp_link": [{{rgb.primary}}],
+      "ntp_header": [{{rgb.secondary}}]
+    }
+  }
+}

@@ -1,0 +1,58 @@
+# Copy this complete preset, edit it, then run: theme apply themes/your-name.toml
+name = "Cozy Mint"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#191B19"
+surface = "#272C27"
+text = "#EEE8DC"
+muted = "#ABAFA4"
+primary = "#A7CCAE"
+secondary = "#C0AFD5"
+warning = "#DEC28A"
+error = "#DBA0AA"
+border = "#46534A"
+separator = "#5D6D5E"
+selection = "#403849"
+urgent_background = "#3A2730"
+pane_border = "#2E352F"
+gradient_start = "#233028"
+gradient_end = "#2D2934"
+menu_text = "#FFFFFF"
+panel_separator = "#5C6370"
+shade1 = "#222622"
+shade3 = "#2C322C"
+shade4 = "#303730"
+shade5 = "#354035"
+shade6 = "#3A453A"
+shade7 = "#3F4A3F"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Grey"
+gtk3 = "Mint-Y-Dark-Teal"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#191B19", "#E46A78", "#98BC6D", "#E5C283",
+  "#7EB3C9", "#957FB8", "#7EB3C9", "#EEE8DC",
+  "#46534A", "#EC818C", "#9EC967", "#F1C982",
+  "#7BC2DF", "#A98FD2", "#7BC2DF", "#F6F0E7",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"
