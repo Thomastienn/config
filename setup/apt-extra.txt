@@ -3,6 +3,8 @@ bridge-utils
 cpu-checker
 latexmk
 libatomic1
+libvirt-clients
+libvirt-daemon-system
 maven
 openjdk-21-jdk
 qemu-system-x86

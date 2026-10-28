@@ -1,6 +1,8 @@
 # Desktop runtime and installer prerequisites. Mint 22 / Ubuntu 24.04+ (X11).
 at-spi2-core
+alsa-utils
 bash-completion
+bc
 brightnessctl
 build-essential
 ca-certificates
@@ -25,6 +27,7 @@ git
 git-lfs
 i3
 ibus-unikey
+i3lock
 imagemagick
 jq
 kdenlive
@@ -34,6 +37,7 @@ libglib2.0-bin
 lm-sensors
 lxappearance
 mesa-utils
+mpc
 nemo
 network-manager
 nvidia-prime
@@ -85,6 +89,8 @@ libdbusmenu-gtk3-dev
 libepoxy-dev
 libev-dev
 libgdk-pixbuf-2.0-dev
+libgif-dev
+libgl1-mesa-dev
 libglib2.0-dev
 libgtk-3-dev
 libjpeg-dev
@@ -120,5 +126,6 @@ libxrandr-dev
 libxss-dev
 meson
 ninja-build
+nim
 uthash-dev
 fonts-lato

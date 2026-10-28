@@ -116,7 +116,7 @@ exec --no-startup-id xidlehook \
 exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 
 # ActivityWatch
-exec --no-startup-id ~/Downloads/activitywatch/aw-qt
+exec --no-startup-id aw-qt
 exec --no-startup-id copyq
 
 # ================================================================
@@ -183,7 +183,7 @@ bindsym $mod+Shift+v exec virt-manager
 
 # Zooming
 # shortcut: Screen magnifier
-bindsym $mod+z exec --no-startup-id ~/tools/boomer/boomer
+bindsym $mod+z exec --no-startup-id boomer
 
 # ================================================================
 # VIM-STYLE NAVIGATION

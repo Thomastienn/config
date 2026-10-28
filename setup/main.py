@@ -7,6 +7,7 @@ from datetime import datetime
 import json
 import os
 from pathlib import Path
+import pwd
 import re
 import shlex
 import shutil
@@ -42,6 +43,33 @@ def output(args):
 def lines(name):
     return [line.split("#", 1)[0].strip() for line in (ROOT / name).read_text().splitlines()
             if line.split("#", 1)[0].strip()]
+
+
+def choices():
+    path = STATE / "choices.json"
+    saved = json.loads(path.read_text()) if path.exists() else {}
+    if not isinstance(saved, dict) or any(key not in ("nvim", "extras") or type(value) is not bool
+                                          for key, value in saved.items()):
+        raise ValueError(f"Invalid setup choices: {path}")
+    return {"nvim": True, "extras": True, **saved}
+
+
+def select_choices(args):
+    selected = choices()
+    for name, question in [("nvim", "Load Neovim configuration and Python tools?"),
+                           ("extras", "Install development, AI and virtualization tools?")]:
+        value = getattr(args, name)
+        if value is None and not args.yes and sys.stdin.isatty():
+            default = selected[name]
+            while True:
+                answer = input(f"{question} {'[Y/n]' if default else '[y/N]'} ").strip().lower()
+                if answer in ("", "y", "yes", "n", "no"):
+                    value = default if not answer else answer in ("y", "yes")
+                    break
+                print("Enter y or n.")
+        if value is not None:
+            selected[name] = value
+    return selected
 
 
 def backup(path):
@@ -80,7 +108,12 @@ def link(source, target, apply=True):
 def configured_links():
     yield REPO, HOME / "thomas_config"
     for source, target in json.loads((ROOT / "links.json").read_text()).items():
+        if not choices()["extras"] and source.startswith(("codex/", "hermes/")):
+            continue
         yield REPO / source, HOME / target
+    activitywatch = HOME / ".local/opt/activitywatch/aw-qt"
+    if activitywatch.is_file():
+        yield activitywatch, HOME / ".local/bin/aw-qt"
     # Keep this a real directory: systemctl writes enablement links below it.
     for source in sorted((REPO / "systemd/user").iterdir()):
         if source.suffix in (".service", ".timer"):
@@ -88,7 +121,7 @@ def configured_links():
     # Fresh setup can link nvim to its source checkout; never replace that parent.
     nvim = (HOME / ".config/nvim").resolve()
     loader = nvim / "lua/lazy_setup.lua"
-    if (nvim.is_relative_to(HOME) and loader.is_file() and 'import = "plugins"' in loader.read_text()
+    if (choices()["nvim"] and nvim.is_relative_to(HOME) and loader.is_file() and 'import = "plugins"' in loader.read_text()
             and 'AstroNvim/AstroNvim' in loader.read_text() and (nvim / "lua/plugins").is_dir()
             and not any((nvim / p).is_symlink() for p in ["lua", "lua/plugins"])):
         yield REPO / "themes/nvim.lua", nvim / "lua/plugins/zz-desktop-theme.lua"
@@ -125,9 +158,10 @@ def apply_links():
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         directory.chmod(0o700)
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
-    codex.configuration(HOME, backup)
-    hermes.configuration(HOME, backup)
-    if not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
+    if choices()["extras"]:
+        codex.configuration(HOME, backup)
+        hermes.configuration(HOME, backup)
+    if choices()["nvim"] and not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
         print("Pending: Neovim theme bridge needs the managed AstroNvim configuration.")
 
 
@@ -236,8 +270,11 @@ def packages(extras):
     if not brew.exists():
         installer = CACHE / "homebrew-install.sh"
         run(["curl", "-fL", "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh", "-o", installer])
-        run(["bash", installer])
+        run(["sudo", "-v"])
+        run(["bash", installer], env=dict(os.environ, NONINTERACTIVE="1"))
     run([brew, "bundle", "install", "--no-upgrade", f"--file={REPO / 'Brewfile'}"])
+    if extras:
+        run([brew, "bundle", "install", "--no-upgrade", f"--file={ROOT / 'Brewfile-extra'}"])
     # The desktop's Brave shortcut needs its official repository on a fresh host.
     if not shutil.which("brave-browser"):
         key = CACHE / "brave-browser-archive-keyring.gpg"
@@ -256,12 +293,14 @@ def packages(extras):
 
 
 def check():
-    gaps = power.check() + codex.configuration(HOME) + hermes.configuration(HOME)
+    gaps = power.check()
+    if choices()["extras"]:
+        gaps += codex.configuration(HOME) + hermes.configuration(HOME)
     gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
-                    "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "recollq", "brave-browser"]:
+                    "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser"]:
         if not shutil.which(command):
             gaps.append("command: " + command)
     for command, revision in [("picom", "v12.5"), ("dunst", "1.13"), ("eww", "fddb4a09")]:
@@ -273,7 +312,8 @@ def check():
     try:
         installed = output(["dpkg-query", "-W", "-f=${binary:Package}\t${db:Status-Status}\n"])
         names = {row.split("\t")[0].split(":")[0] for row in installed.splitlines() if row.endswith("\tinstalled")}
-        gaps.extend("apt: " + name for name in lines("apt.txt") if name not in names)
+        desired_apt = lines("apt.txt") + (lines("apt-extra.txt") if choices()["extras"] else [])
+        gaps.extend("apt: " + name for name in desired_apt if name not in names)
         installed_apps = output(["flatpak", "list", "--app", "--columns=application"]).splitlines()
         gaps.extend("flatpak: " + app for app in lines("flatpaks.txt") if app not in installed_apps)
     except (OSError, subprocess.SubprocessError):
@@ -283,6 +323,8 @@ def check():
         installed = {name for formula in formulas
                      for name in [formula["name"], formula["full_name"], *formula.get("aliases", []), *formula.get("oldnames", [])]}
         desired = re.findall(r'^brew "([^"]+)"', (REPO / "Brewfile").read_text(), re.M)
+        if choices()["extras"]:
+            desired += re.findall(r'^brew "([^"]+)"', (ROOT / "Brewfile-extra").read_text(), re.M)
         gaps.extend("brew: " + name for name in desired if name not in installed)
     except (OSError, subprocess.SubprocessError):
         gaps.append("Homebrew inventory unavailable")
@@ -327,17 +369,24 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", nargs="?", default="plan", choices=["plan", "apply", "link", "check", "capture"])
     parser.add_argument("--configs-only", action="store_true", help="skip packages, source builds and fonts")
-    parser.add_argument("--extras", action="store_true", help="also install development tools, Codex skills/plugins, Hermes/Ollama and virtualization")
+    parser.add_argument("--nvim", action=argparse.BooleanOptionalAction, default=None,
+                        help="load Neovim config and Python tools (prompt defaults to yes)")
+    parser.add_argument("--extras", action=argparse.BooleanOptionalAction, default=None,
+                        help="install development/AI/virtualization tools (prompt defaults to yes)")
+    parser.add_argument("-y", "--yes", action="store_true", help="accept saved/default optional choices without prompting")
     parser.add_argument("--graphics", choices=["on-demand", "nvidia"],
                         help="explicitly select a PRIME profile during apply; activate at the next login")
     args = parser.parse_args()
     if args.graphics and args.command != "apply":
         parser.error("--graphics requires apply")
+    if (args.nvim is not None or args.extras is not None or args.yes) and (args.command != "apply" or args.configs_only):
+        parser.error("optional installation choices require full apply (without --configs-only)")
     if args.command == "plan":
         print("Target: Mint 22 / Ubuntu 24.04+, i3 on X11. Run as your normal user.")
         print("apply: APT + Brewfile + Flatpak apps, pinned desktop builds/fonts, links, desktop settings, user services.")
         print("apply --configs-only: links, desktop settings and services after a Git pull.")
-        print("apply --extras: also restore development tools, Codex skills/plugins, Hermes/Ollama and virtualization.")
+        print("apply asks about Neovim config and development/AI tools; both default to yes.")
+        print("Use --no-nvim / --no-extras to opt out, or --yes to accept saved/default choices.")
         print("link: only files/symlinks, no installations or session changes. Conflicts are backed up.")
         print("check: read-only differences. capture: refresh only allowlisted desktop settings.")
         print("No desktop restart. Browser sign-in/theme installation and hardware drivers remain manual.")
@@ -351,29 +400,32 @@ def main():
         print("Captured allowlisted desktop preferences. Review git diff before committing.")
         return 0
     if not args.configs_only and args.command == "apply":
+        selected = select_choices(args)
         CACHE.mkdir(parents=True, exist_ok=True)
         # Make freshly installed tools available to build steps without sourcing interactive bashrc.
         os.environ["PATH"] = f"{HOME}/.local/bin:{HOME}/.cargo/bin:/home/linuxbrew/.linuxbrew/bin:" + os.environ["PATH"]
-        packages(args.extras)
-        if args.extras:
+        packages(selected["extras"])
+        if selected["nvim"]:
             python = HOME / ".virtualenvs/neovim/bin/python"
             if not python.exists():
                 run(["/usr/bin/python3", "-m", "venv", python.parents[1]])
             run([python, "-m", "pip", "install", "-r", ROOT / "neovim-requirements.txt"])
+        if selected["extras"]:
             run(["npm", "install", "-g", *lines("npm-extra.txt")])
             run(["cargo", "install", "--locked", "code-minimap", "--version", "0.6.8"])
             run(["sudo", "systemctl", "enable", "--now", "libvirtd"])
-            run(["sudo", "usermod", "-aG", "libvirt", os.environ["USER"]])
-        tools.install(HOME, CACHE, link)
+            run(["sudo", "usermod", "-aG", "libvirt", pwd.getpwuid(os.getuid()).pw_name])
+        tools.install(HOME, CACHE, link, nvim=selected["nvim"])
         tools.assets(HOME, CACHE)
-        if args.extras:
+        if selected["extras"]:
             hermes.install(HOME, CACHE, run)
+        theme.atomic(STATE / "choices.json", (json.dumps(selected, indent=2) + "\n").encode())
     refresh_theme = bool(theme.check() + theme.bridge(check=True)) or theme.needs_activation()
     if args.command == "apply":
         theme.assets(theme.load()[0])
     apply_links()
     if args.command == "apply":
-        if args.extras and not args.configs_only:
+        if choices()["extras"] and not args.configs_only:
             codex.install(HOME, run)
         power.install(run)
         if args.graphics:

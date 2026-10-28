@@ -7,23 +7,30 @@
   },
   {
     "name": "mint-themes",
-    "url": "https://packages.linuxmint.com/pool/main/m/mint-themes/mint-themes_2.3.2_all.deb",
+    "url": "https://mirrors.edge.kernel.org/linuxmint-packages/pool/main/m/mint-themes/mint-themes_2.3.2_all.deb",
     "sha256": "8651c4cf8793e833386c56cf865dbbf59d3e4a2b13282d38655b913bf6c6a52c",
     "kind": "themes",
     "installed": "Mint-Y-Dark-Teal"
   },
   {
     "name": "mint-cursor-themes",
-    "url": "https://packages.linuxmint.com/pool/main/m/mint-cursor-themes/mint-cursor-themes_1.0.2_all.deb",
+    "url": "https://mirrors.edge.kernel.org/linuxmint-packages/pool/main/m/mint-cursor-themes/mint-cursor-themes_1.0.2_all.deb",
     "sha256": "a0058085cdf5bcedf9698c91efa82a36179b95ef83af2a64b67639a5066cf020",
     "kind": "icons",
     "installed": "Bibata-Modern-Classic"
   },
   {
     "name": "mint-y-icons",
-    "url": "https://packages.linuxmint.com/pool/main/m/mint-y-icons/mint-y-icons_1.8.6_all.deb",
+    "url": "https://mirrors.edge.kernel.org/linuxmint-packages/pool/main/m/mint-y-icons/mint-y-icons_1.8.6_all.deb",
     "sha256": "ae6bf95f0b37c4736d4d37b696a34415a56755df294700a42935038f56ea802a",
     "kind": "icons",
     "installed": "Mint-Y-Blue"
+  },
+  {
+    "name": "activitywatch",
+    "url": "https://github.com/ActivityWatch/activitywatch/releases/download/v0.13.2/activitywatch-v0.13.2-linux-x86_64.zip",
+    "sha256": "8f62b10babf8a8f108cbdf7267c02fbc1ce2a970fa9535f230b3416b803e3360",
+    "kind": "app",
+    "command": "aw-qt"
   }
 ]

@@ -56,9 +56,9 @@ case $chosen in
         fi
         ;;
     $lock)
-		if [[ -f /usr/bin/betterlockscreen || -f /usr/local/bin/betterlockscreen ]]; then
+		if command -v betterlockscreen >/dev/null 2>&1; then
 			betterlockscreen --lock dimblur
-		elif [[ -f /usr/bin/i3lock ]]; then
+		elif command -v i3lock >/dev/null 2>&1; then
 			i3lock
 		fi
         ;;

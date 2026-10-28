@@ -7,6 +7,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import tarfile
+import zipfile
 
 
 ROOT = Path(__file__).resolve().parent
@@ -31,7 +32,7 @@ def checkout(name, spec, cache):
     return path
 
 
-def install(home, cache, link):
+def install(home, cache, link, nvim=True):
     prefix = home / ".local"
     binaries = prefix / "bin"
     binaries.mkdir(parents=True, exist_ok=True)
@@ -40,11 +41,13 @@ def install(home, cache, link):
     markers.mkdir(parents=True, exist_ok=True)
     outputs = {"picom": binaries / "picom", "dunst": binaries / "dunst", "eww": binaries / "eww",
                "blesh": prefix / "share/blesh/ble.sh", "i3lock-color": binaries / "i3lock",
-               "betterlockscreen": binaries / "betterlockscreen"}
+               "betterlockscreen": binaries / "betterlockscreen", "boomer": binaries / "boomer"}
     for name, spec in specs.items():
         if spec.get("kind") in ("skills", "hermes"):
             continue  # Optional assistant tools/skills are installed with --extras.
         if name == "nvim":
+            if not nvim:
+                continue
             target = home / ".config/nvim"
             if target.exists() or target.is_symlink():
                 print(f"Keep existing Neovim repository: {target}")
@@ -83,6 +86,9 @@ def install(home, cache, link):
         elif name == "betterlockscreen":
             shutil.copy2(source / "betterlockscreen", output)
             output.chmod(0o755)
+        elif name == "boomer":
+            run(["nimble", "build", "-y"], cwd=source)
+            shutil.copy2(source / "boomer", output)
         else:
             link(source, output)
         marker.write_text(spec["rev"])
@@ -94,16 +100,32 @@ def install(home, cache, link):
 
 def assets(home, cache):
     for spec in json.loads((ROOT / "assets.json").read_text()):
-        destination = home / ".local/share" / spec["kind"] / spec.get("installed", spec["name"])
+        if spec["kind"] in ("themes", "icons") and (Path("/usr/share") / spec["kind"] / spec["installed"]).is_dir():
+            continue  # Mint's APT packages already supply these assets.
+        destination = (home / ".local/opt" / spec["name"] if spec["kind"] == "app"
+                       else home / ".local/share" / spec["kind"] / spec.get("installed", spec["name"]))
         marker = cache / (spec["name"] + ".sha256")
-        if destination.exists() and marker.exists() and marker.read_text() == spec["sha256"]:
+        installed = destination / spec["command"] if spec["kind"] == "app" else destination
+        if installed.exists() and marker.exists() and marker.read_text() == spec["sha256"]:
             continue
         archive = cache / Path(spec["url"]).name
         if not archive.exists() or hashlib.sha256(archive.read_bytes()).hexdigest() != spec["sha256"]:
-            run(["curl", "-fL", "--retry", "2", spec["url"], "-o", archive])
+            run(["curl", "-fL", "--connect-timeout", "15", "--max-time", "300", "--retry", "2", spec["url"], "-o", archive])
         if hashlib.sha256(archive.read_bytes()).hexdigest() != spec["sha256"]:
             raise RuntimeError(f"Checksum mismatch: {archive}")
-        if spec["kind"] == "fonts":
+        if spec["kind"] == "app":
+            with zipfile.ZipFile(archive) as bundle:
+                for member in bundle.infolist():
+                    path = Path(member.filename)
+                    if path.is_absolute() or ".." in path.parts or path.parts[0] != spec["name"]:
+                        raise RuntimeError(f"Unsafe application archive path: {path}")
+                bundle.extractall(destination.parent)
+                for member in bundle.infolist():
+                    if member.external_attr >> 16 & 0o111:
+                        (destination.parent / member.filename).chmod(0o755)
+            if not (destination / spec["command"]).is_file():
+                raise RuntimeError(f"Application archive is missing {spec['command']}")
+        elif spec["kind"] == "fonts":
             destination.mkdir(parents=True, exist_ok=True)
             with tarfile.open(archive) as font_archive:
                 for member in font_archive.getmembers():
