@@ -68,7 +68,9 @@ xauth
 xclip
 xdg-utils
 xdotool
+xfconf
 xinput
+xss-lock
 xz-utils
 zathura
 zathura-pdf-poppler

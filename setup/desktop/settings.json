@@ -8,6 +8,11 @@
       "toolkit-accessibility": "true"
     }
   },
+  "xfconf": {
+    "xfce4-power-manager": {
+      "/xfce4-power-manager/lock-command": "betterlockscreen --lock dimblur"
+    }
+  },
   "copyq": {
     "maxitems": "200",
     "check_selection": "false",

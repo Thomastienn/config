@@ -149,6 +149,15 @@ ble.sh and FZF changes. The switcher never restarts these applications. The
 lockscreen image cache rebuilds when wallpaper content changes. Terminal apps
 such as Codex can cache their startup colors; relaunch them if colors stay stale.
 
+Manual locking, idle locking, and lid/suspend locking use Betterlockscreen with
+the selected preset. Setup records XFCE's lock command; i3 starts `xss-lock` to
+lock before sleep. After pulling this change, run `./setup.sh apply --configs-only`;
+an existing session's old `xss-lock` command needs a logout/login to be replaced.
+
+For isolated setup/theme checks, copy the repository into the temporary directory
+as well as using an isolated home. Its `themes/.generated` link belongs to that
+checkout; repointing the live checkout at temporary state can break the next login.
+
 ## ChatGPT context shortcuts
 
 Keep a signed-in ChatGPT chat open in the Firefox scratchpad (`Super+G`). These

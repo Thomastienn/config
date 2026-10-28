@@ -68,5 +68,17 @@ lockargs=(
     --layout-align=0
 )
 
+# Let i3lock release the sleep inhibitor when ready; keep postlock until unlock.
+if [[ -n ${XSS_SLEEP_LOCK_FD:-} ]]; then
+    lock_with_sleep_inhibitor() {
+        exec "$@" &
+        local locker_pid=$!
+        exec {XSS_SLEEP_LOCK_FD}<&-
+        wait "$locker_pid"
+    }
+    i3lock() { lock_with_sleep_inhibitor i3lock "$@"; }
+    i3lock-color() { lock_with_sleep_inhibitor i3lock-color "$@"; }
+fi
+
 # Wallpaper for: betterlockscreen --update "$wallpaper"
 wallpaper={{wallpaper_shell}}

@@ -52,6 +52,10 @@ def backup(path):
 
 
 def link(source, target, apply=True):
+    if not source.exists():
+        if apply:
+            raise FileNotFoundError(f"Missing configuration source: {source}")
+        return [f"{target.relative_to(HOME)} (missing source: {source})"]
     if target.resolve() == source.resolve():
         return []
     if source.is_dir() and target.is_dir() and not target.is_symlink():
@@ -150,6 +154,19 @@ def settings(capture=False):
                     captured.setdefault(schema, {})[key] = values[key]
             else:
                 run(["/usr/bin/gsettings", "set", schema, key, value])
+    if Path("/usr/bin/xfconf-query").is_file() and os.environ.get("DBUS_SESSION_BUS_ADDRESS"):
+        for channel, values in data["xfconf"].items():
+            for key, value in values.items():
+                args = ["/usr/bin/xfconf-query", "-c", channel, "-p", key]
+                if capture:
+                    try:
+                        values[key] = output(args)
+                    except subprocess.SubprocessError:
+                        print(f"Could not capture XFCE {key}; kept recorded value.")
+                else:
+                    run([*args, "-n", "-t", "string", "-s", value])
+    else:
+        print("Pending: XFCE lock command needs xfconf and a user session.")
     if capture:
         theme.capture_settings(captured, codex.toml_text)
         for schema, values in appearance.items():
@@ -244,7 +261,7 @@ def check():
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
-                    "copyq", "tesseract", "xidlehook", "xidlehook-client", "betterlockscreen", "recollq", "brave-browser"]:
+                    "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "recollq", "brave-browser"]:
         if not shutil.which(command):
             gaps.append("command: " + command)
     for command, revision in [("picom", "v12.5"), ("dunst", "1.13"), ("eww", "fddb4a09")]:
@@ -290,6 +307,9 @@ def check():
             if schema in schemas:
                 gaps.extend(f"setting: {schema} {key}" for key, value in values.items()
                             if output(["/usr/bin/gsettings", "get", schema, key]) != value)
+        for channel, values in data["xfconf"].items():
+            gaps.extend(f"setting: {channel} {key}" for key, value in values.items()
+                        if output(["/usr/bin/xfconf-query", "-c", channel, "-p", key]) != value)
         if os.environ.get("DISPLAY"):
             for key, value in data["copyq"].items():
                 actual = output(["copyq", "config", key])

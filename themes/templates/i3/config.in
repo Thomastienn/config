@@ -46,6 +46,7 @@ bindsym Ctrl+Print exec env QT_QPA_PLATFORMTHEME=gtk3 flameshot screen -c
 # LOCKSCREEN
 # ================================================================
 # exec --no-startup-id betterlockscreen -w dim
+exec --no-startup-id xss-lock --transfer-sleep-lock -- betterlockscreen --lock dimblur
 
 # ================================================================
 # KEYBOARD
