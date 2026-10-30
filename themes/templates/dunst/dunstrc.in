@@ -54,6 +54,7 @@
     dmenu = /usr/bin/rofi -dmenu -p dunst:
     browser = /usr/bin/brave
     always_run_script = true
+    script = "$HOME/thomas_config/scripts/notification-app-record.sh"
     title = Dunst
     class = Dunst
     ignore_dbusclose = false

@@ -56,17 +56,18 @@ close() { "${EWW[@]}" close-all 2>/dev/null; }
 
 case $1 in
     status) status ;;
-    toggle)
+    toggle|controls)
         # Start immediately: client commands otherwise each retry a missing daemon for a second.
         "${EWW[@]}" daemon >/dev/null 2>&1 || exit 1
-        if "${EWW[@]}" active-windows 2>/dev/null | grep -q '^flyout'; then close
+        if "${EWW[@]}" active-windows 2>/dev/null | grep -q '^flyout'; then
+            if [[ $1 == controls ]]; then "${EWW[@]}" update qs_page=0; else close; fi
         else
             close
             "${EWW[@]}" open closer && "${EWW[@]}" update qs_page=0 &&
                 "${EWW[@]}" open flyout --arg panel_height="$(panel_height)" &&
                 raise_flyout
         fi ;;
-    page) [[ $2 =~ ^[0-2]$ ]] || exit 2; "${EWW[@]}" update qs_page="$2" ;;
+    page) [[ $2 =~ ^[0-3]$ ]] || exit 2; "${EWW[@]}" update qs_page="$2" ;;
     close) close ;;
     mic) pactl set-source-mute @DEFAULT_SOURCE@ toggle; polybar-msg action microphone hook 0 >/dev/null 2>&1 ;;
     kbd) "$PB/keyboard-switch.sh" >/dev/null 2>&1 ;;
@@ -74,6 +75,7 @@ case $1 in
     battery) /usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" toggle >/dev/null ;;
     wifi) close; setsid -f kitty -e nmtui >/dev/null 2>&1 ;;
     timer) close; setsid -f /usr/bin/python3 "$HOME/thomas_config/scripts/polybar-timer.py" menu >/dev/null 2>&1 ;;
+    apps-search) setsid -f /usr/bin/python3 "$HOME/thomas_config/scripts/desktop-controls.py" pick-app >/dev/null 2>&1 ;;
     updates) close; setsid -f exo-open --launch TerminalEmulator >/dev/null 2>&1 ;;
     vol) pactl set-sink-volume @DEFAULT_SINK@ "$(num "${2%.*}")%" ;;
     mute) pactl set-sink-mute @DEFAULT_SINK@ toggle ;;
@@ -81,5 +83,5 @@ case $1 in
     bright) b=$(num "${2%.*}"); "${backlight[@]}" -q s "$(( b < 5 ? 5 : b ))%" ;;
     prev|next) playerctl "$1" ;;
     play) playerctl play-pause ;;
-    *) echo "usage: $0 status|toggle|close|page N|mic|kbd|hz|battery|wifi|timer|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
+    *) echo "usage: $0 status|toggle|controls|close|page N|mic|kbd|hz|battery|wifi|timer|apps-search|updates|vol N|mute|bright N|prev|play|next" >&2; exit 1 ;;
 esac

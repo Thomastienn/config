@@ -6,7 +6,7 @@
 (defvar qs_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
 (defpoll desktop :interval "1s"
-  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"dnd":false,"dnd_available":false,"notifications":[],"history_available":false}'
+  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"dnd":false,"dnd_available":false,"apps":[],"apps_available":false,"apps_editable":false,"apps_error":"Loading apps…","allowed_count":0,"notifications":[],"history_available":false}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
@@ -70,6 +70,35 @@
 (defwidget settings-tab [text index]
   (button :class "settings-tab ${qs_page == index ? 'selected' : ''}" :onclick "${qs_cmd} page ${index}" text))
 
+(defwidget allowed-apps []
+  (box :orientation "v" :space-evenly false :spacing 20
+    (box :space-evenly false :spacing 12
+      (button :class "compact-btn" :tooltip "Back to Controls" :onclick "${qs_cmd} page 0" "")
+      (label :class "section-label" :hexpand true :xalign 0 :text "Allowed apps"))
+    (label :class "muted" :xalign 0 :wrap true :width 480
+           :text "Selected apps can interrupt Do not disturb. Changes save immediately.")
+    (button :class "compact-btn" :active {desktop.apps_editable && arraylength(desktop.apps) > 0}
+            :onclick "${qs_cmd} apps-search" "  Search apps…")
+    (label :visible {desktop.dnd_available && !desktop.apps_editable} :class "muted" :xalign 0 :wrap true :width 480
+           :text "Notifications are paused. Resume them before changing app exceptions.")
+    (label :visible {!desktop.apps_available} :class "muted" :xalign 0 :wrap true :width 480 :text {desktop.apps_error})
+    (label :visible {desktop.apps_available && arraylength(desktop.apps) == 0}
+           :class "muted" :xalign 0 :wrap true :width 480
+           :text "Apps appear here after sending a notification.")
+    (box :orientation "v" :space-evenly false :spacing 10
+      (for app in {desktop.apps}
+        (button :timeout "10s" :class "device ${app.allowed ? 'selected' : ''}"
+                :active {desktop.dnd_available && desktop.apps_available && desktop.apps_editable}
+                :tooltip "${app.name}: ${app.allowed ? 'allowed during DND' : 'silenced during DND'}"
+                :onclick "${desktop_cmd} allow-app ${app.id}"
+          (box :space-evenly false :spacing 12
+            (label :width 24 :text {app.allowed ? "☑" : "☐"})
+            (label :visible {arraylength(app.icons) == 0} :width 24 :text "")
+            (for icon in {app.icons}
+              (image :path icon :image-width 24 :image-height 24))
+            (label :hexpand true :xalign 0 :limit-width 25 :tooltip {app.name} :text {app.name})
+            (label :text {app.allowed ? "Allowed" : "Silenced"})))))))
+
 (defwidget quick-controls []
   (box :orientation "v" :space-evenly false :spacing 24
     (slider-row :icon {qs.vol_muted ? "" : ""} :text {qs.vol_muted ? "Volume · muted" : "Volume"}
@@ -89,13 +118,16 @@
         (tile :icon "" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
         (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
               :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")))
-    (button :timeout "10s" :class "afk-toggle ${desktop.dnd ? 'afk-on' : ''}"
-            :tooltip "Hide all notification popups, including critical alerts. Keep them in History."
-            :active {desktop.dnd_available} :onclick "${desktop_cmd} dnd"
-      (box :space-evenly false :spacing 12
-        (label :width 24 :text {desktop.dnd ? "" : ""})
-        (label :hexpand true :xalign 0 :text "Do not disturb")
-        (label :text {desktop.dnd_available ? (desktop.dnd ? "On" : "Off") : "Unavailable"})))
+    (box :space-evenly false :spacing 10
+      (button :timeout "10s" :hexpand true :class "afk-toggle ${desktop.dnd ? 'afk-on' : ''}"
+              :tooltip "Silence notifications except allowed apps. Keep silenced notifications in History."
+              :active {desktop.dnd_available} :onclick "${desktop_cmd} dnd"
+        (box :space-evenly false :spacing 12
+          (label :width 24 :text {desktop.dnd ? "" : ""})
+          (label :hexpand true :xalign 0 :text "Do not disturb")
+          (label :text {desktop.dnd_available ? (desktop.dnd ? (desktop.allowed_count > 0 ? "On · ${desktop.allowed_count} allowed" : "On") : "Off") : "Unavailable"})))
+      (button :class "compact-btn" :tooltip "Choose apps allowed during Do not disturb"
+              :onclick "${qs_cmd} page 3" ""))
     (button :timeout "1m" :class "afk-toggle ${qs.battery.enabled ? 'afk-on' : ''}"
             :tooltip {qs.battery.detail} :active {qs.battery.available}
             :onclick "${qs_cmd} battery"
@@ -131,7 +163,8 @@
     (stack :selected qs_page :transition "none" :same-size false :vexpand true
       (scroll :vexpand true :hscroll false (quick-controls))
       (scroll :vexpand true :hscroll false (audio-devices))
-      (scroll :vexpand true :hscroll false (notification-history)))
+      (scroll :vexpand true :hscroll false (notification-history))
+      (scroll :vexpand true :hscroll false (allowed-apps)))
     (box :class "footer" :space-evenly false :spacing 12
       (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
       (button :class "footer-btn" :onclick "${qs_cmd} updates" {updates}))))

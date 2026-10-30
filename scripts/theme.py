@@ -411,7 +411,7 @@ def reload_desktop(data):
     if processes("polybar"):
         success = command(["polybar-msg", "cmd", "restart"]) and success
     if processes("dunst"):
-        success = command(["dunstctl", "reload"]) and success
+        success = command(["/usr/bin/python3", REPO / "scripts/desktop-controls.py", "reload-dnd"]) and success
     if processes("eww"):
         success = command(["eww", "-c", REPO / "eww", "reload"]) and success
     if shutil.which("tmux") and subprocess.run(["tmux", "has-session"], capture_output=True).returncode == 0:

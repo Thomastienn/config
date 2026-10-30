@@ -386,6 +386,20 @@ label = " %percentage%% "
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 
+[module/dnd]
+type = custom/script
+exec = /usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py watch-dnd
+tail = true
+format = <label>
+format-prefix = "%{T4}%{T-}"
+format-prefix-foreground = ${color.warning}
+format-suffix = "%{T4}%{T-}%{O6}"
+format-suffix-foreground = ${color.warning}
+format-background = ${color.bar}
+label-background = ${color.warning}
+label-foreground = ${color.ink}
+click-left = /usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py dnd
+
 [module/afk]
 type = custom/ipc
 hook-0 = /usr/bin/python3 $HOME/thomas_config/scripts/afk.py bar

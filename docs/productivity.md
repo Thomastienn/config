@@ -8,7 +8,8 @@ cd ~/thomas_config
 ```
 
 Reload Eww when its flyout is closed:
-`eww -c ~/thomas_config/eww reload`. Reload notification rules with `dunstctl reload`.
+`eww -c ~/thomas_config/eww reload`. Reload notification rules and preserve DND with
+`/usr/bin/python3 ~/thomas_config/scripts/desktop-controls.py reload-dnd`.
 The installer starts only the PDF indexing timer; the AFK service runs on demand.
 
 ## PDF contents

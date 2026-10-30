@@ -38,9 +38,16 @@ Ollama model downloads stay local.
 
 `Super+Enter`: terminal · `Super+D`: launcher · `Super+F1`: shortcut finder.
 Click Polybar controls for audio, network, battery saver and timer.
-Eww **Controls → Do not disturb** hides all notification popups, including critical
-alerts, and keeps the latest 30 in **History**. Turning it off restores new popups
-without replaying missed ones. Dunst restart or rule reload resets it to Off.
+Eww **Controls → Do not disturb** silences notifications and keeps the latest 30 in
+**History**. Its gear opens **Allowed apps**; selected apps can still show popups.
+Apps appear after sending a notification. Click a row to save immediately, or use
+**Search apps** for a searchable Rofi chooser. Choices stay private on this machine
+and survive history clearing. New apps are silenced by default, including critical
+alerts. Turning DND off restores new popups without replaying missed ones.
+Theme updates preserve DND; restarting Dunst or using `dunstctl reload` resets it
+to Off. Opening the app picker never turns DND on.
+A rounded **bell-slash icon** appears in Polybar while DND is enabled; click it to turn DND off.
+App-exception editing waits while Dunst has a separate notification pause active.
 
 ```sh
 git pull --ff-only
