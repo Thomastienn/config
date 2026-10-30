@@ -247,6 +247,8 @@ def services():
         run(["systemctl", "--user", "import-environment", *environment])
     if os.environ.get("DISPLAY") and power.FILES[0][1].is_file():
         run(["systemctl", "--user", "start", "thomas-battery-mode.service"])
+    if choices()["extras"] and shutil.which("9router"):
+        run(["systemctl", "--user", "start", "9router.service"])
     if shutil.which("recollq") and shutil.which("recollindex"):
         run(["systemctl", "--user", "enable", "thomas-pdf-index.timer"])
         if not (Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) /
@@ -299,8 +301,9 @@ def check():
     gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
-    for command in ["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
-                    "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser"]:
+    for command in (["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
+                     "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser"]
+                    + (["9router"] if choices()["extras"] else [])):
         if not shutil.which(command):
             gaps.append("command: " + command)
     for command, revision in [("picom", "v12.5"), ("dunst", "1.13"), ("eww", "fddb4a09")]:

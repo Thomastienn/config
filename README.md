@@ -34,6 +34,17 @@ extensions and hardware drivers separately. First Firefox launch creates its
 profile; rerun config-only setup afterward to apply its styles. AI sign-in and
 Ollama model downloads stay local.
 
+Development/AI tools include 9Router 0.5.112. Its user service starts at i3 login
+and listens only on `127.0.0.1:20128`; open `http://127.0.0.1:20128/dashboard`.
+Setup also starts it immediately when installed. The service runs the bundled
+server directly, avoiding the interactive launcher's process cleanup and update
+checks. Provider sign-in, passwords and API keys stay in private `~/.9router/`;
+configure them locally on each machine. Keep cloud/tunnels disabled for local use.
+API keys are optional in the app: enable them if untrusted local clients are a concern.
+Use `systemctl --user stop 9router.service` to stop it until next login or setup
+application. Running `9router` manually uses upstream's launcher defaults instead
+of these service settings.
+
 ## Use and update
 
 `Super+Enter`: terminal · `Super+D`: launcher · `Super+F1`: shortcut finder.

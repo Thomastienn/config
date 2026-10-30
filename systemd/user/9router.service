@@ -1,0 +1,15 @@
+[Unit]
+Description=Local 9Router gateway
+ConditionPathExists=/home/linuxbrew/.linuxbrew/lib/node_modules/9router/app/custom-server.js
+
+[Service]
+Type=simple
+UMask=0077
+Environment=HOSTNAME=127.0.0.1 PORT=20128 DATA_DIR=%h/.9router
+Environment="PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/bin:/usr/bin:/bin"
+Environment="NODE_PATH=%h/.9router/runtime/node_modules:/home/linuxbrew/.linuxbrew/lib/node_modules/9router/node_modules"
+ExecStartPre=/usr/bin/install -d -m 700 %h/.9router
+# Use the server directly: the interactive launcher kills other Next.js servers.
+ExecStart=/home/linuxbrew/.linuxbrew/bin/node --dns-result-order=ipv4first /home/linuxbrew/.linuxbrew/lib/node_modules/9router/app/custom-server.js
+Restart=on-failure
+RestartSec=5

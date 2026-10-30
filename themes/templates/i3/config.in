@@ -118,6 +118,7 @@ exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 # ActivityWatch
 exec --no-startup-id aw-qt
 exec --no-startup-id copyq
+exec --no-startup-id systemctl --user start 9router.service
 
 # ================================================================
 # APPLICATION SHORTCUTS

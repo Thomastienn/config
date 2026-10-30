@@ -2,5 +2,6 @@
 @github/copilot
 @google/gemini-cli
 @openai/codex
+9router@0.5.112
 codebase-memory-mcp
 skills@1.7.0
