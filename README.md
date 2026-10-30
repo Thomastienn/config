@@ -38,6 +38,9 @@ Ollama model downloads stay local.
 
 `Super+Enter`: terminal · `Super+D`: launcher · `Super+F1`: shortcut finder.
 Click Polybar controls for audio, network, battery saver and timer.
+Eww **Controls → Do not disturb** hides all notification popups, including critical
+alerts, and keeps the latest 30 in **History**. Turning it off restores new popups
+without replaying missed ones. Dunst restart or rule reload resets it to Off.
 
 ```sh
 git pull --ff-only

@@ -229,3 +229,9 @@
     summary = "*pdate*"
     default_icon = {{icons_root}}/symbolic/status/software-update-available-symbolic.svg
     timeout = 8
+
+# Eww toggles this last rule; suppressed notifications go straight to history.
+[do-not-disturb]
+    enabled = false
+    skip_display = true
+    history_ignore = false

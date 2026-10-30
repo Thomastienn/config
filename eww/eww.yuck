@@ -6,7 +6,7 @@
 (defvar qs_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
 (defpoll desktop :interval "1s"
-  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"notifications":[],"history_available":false}'
+  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"dnd":false,"dnd_available":false,"notifications":[],"history_available":false}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
@@ -89,16 +89,25 @@
         (tile :icon "" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
         (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
               :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")))
+    (button :timeout "10s" :class "afk-toggle ${desktop.dnd ? 'afk-on' : ''}"
+            :tooltip "Hide all notification popups, including critical alerts. Keep them in History."
+            :active {desktop.dnd_available} :onclick "${desktop_cmd} dnd"
+      (box :space-evenly false :spacing 12
+        (label :width 24 :text {desktop.dnd ? "" : ""})
+        (label :hexpand true :xalign 0 :text "Do not disturb")
+        (label :text {desktop.dnd_available ? (desktop.dnd ? "On" : "Off") : "Unavailable"})))
     (button :timeout "1m" :class "afk-toggle ${qs.battery.enabled ? 'afk-on' : ''}"
             :tooltip {qs.battery.detail} :active {qs.battery.available}
             :onclick "${qs_cmd} battery"
       (box :space-evenly false :spacing 12
+        (label :width 24 :text "")
         (label :hexpand true :xalign 0 :text "Battery Saver")
         (label :text {qs.battery.enabled ? "On" : "Off"})))
     (button :timeout "10s" :class "afk-toggle ${desktop.afk ? 'afk-on' : ''}"
             :tooltip "Keep screen awake while lid is open. Lid close or sleep turns this off."
             :onclick "${afk_cmd} toggle"
       (box :space-evenly false :spacing 12
+        (label :width 24 :text "")
         (label :hexpand true :xalign 0 :text "AFK · keep awake")
         (label :text {desktop.afk ? "On" : "Off"})))
     (box :class "media" :space-evenly false :spacing 12
