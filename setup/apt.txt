@@ -7,6 +7,7 @@ brightnessctl
 build-essential
 ca-certificates
 conky-all
+coreutils # Bounded Eww and monitor commands (timeout)
 copyq
 copyq-plugins
 curl
@@ -71,6 +72,7 @@ rsync
 suckless-tools
 tlp
 unzip
+util-linux # Serialize Eww panel actions (flock)
 x11-utils
 x11-xserver-utils
 xauth

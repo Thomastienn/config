@@ -197,6 +197,19 @@ change tabs, start a new conversation, or submit a message. If accessibility is
 unavailable, check the desktop accessibility setting and reopen Firefox when
 convenient. ChatGPT website changes can require updating the prompt locator.
 
+## Eww Quick Settings
+
+Click the clock, Wi-Fi, or battery to toggle Quick Settings. Click outside the
+panel, use its Close button, or press **Super+Escape** to close it. Escape alone
+keeps its normal behavior in applications.
+
+Panel actions run one at a time. Monitor queries finish before the transparent
+click catcher opens, and failed or interrupted opens close both Eww windows.
+The panel and catcher both bypass i3 window management, so fullscreen applications
+cannot hide the panel underneath the catcher. The panel receives keyboard focus.
+`./setup.sh apply` installs `coreutils` and `util-linux` for timeouts and locking;
+the existing Eww links and generated i3 configuration carry these changes.
+
 ## Polybar timer
 
 Open Eww Quick Settings by clicking the clock or status area, then choose

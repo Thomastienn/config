@@ -163,7 +163,9 @@
       (box :orientation "v" :space-evenly false :hexpand true :spacing 8
         (label :class "settings-title" :xalign 0 :text "Quick settings")
         (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")}))
-      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")}))
+      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
+      (button :class "compact-btn" :tooltip "Close quick settings (Super+Escape)"
+              :timeout "10s" :onclick "${qs_cmd} close" ""))
     (box :class "settings-tabs" :space-evenly true :spacing 8
       (settings-tab :text "Controls" :index 0)
       (settings-tab :text "Audio" :index 1)
@@ -179,7 +181,7 @@
 
 ;; Transparent full-screen catcher: clicking outside the card closes it.
 (defwidget closer []
-  (eventbox :onclick "${qs_cmd} close" (box)))
+  (eventbox :timeout "10s" :onclick "${qs_cmd} close" (box)))
 
 (defwindow closer
   :monitor 0
@@ -194,6 +196,7 @@
   :monitor 0
   :geometry (geometry :x "-22px" :y "52px" :width "560px" :height {panel_height ?: "780px"} :anchor "top right")
   :stacking "fg"
-  :wm-ignore false
+  ;; Keep both windows in the same layer, including above fullscreen apps.
+  :wm-ignore true
   :windowtype "dialog"
   (flyout))

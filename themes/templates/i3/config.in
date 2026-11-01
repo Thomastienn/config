@@ -124,7 +124,8 @@ exec --no-startup-id systemctl --user start 9router.service
 # ================================================================
 # APPLICATION SHORTCUTS
 # ================================================================
-for_window [class="^Eww$" title="^Eww - flyout$"] floating enable, border pixel 0
+# Close both quick-settings windows, including its transparent click catcher.
+bindsym $mod+Escape exec --no-startup-id $HOME/thomas_config/eww/scripts/qs.sh close
 # shortcut: Quick task capture
 bindsym $mod+t exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/quick-task.py
 # shortcut: Dropdown terminal
