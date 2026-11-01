@@ -6,7 +6,7 @@
 (defvar qs_page 0)
 (defvar afk_cmd "/usr/bin/python3 $HOME/thomas_config/scripts/afk.py")
 (defpoll desktop :interval "1s"
-  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"dnd":false,"dnd_available":false,"apps":[],"apps_available":false,"apps_editable":false,"apps_error":"Loading apps…","allowed_count":0,"notifications":[],"history_available":false}'
+  :initial '{"outputs":[],"inputs":[],"audio_available":false,"audio_error":"Loading audio…","afk":false,"dnd":false,"dnd_available":false,"apps":[],"apps_available":false,"apps_editable":false,"apps_error":"Loading apps…","allowed_count":0,"notifications":[],"history_available":false,"login_tracking":{"available":false,"enabled":false,"setup":false}}'
   "/usr/bin/python3 $HOME/thomas_config/scripts/desktop-controls.py status")
 
 (defpoll qs :interval "1s"
@@ -128,6 +128,14 @@
           (label :text {desktop.dnd_available ? (desktop.dnd ? (desktop.allowed_count > 0 ? "On · ${desktop.allowed_count} allowed" : "On") : "Off") : "Unavailable"})))
       (button :class "compact-btn" :tooltip "Choose apps allowed during Do not disturb"
               :onclick "${qs_cmd} page 3" ""))
+    (button :class "afk-toggle ${desktop.login_tracking.enabled ? 'afk-on' : ''}"
+            :active {desktop.login_tracking.available}
+            :tooltip "Require your application password to change future login recording. Existing history keeps its seven-day expiry."
+            :onclick "${desktop_cmd} login-tracking"
+      (box :space-evenly false :spacing 12
+        (label :width 24 :text "")
+        (label :hexpand true :xalign 0 :text "Login tracking")
+        (label :text {desktop.login_tracking.available ? (desktop.login_tracking.setup ? "Setup required" : (desktop.login_tracking.enabled ? "On" : "Off")) : "Unavailable"})))
     (button :timeout "1m" :class "afk-toggle ${qs.battery.enabled ? 'afk-on' : ''}"
             :tooltip {qs.battery.detail} :active {qs.battery.available}
             :onclick "${qs_cmd} battery"

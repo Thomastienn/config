@@ -10,7 +10,119 @@ cd ~/thomas_config
 Reload Eww when its flyout is closed:
 `eww -c ~/thomas_config/eww reload`. Reload notification rules and preserve DND with
 `/usr/bin/python3 ~/thomas_config/scripts/desktop-controls.py reload-dnd`.
-The installer starts only the PDF indexing timer; the AFK service runs on demand.
+The installer starts PDF indexing and the protected Login History service; the AFK
+service runs on demand.
+
+## Login history
+
+Open **Login History** from the application launcher or press
+**Super+Ctrl+Shift+L**. After `setup.sh apply` (or `apply --configs-only` after a
+pull), its initial setup asks for administrator authorization, your own application
+password of at least 12 characters, and the previous vault password when migrating
+an existing installation. Existing encrypted records and keys are preserved.
+Save the displayed recovery code **off this laptop**. Neither password nor the
+recovery code is written to an application log or saved as plaintext.
+
+Initial tracking is **Off**. In **Eww → Controls → Login tracking**, enter your
+application password to turn it On or Off. On records the next new i3 session;
+enabling does not immediately take a photo. Off stops future collection, preserves
+existing history, and keeps seven-day expiry running. Canceling or entering a wrong
+password leaves the setting unchanged. The flag survives reboot. **Unavailable**
+means the protected service cannot be reached; it does not mean tracking is Off.
+
+A new local i3/X11 login and each successful Betterlockscreen unlock are recorded.
+Manual, idle and suspend/lid locking use the same foreground locker wrapper.
+Only a successful foreground locker exit counts as an unlock; failed startup,
+a killed locker and version/help queries do not. Repeated logins in the same
+session are deduplicated for seven days; unlocks are separate events.
+
+Failed local password attempts are read from native `pam_unix` journal messages
+for LightDM and i3lock, using trusted process/UID fields rather than application
+names supplied in a message. No PAM configuration or password verification is
+changed. The current Mint password stack emits these messages. Other display
+managers, lockers or authentication modules (for example fingerprint-only failures)
+need their own integration; they are not silently labeled as supported. Canceled
+prompts without a native authentication-failure result are not marked Failed.
+LightDM failures may precede session creation; an unknown attempted username is
+shown as unknown. Successful login logging covers the configured i3 account.
+
+Capture uses the camera's normal activity LED, waits two seconds for exposure,
+and closes the camera after one frame. A busy/unavailable camera stores an error
+alongside the event. Photos are taken after the result is observed, so they may
+show someone after they have moved away from the password prompt. No microphone
+or continuous video recording is used.
+
+The viewer groups records by local date, with local time and UTC offset. Enter a
+date (`YYYY-MM-DD`) or search term and press Enter to filter. Choose **Event**
+(All events / Login / Unlock) and **Result** (All results / Success / Failed) to
+filter immediately. Older login records appear as Login / Success. Select a record
+for its photo and details. **Delete selected** asks for confirmation; no recovery flow
+clears the database. Closing the viewer ends its authenticated connection; five
+minutes without service activity closes it automatically.
+
+Records include account, hostname, local time/timezone, logind session/seat/TTY,
+boot ID, uptime, active network connection names and local IP addresses. These
+identify an account/session rather than proving who used it. Location is unavailable
+without a GPS source; no coordinates are guessed and no external location lookup
+is made.
+
+**Forgot password** accepts your off-laptop recovery code and a new application
+password. Successful recovery preserves all unexpired history, encryption keys and
+the On/Off flag. It invalidates open authenticated sessions and the old recovery
+code, and shows a new code to save. Wrong codes and cancellation change nothing.
+Attempts are rate limited without permanent lockout. **New recovery code** in the
+unlocked viewer replaces a lost code without erasing history. Losing both password
+and recovery code has no unauthenticated reset option.
+
+The root-owned service runs as the dedicated `i3-login-log` system account. It owns
+`/var/lib/i3-login-log` (`0700`) and its files (`0600`). The SQLCipher database and
+sealed photo/metadata records remain encrypted. Only salted Argon2id password and
+recovery verifiers persist; data keys are separate from these verifiers, so recovery
+does not require recreating the database. The desktop communicates through a local
+Unix socket checked against the configured account's kernel peer credentials.
+Eww receives only tracking status. The protected service also receives system
+journal read access for native PAM failures; only selected event fields enter
+the encrypted history. No network listener is added.
+
+Ordinary desktop applications cannot directly read those keys or change the
+protected setting. This is not protection against root, a compromised backend, or
+malware reading input/windows in an unlocked X11 session. Desktop login/unlock
+hooks can be disabled or forged by software already running as the desktop user, so this is not an unskippable or tamper-proof OS audit.
+Already copied files,
+backups and filesystem snapshots cannot be revoked. After verified migration,
+unchanged old live key/database/vault files are removed; changed source files are
+preserved and flagged for administrator cleanup.
+
+The failure monitor follows new journal events, with no historical backfill after
+service downtime. Tracking Off suppresses both successful and failed events,
+including camera access. Re-enabling does not import failures that occurred while
+Off. The viewer reports **Failure monitor unavailable** if its reader is down.
+Native system authentication journals remain governed by the OS's own retention;
+this feature does not delete them or record typed passwords.
+
+Records expire after seven elapsed days, regardless of daylight-saving changes.
+The service excludes expired records from queries and prunes every five minutes,
+even while tracking is Off. Nothing wakes a sleeping laptop solely to prune.
+SQLCipher secure deletion is enabled. Photos are decoded in viewer memory;
+no plaintext photo files or thumbnails are written.
+
+```sh
+i3-login-log view
+i3-login-log list --date 2026-10-31 --search wifi
+i3-login-log list --event unlock --result failure
+i3-login-log toggle
+i3-login-log recover
+systemctl status i3-login-log.service i3-login-log.socket
+```
+
+Dependencies and root-owned service copies are installed through `setup.sh apply`.
+Config-only setup also updates these copies and installs missing native SQLCipher.
+Administrator authentication is required for system installation and initial
+enrollment; enter secrets only in the local dialogs or hidden password prompt.
+Repeat setup preserves enrollment, keys, history and tracking state.
+The fixed camera device defaults to `/dev/video0`; administrator-owned
+`/etc/i3-login-log.json` can select another `/dev/videoN`, then rerun setup to update
+its device permission. No hardware-specific indicator controls are installed.
 
 ## PDF contents
 

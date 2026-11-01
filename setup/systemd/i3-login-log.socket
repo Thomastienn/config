@@ -1,0 +1,12 @@
+[Unit]
+Description=Local socket for protected i3 login history
+
+[Socket]
+ListenStream=/run/i3-login-log.sock
+SocketUser=root
+SocketGroup=@OWNER_GID@
+SocketMode=0660
+RemoveOnStop=yes
+
+[Install]
+WantedBy=sockets.target

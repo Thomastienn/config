@@ -25,9 +25,11 @@ gtk2-engines-murrine
 gtk2-engines-pixbuf
 git
 git-lfs
+gir1.2-gtk-3.0 # Native login-history viewer
 i3
 ibus-unikey
 i3lock
+iproute2 # Local network addresses in login history
 imagemagick
 jq
 kdenlive
@@ -51,9 +53,12 @@ pkexec
 polybar
 poppler-utils
 procps
+psmisc # Camera ownership check before login capture
 pulseaudio-utils
 python3
 python3-gi
+python3-nacl # Encrypted login records and Argon2id credential verifiers
+sqlcipher # Native encrypted login-history database for the protected service
 python3-pyatspi
 python3-venv
 python3-xlib # AFK pointer nudges and X11 display helpers

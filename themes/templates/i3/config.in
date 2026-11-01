@@ -78,6 +78,7 @@ client.urgent           $urgent-color       $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
+exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/login_log.py login
 exec_always --no-startup-id feh --bg-scale {{wallpaper_shell}}
 exec_always --no-startup-id $HOME/thomas_config/picom/run.sh
 exec_always --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/i3-frame-hints.py
@@ -148,6 +149,8 @@ bindsym $mod+Print exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scr
 bindsym $mod+Ctrl+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/nemo-folder.py --documents
 # shortcut: Find keyboard shortcut
 bindsym $mod+F1 exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/shortcut-finder.py
+# shortcut: View encrypted login history
+bindsym $mod+Ctrl+Shift+l exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/login_log.py view
 # shortcut: Quick tools (encoding, JSON, hashes, dates)
 bindsym $mod+u exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/quick-tools.py
 # shortcut: Open terminal

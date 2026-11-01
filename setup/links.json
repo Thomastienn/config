@@ -1,5 +1,7 @@
 {
   "scripts/theme.py": ".local/bin/theme",
+  "scripts/login_log.py": ".local/bin/i3-login-log",
+  "setup/desktop/i3-login-log.desktop": ".local/share/applications/i3-login-log.desktop",
   "bashrc": ".bashrc",
   "bash_aliases": ".bash_aliases",
   "profile": ".profile",

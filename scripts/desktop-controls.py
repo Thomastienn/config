@@ -11,6 +11,7 @@ import subprocess
 import sys
 
 import afk
+import login_log
 from theme import atomic
 
 DND_RULE = "do-not-disturb"
@@ -264,7 +265,12 @@ def status():
     result = {"outputs": [], "inputs": [], "audio_available": False, "audio_error": "Audio unavailable",
               "afk": afk.active(), "dnd": False, "dnd_available": False,
               "apps": [], "apps_available": False, "apps_editable": False, "apps_error": "App list unavailable",
-              "allowed_count": 0, "notifications": [], "history_available": False}
+              "allowed_count": 0, "notifications": [], "history_available": False,
+              "login_tracking": {"available": False, "enabled": False, "setup": False}}
+    try:
+        result["login_tracking"] = {"available": True, **login_log.status()}
+    except (OSError, ValueError, RuntimeError):
+        pass
     try:
         sinks, sources = audio_devices()
         for key, devices, default_command in (("outputs", sinks, "get-default-sink"),
@@ -317,6 +323,10 @@ def main(args):
         pick_app()
     elif action == "watch-dnd" and len(args) == 1:
         watch_dnd()
+    elif action == "login-tracking" and len(args) == 1:
+        subprocess.Popen(["/usr/bin/python3", str(Path(__file__).with_name("login_log.py")), "toggle"],
+                         stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                         start_new_session=True)
     else:
         raise ValueError("Unknown desktop control.")
 

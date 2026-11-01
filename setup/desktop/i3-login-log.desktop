@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Login History
+Comment=View private login photos and session details from the last seven days
+Exec=i3-login-log view
+Icon=preferences-system-privacy
+Terminal=false
+Categories=System;Security;

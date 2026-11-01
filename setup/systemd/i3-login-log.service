@@ -1,0 +1,38 @@
+[Unit]
+Description=Protected encrypted i3 login history
+Requires=i3-login-log.socket
+After=i3-login-log.socket systemd-logind.service
+
+[Service]
+Type=simple
+User=i3-login-log
+Group=i3-login-log
+SupplementaryGroups=video systemd-journal
+ExecStart=/usr/bin/python3 -s /usr/local/libexec/i3-login-log/service.py
+Environment=PATH=/usr/sbin:/usr/bin PYTHONNOUSERSITE=1
+StateDirectory=i3-login-log
+StateDirectoryMode=0700
+UMask=0077
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=15
+KillMode=control-group
+NoNewPrivileges=yes
+CapabilityBoundingSet=
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictNamespaces=yes
+RestrictSUIDSGID=yes
+LockPersonality=yes
+RestrictAddressFamilies=AF_UNIX AF_NETLINK
+DevicePolicy=closed
+LimitCORE=0
+TasksMax=32
+MemoryMax=1G
+
+[Install]
+WantedBy=multi-user.target

@@ -8,6 +8,10 @@ existing Cozy Mint appearance and workflows unless a change is requested.
 - Follow `~/.codex/RTK.md` when present; prefix shell commands with `rtk`.
 - Prefer codebase-memory-mcp graph tools for code discovery. Fall back to `rg`
   for shell/config files, literals, or when this repository is not indexed.
+- Keep `README.md` compact: the i3 overview, core features, requirements, setup
+  and update commands, and basic usage only. Put feature guides, implementation
+  details, troubleshooting, and extended instructions under `docs/`, with links
+  from the README. Do not add every helper or change to the README.
 - `setup.sh` is the entry point for recreating the machine. Put one-time
   installers, migrations, package manifests, and captured desktop preferences
   under `setup/`. Keep `scripts/` for helpers used during normal operation.
@@ -24,7 +28,8 @@ existing Cozy Mint appearance and workflows unless a change is requested.
 - Include new config links, settings, and services in setup as needed. Verify
   the installation route and repeat-run behavior using an isolated environment;
   working on the current machine alone is insufficient. Document unavoidable
-  manual steps in `README.md` and report any fresh-machine checks not performed.
+  manual steps under `docs/`, link them from `README.md`, and report any
+  fresh-machine checks not performed.
 - This machine is the main host. Finish each feature by applying it live here
  too (install root-owned copies, reload affected helpers); `setup.sh` is how
  other machines sync to this host, not a step left for Thomas.

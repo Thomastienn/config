@@ -19,6 +19,7 @@ import power
 import graphics
 import codex
 import hermes
+import login_tracking
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
@@ -302,7 +303,7 @@ def check():
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in (["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
-                     "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser"]
+                     "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser", "sqlcipher", "fuser"]
                     + (["9router"] if choices()["extras"] else [])):
         if not shutil.which(command):
             gaps.append("command: " + command)
@@ -343,6 +344,7 @@ def check():
             gaps.append("service: PDF index timer not enabled")
     except (OSError, subprocess.SubprocessError):
         gaps.append("service: PDF index timer not enabled or user session unavailable")
+    gaps.extend(login_tracking.check())
     data = json.loads((ROOT / "desktop/settings.json").read_text())
     for schema, values in theme.gsettings(theme.load()[0]).items():
         data["gsettings"].setdefault(schema, {}).update(values)
@@ -428,6 +430,7 @@ def main():
         theme.assets(theme.load()[0])
     apply_links()
     if args.command == "apply":
+        login_tracking.install(run)
         if choices()["extras"] and not args.configs_only:
             codex.install(HOME, run)
         power.install(run)

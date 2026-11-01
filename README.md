@@ -49,6 +49,8 @@ of these service settings.
 
 `Super+Enter`: terminal · `Super+D`: launcher · `Super+F1`: shortcut finder.
 Click Polybar controls for audio, network, battery saver and timer.
+**Login History** (`Super+Ctrl+Shift+L`) keeps seven days of encrypted records;
+[setup and recovery](docs/productivity.md#login-history) explain its password-protected Eww toggle.
 Eww **Controls → Do not disturb** silences notifications and keeps the latest 30 in
 **History**. Its gear opens **Allowed apps**; selected apps can still show popups.
 Apps appear after sending a notification. Click a row to save immediately, or use
