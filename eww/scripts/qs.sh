@@ -61,9 +61,14 @@ status() {
 }
 
 close() {
+    local window
     eww_cmd close-all || return
     # The unmanaged panel borrows keyboard focus from i3's selected window.
-    i3-msg '[con_id=__focused__] focus' >/dev/null
+    window=$(i3-msg -t get_tree | jq -r '.. | objects | select(.focused == true) | .window // empty') || return
+    # i3's focus command is a no-op when that container is already selected.
+    if [[ $window ]]; then
+        timeout -k 1s 2s xdotool windowfocus --sync "$window"
+    fi
 }
 
 case $1 in
