@@ -46,8 +46,10 @@ prompts without a native authentication-failure result are not marked Failed.
 LightDM failures may precede session creation; an unknown attempted username is
 shown as unknown. Successful login logging covers the configured i3 account.
 
-Capture uses the camera's normal activity LED, waits two seconds for exposure,
-and closes the camera after one frame. A busy/unavailable camera stores an error
+Capture waits two seconds for exposure and closes the camera after one frame.
+The camera normally uses its activity LED; a locally calibrated indicator profile
+temporarily suppresses it during capture and restores its previous state afterward.
+A busy/unavailable camera stores an error
 alongside the event. Photos are taken after the result is observed, so they may
 show someone after they have moved away from the password prompt. No microphone
 or continuous video recording is used.
@@ -126,7 +128,23 @@ enrollment; enter secrets only in the local dialogs or hidden password prompt.
 Repeat setup preserves enrollment, keys, history and tracking state.
 The fixed camera device defaults to `/dev/video0`; administrator-owned
 `/etc/i3-login-log.json` can select another `/dev/videoN`, then rerun setup to update
-its device permission. No hardware-specific indicator controls are installed.
+its device permission.
+
+An existing private `~/.config/i3-login-log/camera.json` calibration is migrated
+into the administrator-owned configuration on setup, only for the same device.
+Repeat setup preserves that installed profile. Other machines keep the normal LED
+unless separately calibrated; no laptop identifiers or calibration are shared in Git.
+The restored Sonix method checks USB ID, revision, laptop model, controller ID and
+GPIO state before temporarily disabling GPIO bit 0's output direction. It uses the
+[Linux UVC extension interface](https://docs.kernel.org/userspace-api/media/drivers/uvcvideo.html)
+and the [published Sonix register protocol](https://github.com/Kurokesu/C1_SONIX_Test_AP/blob/master/sonix_xu_ctrls.c).
+
+Capture saves the original direction in protected `camera-gpio.json` before
+changing it. Normal completion and failures restore and verify that value after
+closing capture. The systemd service also retries restoration after stopping,
+including a forced kill, and before starting again. Failed restoration retains
+the recovery record and blocks further captures. Device loss or firmware errors
+can still prevent restoration; the GPIO method is specific to calibrated hardware.
 
 ## PDF contents
 

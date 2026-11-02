@@ -153,6 +153,17 @@ def install(source, uid):
             raise RuntimeError("Repeat setup cannot replace the configured desktop owner")
     if not re.fullmatch(r"/dev/video[0-9]+", owner["device"]):
         raise RuntimeError("Camera must be a fixed /dev/video device")
+    if "indicator" not in owner:
+        try:
+            profile = json.loads(source_bytes(Path(account.pw_dir), ".config/i3-login-log/camera.json", uid, 16384))
+        except FileNotFoundError:
+            profile = {}
+        if not isinstance(profile, dict):
+            raise RuntimeError("Legacy camera calibration must be an object")
+        if "indicator" in profile:
+            if profile.get("device") != owner["device"]:
+                raise RuntimeError("Legacy camera calibration differs from the configured device")
+            owner["indicator"] = profile["indicator"]
     packages = ("sqlcipher", "python3-nacl", "python3-gi", "gir1.2-gtk-3.0", "ffmpeg",
                 "psmisc", "iproute2", "network-manager")
     installed = subprocess.run(["/usr/bin/dpkg-query", "-W", "-f=${db:Status-Status}\\n", *packages],

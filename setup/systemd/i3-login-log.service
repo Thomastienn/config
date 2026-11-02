@@ -9,6 +9,7 @@ User=i3-login-log
 Group=i3-login-log
 SupplementaryGroups=video systemd-journal
 ExecStart=/usr/bin/python3 -s /usr/local/libexec/i3-login-log/service.py
+ExecStopPost=/usr/bin/python3 -s /usr/local/libexec/i3-login-log/service.py restore-camera
 Environment=PATH=/usr/sbin:/usr/bin PYTHONNOUSERSITE=1
 StateDirectory=i3-login-log
 StateDirectoryMode=0700

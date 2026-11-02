@@ -3,6 +3,7 @@
 
 import ctypes
 from datetime import datetime
+import fcntl
 import json
 import os
 from pathlib import Path
@@ -14,6 +15,7 @@ import socket
 import socketserver
 import struct
 import subprocess
+import sys
 import threading
 import time
 
@@ -136,26 +138,106 @@ def metadata(owner, session, details):
     return now, data
 
 
-def capture(device):
-    # Use the camera's normal activity indicator; no firmware or GPIO changes.
+class CameraQuery(ctypes.Structure):
+    _fields_ = [("unit", ctypes.c_uint8), ("selector", ctypes.c_uint8),
+                ("query", ctypes.c_uint8), ("size", ctypes.c_uint16), ("data", ctypes.c_void_p)]
+
+
+def camera_register(fd, address, value=None):
+    if ctypes.sizeof(CameraQuery) != 16:
+        raise RuntimeError("Camera indicator control requires the validated 64-bit UVC interface")
+    packet = (ctypes.c_uint8 * 4)(address & 255, address >> 8, value or 0, 255 if value is None else 0)
+    query = CameraQuery(3, 1, 1, 4, ctypes.addressof(packet))
+    fcntl.ioctl(fd, 0xc0107521, query)
+    if value is None:
+        packet[3] = 0
+        query.query = 0x81
+        fcntl.ioctl(fd, 0xc0107521, query)
+    return packet[2]
+
+
+def validate_camera(device, indicator):
+    if (not isinstance(indicator, dict)
+            or set(indicator) != {"usb_id", "revision", "model", "chip_id", "direction"}
+            or indicator["chip_id"] != 117 or indicator["direction"] != 7):
+        raise RuntimeError("Invalid locally calibrated camera indicator profile")
+    if not re.fullmatch(r"/dev/video[0-9]+", device) or str(Path(device).resolve()) != device:
+        raise RuntimeError("Camera must be a fixed /dev/video device")
+    usb = (Path("/sys/class/video4linux") / Path(device).name / "device").resolve()
+    while usb != usb.parent and not (usb / "idVendor").exists():
+        usb = usb.parent
+    actual = (usb / "idVendor").read_text().strip() + ":" + (usb / "idProduct").read_text().strip()
+    if (actual != indicator["usb_id"] or (usb / "bcdDevice").read_text().strip() != indicator["revision"]
+            or Path("/sys/class/dmi/id/product_name").read_text().strip() != indicator["model"]):
+        raise RuntimeError("Camera differs from its locally calibrated indicator profile; capture skipped")
+
+
+def restore_camera(owner, root=ROOT):
+    pending = root / "camera-gpio.json"
+    if pending.is_symlink():
+        raise RuntimeError("Refusing symlinked camera recovery state")
+    if not pending.exists():
+        return
+    saved = json.loads(pending.read_text())
+    indicator = owner.get("indicator")
+    validate_camera(owner["device"], indicator)
+    if saved != {"device": owner["device"], "direction": indicator["direction"]}:
+        raise RuntimeError("Camera recovery state differs from its calibrated profile")
+    fd = os.open(owner["device"], os.O_RDONLY | os.O_NONBLOCK)
+    try:
+        if (camera_register(fd, 0x101f) != indicator["chip_id"]
+                or camera_register(fd, 0x1007) not in (saved["direction"], saved["direction"] & ~1)):
+            raise RuntimeError("Camera state changed; recovery state retained")
+        camera_register(fd, 0x1007, saved["direction"])
+        if camera_register(fd, 0x1007) != saved["direction"]:
+            raise RuntimeError("Camera indicator restoration failed; recovery state retained")
+        pending.unlink()
+    finally:
+        os.close(fd)
+
+
+def capture(device, indicator=None, root=ROOT):
+    restore_camera({"device": device, "indicator": indicator}, root)
     busy = subprocess.run(["/usr/bin/fuser", device], capture_output=True, timeout=4)
     if busy.returncode != 1:
         raise RuntimeError("Camera is busy or ownership could not be checked")
-    with subprocess.Popen([
+    fd = None
+    try:
+        if indicator is not None:
+            validate_camera(device, indicator)
+            fd = os.open(device, os.O_RDONLY | os.O_NONBLOCK)
+            original = camera_register(fd, 0x1007)
+            if (camera_register(fd, 0x101f) != indicator["chip_id"] or original != indicator["direction"]
+                    or camera_register(fd, 0x1006) & 1):
+                raise RuntimeError("Unexpected camera GPIO state; capture skipped")
+            with (root / "camera-gpio.json").open("x") as stream:
+                json.dump({"device": device, "direction": original}, stream)
+                stream.flush()
+                os.fsync(stream.fileno())
+            camera_register(fd, 0x1007, original & ~1)
+            if camera_register(fd, 0x1007) != original & ~1:
+                raise RuntimeError("Camera indicator suppression did not verify; capture skipped")
+        with subprocess.Popen([
             "/usr/bin/ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "v4l2",
             "-input_format", "mjpeg", "-video_size", "640x480", "-framerate", "30", "-i", device,
             "-ss", "2", "-frames:v", "1", "-c:v", "mjpeg", "-f", "image2pipe", "pipe:1"],
-            stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as process:
-        try:
-            photo, _ = process.communicate(timeout=10)
-        except BaseException:
-            process.kill()
-            process.communicate()
-            raise
-        if (process.returncode or len(photo) > 1024 * 1024
-                or not photo.startswith(b"\xff\xd8") or not photo.endswith(b"\xff\xd9")):
-            raise RuntimeError("Camera did not produce a complete JPEG")
-        return photo
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as process:
+            try:
+                photo, _ = process.communicate(timeout=10)
+            except BaseException:
+                process.kill()
+                process.communicate()
+                raise
+            if (process.returncode or len(photo) > 1024 * 1024
+                    or not photo.startswith(b"\xff\xd8") or not photo.endswith(b"\xff\xd9")):
+                raise RuntimeError("Camera did not produce a complete JPEG")
+            if fd is not None and camera_register(fd, 0x1007) != original & ~1:
+                raise RuntimeError("Camera firmware changed GPIO direction during capture")
+            return photo
+    finally:
+        if fd is not None:
+            os.close(fd)
+            restore_camera({"device": device, "indicator": indicator}, root)
 
 
 class Service:
@@ -169,7 +251,7 @@ class Service:
     def add_event(self, now, data, identity=None):
         photo, error = None, None
         try:
-            photo = capture(self.owner["device"])
+            photo = capture(self.owner["device"], self.owner.get("indicator"), self.root)
         except (OSError, ValueError, RuntimeError, subprocess.SubprocessError):
             error = "Camera busy, unavailable, or capture failed"
         self.store.add(now, data, photo, error, identity)
@@ -384,6 +466,9 @@ def main():
     os.umask(0o077)
     protect_process()
     owner = json.loads(OWNER.read_text())
+    restore_camera(owner)
+    if sys.argv[1:] == ["restore-camera"]:
+        return
     application = Service(ROOT, owner)
     if os.environ.get("LISTEN_PID") != str(os.getpid()) or os.environ.get("LISTEN_FDS") != "1":
         raise RuntimeError("Start Login History using its systemd socket")
