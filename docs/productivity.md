@@ -18,7 +18,7 @@ service runs on demand.
 Open **Login History** from the application launcher or press
 **Super+Ctrl+Shift+L**. After `setup.sh apply` (or `apply --configs-only` after a
 pull), its initial setup asks for administrator authorization, your own application
-password of at least 12 characters, and the previous vault password when migrating
+password, and the previous vault password when migrating
 an existing installation. Existing encrypted records and keys are preserved.
 Save the displayed recovery code **off this laptop**. Neither password nor the
 recovery code is written to an application log or saved as plaintext.
@@ -72,6 +72,13 @@ boot ID, uptime, active network connection names and local IP addresses. These
 identify an account/session rather than proving who used it. Location is unavailable
 without a GPS source; no coordinates are guessed and no external location lookup
 is made.
+
+In the unlocked viewer, **Change password** asks for your current password, a new
+password, and confirmation. No recovery code is needed.
+The change preserves history, encryption keys, tracking state and your existing
+recovery code. This viewer stays unlocked; other authenticated connections must
+unlock again. Incorrect current passwords are rate limited like normal sign-in.
+Canceling or invalid new passwords leave the password unchanged.
 
 **Forgot password** accepts your off-laptop recovery code and a new application
 password. Successful recovery preserves all unexpired history, encryption keys and

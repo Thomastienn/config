@@ -63,19 +63,15 @@ def valid_request(request):
     fields = {"status": (), "auth": ("password",), "set_enabled": ("enabled",),
               "list": ("date", "search", "before", "event_type", "result"), "get": ("id",), "delete": ("id",),
               "capture": (), "unlock": (), "recover": ("code", "password"), "rotate_code": (),
-              "enroll": ("password", "old_password")}
+              "enroll": ("password", "old_password"), "change_password": ("current_password", "password")}
     if not isinstance(request, dict) or not isinstance(request.get("op"), str):
         raise ValueError("Invalid request")
     op = request["op"]
     if op not in fields or set(request) != {"op", *fields[op]}:
         raise ValueError("Invalid operation or fields")
-    for key in ("password", "old_password", "code"):
+    for key in ("password", "old_password", "current_password", "code"):
         if key in request:
             text(request[key], minimum=0 if key == "old_password" else 1)
-    if op in ("recover", "enroll"):
-        text(request["password"], minimum=12)
-        if len(request["password"]) < 12:
-            raise ValueError("Use an application password of at least 12 characters")
     if op == "set_enabled" and type(request["enabled"]) is not bool:
         raise ValueError("Tracking state must be On or Off")
     if op == "list":
@@ -361,6 +357,12 @@ class Service:
                 session.clear()
                 raise ValueError("Unlock required; close and reopen Login History")
             session["seen"] = time.monotonic()
+            if op == "change_password":
+                self.check_secret(state, "password", request["current_password"])
+                state.update(password=verifier(request["password"]), generation=secrets.token_hex(16))
+                self.save(state)
+                session.update(generation=state["generation"])
+                return {"changed": True}
             if op == "set_enabled":
                 if request["enabled"] and not state["enabled"]:
                     state["enabled_since"] = time.time()

@@ -155,8 +155,8 @@ def show_code(code, parent=None):
 
 
 def checked_password(values):
-    if len(values[0]) < 12:
-        raise ValueError("Use an application password of at least 12 characters")
+    if not values[0]:
+        raise ValueError("Password cannot be empty")
     if values[0] != values[1]:
         raise ValueError("Passwords do not match")
     return values[0]
@@ -281,6 +281,8 @@ def view(date="", search="", event_type="", result=""):
         event_filters.pack_start(widget, False, False, 0)
     show_all = Gtk.CheckButton(label="Show all photos")
     event_filters.pack_start(show_all, False, False, 0)
+    password_change = Gtk.Button(label="Change password")
+    event_filters.pack_end(password_change, False, False, 0)
     layout.pack_start(event_filters, False, False, 0)
     status = Gtk.Label(xalign=0)
     layout.pack_start(status, False, False, 0)
@@ -408,6 +410,22 @@ def view(date="", search="", event_type="", result=""):
             except (RuntimeError, OSError, subprocess.SubprocessError) as error:
                 status.set_text(str(error))
 
+    def replace_password(_):
+        values = secret_form("Change password", "Enter your current password and choose a new one.\n"
+                             "History, tracking state and your recovery code will stay unchanged.",
+                             ["Current password", "New password", "Confirm new password"], parent=window)
+        if values is None:
+            return
+        try:
+            password = checked_password(values[1:])
+            client.request("change_password", current_password=values[0], password=password)
+            status.set_text("Password changed. Your existing recovery code still works.")
+        except (OSError, ValueError, RuntimeError) as error:
+            status.set_text(str(error))
+        finally:
+            values.clear()
+            password = ""
+
     def replace_code(_):
         if confirm_action(window, "Replace your recovery code?", "The previous recovery code will stop working. Save the new code off this laptop."):
             try:
@@ -416,6 +434,7 @@ def view(date="", search="", event_type="", result=""):
                 status.set_text(str(error))
 
     rotate.connect("clicked", replace_code)
+    password_change.connect("clicked", replace_password)
     photo_toggle.connect("toggled", render_photo)
     show_all.connect("toggled", lambda button: photo_toggle.set_active(button.get_active() and photo_toggle.get_sensitive()))
     tree.get_selection().connect("changed", selected)
