@@ -241,7 +241,7 @@ def toggle():
 def view(date="", search="", event_type="", result=""):
     import gi
     gi.require_version("Gtk", "3.0")
-    from gi.repository import GdkPixbuf, Gtk
+    from gi.repository import GdkPixbuf, GLib, Gtk
 
     client = Client()
     if not authenticate(client):
@@ -279,6 +279,8 @@ def view(date="", search="", event_type="", result=""):
     for label, widget in (("Event:", kind_input), ("Result:", result_input)):
         event_filters.pack_start(Gtk.Label(label=label), False, False, 0)
         event_filters.pack_start(widget, False, False, 0)
+    show_all = Gtk.CheckButton(label="Show all photos")
+    event_filters.pack_start(show_all, False, False, 0)
     layout.pack_start(event_filters, False, False, 0)
     status = Gtk.Label(xalign=0)
     layout.pack_start(status, False, False, 0)
@@ -297,20 +299,53 @@ def view(date="", search="", event_type="", result=""):
     detail = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=8)
     image = Gtk.Image()
     detail.pack_start(image, False, False, 0)
+    photo_label = Gtk.Label()
+    detail.pack_start(photo_label, False, False, 0)
+    photo_toggle = Gtk.ToggleButton(label="Show photo", sensitive=False)
+    detail.pack_start(photo_toggle, False, False, 0)
     text = Gtk.TextView(editable=False, cursor_visible=False, wrap_mode=Gtk.WrapMode.WORD_CHAR)
     detail_scroll = Gtk.ScrolledWindow()
     detail_scroll.add(text)
     detail.pack_start(detail_scroll, True, True, 0)
     panes.pack2(detail, resize=True, shrink=False)
     records = {}
+    photo_row = None
+
+    def render_photo(*_):
+        image.clear()
+        photo_label.set_text("")
+        photo_toggle.set_label("Hide photo" if photo_toggle.get_active() else "Show photo")
+        photo_toggle.set_sensitive(False)
+        if photo_row is None:
+            return
+        if photo_row["created_at"] <= time.time() - RETENTION or not photo_row["photo"]:
+            image.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+            photo_label.set_text("Photo expired" if photo_row["photo"] else "No photo captured")
+            return
+        photo_toggle.set_sensitive(True)
+        if not photo_toggle.get_active():
+            image.set_from_icon_name("view-conceal-symbolic", Gtk.IconSize.DIALOG)
+            photo_label.set_text("Photo hidden")
+            return
+        try:
+            loader = GdkPixbuf.PixbufLoader.new_with_type("jpeg")
+            loader.write(bytes.fromhex(photo_row["photo"]))
+            loader.close()
+            image.set_from_pixbuf(loader.get_pixbuf())
+        except (GLib.Error, ValueError):
+            image.set_from_icon_name("image-missing-symbolic", Gtk.IconSize.DIALOG)
+            photo_label.set_text("Photo unavailable")
 
     def selected(selection):
-        image.clear()
+        nonlocal photo_row
+        photo_row = None
+        photo_toggle.set_active(False)
+        render_photo()
+        text.get_buffer().set_text("")
         model, item = selection.get_selected()
         row = records.get(model[item][2]) if item else None
         delete.set_sensitive(row is not None)
         if not row:
-            text.get_buffer().set_text("")
             return
         try:
             row = client.request("get", id=row["id"])
@@ -320,15 +355,16 @@ def view(date="", search="", event_type="", result=""):
         details = json.loads(row["metadata"])
         details["photo_status"] = row["photo_error"] or "captured"
         text.get_buffer().set_text(json.dumps(details, indent=2, ensure_ascii=False))
-        if row["photo"] and row["created_at"] > time.time() - RETENTION:
-            loader = GdkPixbuf.PixbufLoader.new_with_type("jpeg")
-            loader.write(bytes.fromhex(row["photo"]))
-            loader.close()
-            image.set_from_pixbuf(loader.get_pixbuf())
+        photo_row = row
+        render_photo()
+        photo_toggle.set_active(show_all.get_active() and photo_toggle.get_sensitive())
 
     def reload(*_):
+        nonlocal photo_row
+        photo_row = None
+        photo_toggle.set_active(False)
+        render_photo()
         delete.set_sensitive(False)
-        image.clear()
         text.get_buffer().set_text("")
         store.clear()
         records.clear()
@@ -380,6 +416,8 @@ def view(date="", search="", event_type="", result=""):
                 status.set_text(str(error))
 
     rotate.connect("clicked", replace_code)
+    photo_toggle.connect("toggled", render_photo)
+    show_all.connect("toggled", lambda button: photo_toggle.set_active(button.get_active() and photo_toggle.get_sensitive()))
     tree.get_selection().connect("changed", selected)
     refresh.connect("clicked", reload)
     delete.connect("clicked", delete_selected)
@@ -389,7 +427,6 @@ def view(date="", search="", event_type="", result=""):
     result_input.connect("changed", reload)
     reload()
     window.show_all()
-    from gi.repository import GLib
     def expire():
         if time.monotonic() - client.last_request >= 300:
             window.destroy()

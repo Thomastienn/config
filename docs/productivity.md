@@ -56,9 +56,13 @@ The viewer groups records by local date, with local time and UTC offset. Enter a
 date (`YYYY-MM-DD`) or search term and press Enter to filter. Choose **Event**
 (All events / Login / Unlock) and **Result** (All results / Success / Failed) to
 filter immediately. Older login records appear as Login / Success. Select a record
-for its photo and details. **Delete selected** asks for confirmation; no recovery flow
-clears the database. Closing the viewer ends its authenticated connection; five
-minutes without service activity closes it automatically.
+for its details. Photos start hidden behind a crossed-eye icon and **Photo hidden**
+label. **Show photo** reveals only the selected photo; **Hide photo** conceals it
+again. **Show all photos** reveals photos as you select records until unchecked.
+Each new viewer starts with photos hidden. Missing photos show **No photo captured**.
+**Delete selected** asks for confirmation; no recovery flow clears the database.
+Closing the viewer ends its authenticated connection; five minutes without service
+activity closes it automatically.
 
 Records include account, hostname, local time/timezone, logind session/seat/TTY,
 boot ID, uptime, active network connection names and local IP addresses. These
