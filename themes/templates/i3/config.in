@@ -132,6 +132,8 @@ bindsym $mod+t exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts
 bindsym $mod+grave exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/dropdown-terminal.py
 # shortcut: Browser scratchpad (Firefox)
 bindsym $mod+g exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/dropdown-browser.py
+# shortcut: Toggle Live Captions at bottom center
+bindsym $mod+Ctrl+c exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/live-captions.py
 # shortcut: ChatGPT: insert selected text
 bindsym --release $mod+Ctrl+g exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/chatgpt-context.py selection
 # shortcut: ChatGPT: attach a selected screen region

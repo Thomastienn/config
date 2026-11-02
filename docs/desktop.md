@@ -51,6 +51,11 @@ Setup installs Kdenlive and links `setup/desktop/org.kde.kdenlive.desktop` into
 
 ## After pulling on another machine
 
+`Super+Ctrl+C` toggles Live Captions. It opens at the bottom center of the
+focused monitor's workspace, up to 1000 pixels wide and 180 pixels tall, with
+24 pixels of bottom clearance. Press again to hide; captions keep running.
+Setup installs the app from the Flatpak manifest.
+
 ```sh
 git pull --ff-only
 ./setup.sh apply --configs-only
