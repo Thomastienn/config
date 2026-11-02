@@ -220,7 +220,7 @@ def capture(device, indicator=None, root=ROOT):
         with subprocess.Popen([
             "/usr/bin/ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "v4l2",
             "-input_format", "mjpeg", "-video_size", "640x480", "-framerate", "30", "-i", device,
-            "-ss", "2", "-frames:v", "1", "-c:v", "mjpeg", "-f", "image2pipe", "pipe:1"],
+            "-frames:v", "1", "-c:v", "mjpeg", "-f", "image2pipe", "pipe:1"],
                 stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as process:
             try:
                 photo, _ = process.communicate(timeout=10)

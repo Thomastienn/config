@@ -46,7 +46,8 @@ prompts without a native authentication-failure result are not marked Failed.
 LightDM failures may precede session creation; an unknown attempted username is
 shown as unknown. Successful login logging covers the configured i3 account.
 
-Capture waits two seconds for exposure and closes the camera after one frame.
+Capture saves the first frame without an added warm-up delay, then closes the camera.
+Camera startup and processing still take time; exposure may be unsettled in changing light.
 The camera normally uses its activity LED; a locally calibrated indicator profile
 temporarily suppresses it during capture and restores its previous state afterward.
 A busy/unavailable camera stores an error
