@@ -1,0 +1,59 @@
+# St Patrick Day: Shamrock green and gold.
+# Apply with: theme apply themes/st-patrick-day.toml
+name = "St Patrick Day Shamrock"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#11271F"
+surface = "#223C2E"
+text = "#F2F1E2"
+muted = "#D5E9CE"
+primary = "#92D5A0"
+secondary = "#F0D38B"
+warning = "#F0D18E"
+error = "#E8A4AA"
+border = "#3C604A"
+separator = "#4C775A"
+selection = "#324835"
+urgent_background = "#363130"
+pane_border = "#203C2E"
+gradient_start = "#1E382C"
+gradient_end = "#27382A"
+menu_text = "#F2F1E2"
+panel_separator = "#4C775A"
+shade1 = "#162E24"
+shade3 = "#1B3529"
+shade4 = "#1F392D"
+shade5 = "#223E30"
+shade6 = "#254233"
+shade7 = "#284636"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#11271F", "#DA777D", "#A3BF71", "#DBC486",
+  "#8CB7C2", "#9589B5", "#8CB7C2", "#F2F1E2",
+  "#3C604A", "#E18B8E", "#A8CA6B", "#E6CA86",
+  "#89C4D5", "#A697CC", "#89C4D5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

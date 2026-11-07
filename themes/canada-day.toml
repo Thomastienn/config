@@ -1,0 +1,59 @@
+# Canada Day: Maple red and warm white.
+# Apply with: theme apply themes/canada-day.toml
+name = "Canada Day Maple"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#2B171C"
+surface = "#402830"
+text = "#FAECE3"
+muted = "#F8D5D2"
+primary = "#F4A0A9"
+secondary = "#FFF0E8"
+warning = "#F2D497"
+error = "#F0A0AB"
+border = "#6D444B"
+separator = "#87565D"
+selection = "#4F383F"
+urgent_background = "#4A252E"
+pane_border = "#43272D"
+gradient_start = "#3F252A"
+gradient_end = "#402D30"
+menu_text = "#FAECE3"
+panel_separator = "#87565D"
+shade1 = "#331C22"
+shade3 = "#3B2227"
+shade4 = "#40252B"
+shade5 = "#45292E"
+shade6 = "#4A2C32"
+shade7 = "#4F3035"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Red"
+gtk3 = "Mint-Y-Dark-Red"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#2B171C", "#E6707E", "#A4C27C", "#E7BE88",
+  "#8DBACD", "#A083B6", "#8DBACD", "#FAECE3",
+  "#6D444B", "#ED858F", "#AACE76", "#F1C487",
+  "#8BC8E0", "#B291CD", "#8BC8E0", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

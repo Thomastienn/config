@@ -1,0 +1,59 @@
+# Easter: Lavender and primrose yellow.
+# Apply with: theme apply themes/easter.toml
+name = "Easter Primrose"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#202232"
+surface = "#32364B"
+text = "#F6EEE9"
+muted = "#E7DEEB"
+primary = "#C5BAF1"
+secondary = "#F0D69F"
+warning = "#F0D290"
+error = "#EDA2B1"
+border = "#565471"
+separator = "#6C688A"
+selection = "#414352"
+urgent_background = "#422E3E"
+pane_border = "#343449"
+gradient_start = "#303145"
+gradient_end = "#35343D"
+menu_text = "#F6EEE9"
+panel_separator = "#6C688A"
+shade1 = "#27283A"
+shade3 = "#2D2E41"
+shade4 = "#313246"
+shade5 = "#35364B"
+shade6 = "#3A3A50"
+shade7 = "#3E3D54"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Purple"
+gtk3 = "Mint-Y-Dark-Purple"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#202232", "#E07487", "#A3BF73", "#E1C190",
+  "#8CB7C4", "#9B86BF", "#8CB7C4", "#F6EEE9",
+  "#565471", "#E78898", "#A8CB6E", "#ECC78F",
+  "#89C4D7", "#AC94D6", "#89C4D7", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

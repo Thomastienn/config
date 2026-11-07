@@ -1,0 +1,59 @@
+# Birthday: Periwinkle and confetti pink.
+# Apply with: theme apply themes/birthday.toml
+name = "Birthday Confetti"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#222039"
+surface = "#34324E"
+text = "#F4F0E9"
+muted = "#E1E6ED"
+primary = "#B4CDF6"
+secondary = "#EDB7DC"
+warning = "#F0CE96"
+error = "#EBA4B1"
+border = "#525977"
+separator = "#657090"
+selection = "#433D59"
+urgent_background = "#432C44"
+pane_border = "#343550"
+gradient_start = "#31314C"
+gradient_end = "#362F49"
+menu_text = "#F4F0E9"
+panel_separator = "#657090"
+shade1 = "#282741"
+shade3 = "#2E2E48"
+shade4 = "#31324D"
+shade5 = "#353652"
+shade6 = "#393B56"
+shade7 = "#3C3F5B"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Blue"
+gtk3 = "Mint-Y-Dark-Blue"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#222039", "#DE7687", "#A2BB7A", "#DFC391",
+  "#8BB3CB", "#9988BF", "#8BB3CB", "#F4F0E9",
+  "#525977", "#E58A99", "#A7C775", "#EAC990",
+  "#89C1DF", "#AA96D6", "#89C1DF", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

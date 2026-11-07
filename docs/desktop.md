@@ -115,14 +115,12 @@ different GTK 2 settings, terminal ANSI colors and Lato lockscreen fonts.
 cd ~/thomas_config
 theme check                         # read-only check of selected preset and output
 theme apply                         # reapply the preset named by themes/active
-cp themes/cozy-mint.toml themes/halloween.toml
-$EDITOR themes/halloween.toml
 theme check themes/halloween.toml    # preview differences and missing assets
 theme apply themes/halloween.toml
 theme apply themes/cozy-mint.toml    # return to the regular theme
 ```
 
-Only Cozy Mint is included. Presets live directly under `themes/`; use filenames
+Holiday presets are included alongside Cozy Mint. Presets live directly under `themes/`; use filenames
 such as `halloween.toml`. `theme apply FILE` changes the one-line `themes/active`
 selector after successful activation. Commit the preset and selector deliberately
 to share the choice. After pulling on another machine, `apply --configs-only`

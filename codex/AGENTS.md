@@ -60,8 +60,16 @@ For multi-step tasks, state a brief plan:
 
 Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
 
-Also, always prefer 'trash' command instead of 'delete' when removing files, to avoid accidental loss.
-
 ---
 
 **These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+--
+
+# Reminder
+- Also, ALWAYS prefer 'trash' command instead of 'delete' when removing files, to avoid accidental loss.
+- ALWAYS use cavemen, rtk and codebase-memory-mcp to reduce tokens
+- ALWAYS use ponytail to make better decision
+- HIGHLY recommended use Matt Pocock skills for the workflow, read overall skill first then decide if the problem is suitable for it
+- ONLY use Beads for task tracking for personal project (Must use if it's a single person project)
+- MUST use Impeccable whenever making UI changes and frontend

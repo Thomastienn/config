@@ -1,0 +1,59 @@
+# New Year: Midnight blue, champagne gold, ice blue.
+# Apply with: theme apply themes/new-year.toml
+name = "Midnight New Year"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#111B2B"
+surface = "#233149"
+text = "#FAF1DF"
+muted = "#F8E9C1"
+primary = "#F5D57C"
+secondary = "#9BCFF4"
+warning = "#E8D198"
+error = "#F0A4A7"
+border = "#5C5846"
+separator = "#7A7150"
+selection = "#2D3E57"
+urgent_background = "#362839"
+pane_border = "#2C3135"
+gradient_start = "#282E33"
+gradient_end = "#1F2D3F"
+menu_text = "#FAF1DF"
+panel_separator = "#7A7150"
+shade1 = "#1A222E"
+shade3 = "#232A31"
+shade4 = "#292F34"
+shade5 = "#2F3336"
+shade6 = "#343838"
+shade7 = "#3A3C3A"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Blue"
+gtk3 = "Mint-Y-Dark-Blue"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#111B2B", "#E67778", "#98BE7D", "#E7C482",
+  "#81B6CE", "#A189B1", "#81B6CE", "#FAF1DF",
+  "#5C5846", "#ED8B8A", "#9ECA78", "#F1CA81",
+  "#7FC4E2", "#B297C8", "#7FC4E2", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

@@ -1,0 +1,59 @@
+# Mother Day: Carnation pink and lilac.
+# Apply with: theme apply themes/mother-day.toml
+name = "Mother Day Carnation"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#2B1C24"
+surface = "#3E2D35"
+text = "#F9EEE5"
+muted = "#F6DCDC"
+primary = "#F0B3C8"
+secondary = "#D4C1E8"
+warning = "#EDCF97"
+error = "#F0A2AD"
+border = "#6C4E5A"
+separator = "#86616F"
+selection = "#4A3943"
+urgent_background = "#4A2934"
+pane_border = "#432E38"
+gradient_start = "#3F2B34"
+gradient_end = "#3C2C38"
+menu_text = "#F9EEE5"
+panel_separator = "#86616F"
+shade1 = "#33222B"
+shade3 = "#3B2831"
+shade4 = "#402C35"
+shade5 = "#453039"
+shade6 = "#4A333D"
+shade7 = "#4E3742"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Pink"
+gtk3 = "Mint-Y-Dark-Pink"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#2B1C24", "#E57382", "#9FBD7C", "#E6C08B",
+  "#88B5CD", "#A085BA", "#88B5CD", "#F9EEE5",
+  "#6C4E5A", "#EC8793", "#A4C876", "#F1C68A",
+  "#86C2E0", "#B293D1", "#86C2E0", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

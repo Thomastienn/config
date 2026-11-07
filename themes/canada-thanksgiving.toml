@@ -1,0 +1,59 @@
+# Canada Thanksgiving: Maple gold and harvest sage.
+# Apply with: theme apply themes/canada-thanksgiving.toml
+name = "Canada Thanksgiving Harvest"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#281F15"
+surface = "#3D3020"
+text = "#F8EFDF"
+muted = "#F2E0C0"
+primary = "#E3BD78"
+secondary = "#BECE97"
+warning = "#EBD18F"
+error = "#EFA2A7"
+border = "#665336"
+separator = "#7E6843"
+selection = "#473D2A"
+urgent_background = "#482B28"
+pane_border = "#3E3221"
+gradient_start = "#3B2F1F"
+gradient_end = "#373022"
+menu_text = "#F8EFDF"
+panel_separator = "#7E6843"
+shade1 = "#2F2519"
+shade3 = "#372C1D"
+shade4 = "#3C301F"
+shade5 = "#403422"
+shade6 = "#453724"
+shade7 = "#4A3B27"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#281F15", "#E47478", "#9DBE72", "#E5C182",
+  "#86B6C3", "#9E86B0", "#86B6C3", "#F8EFDF",
+  "#665336", "#EB888A", "#A2CA6D", "#EFC881",
+  "#83C3D6", "#B095C7", "#83C3D6", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

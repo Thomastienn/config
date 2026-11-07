@@ -1,0 +1,22 @@
+# Setup copies this to local/theme-calendar.toml only when that file is missing.
+# Edit the local copy: replace each MM-DD and set enabled = true.
+enabled = true
+fallback = "cozy-mint.toml"
+
+[[events]]
+name = "Birthday"
+enabled = false
+theme = "birthday.toml"
+date = "01-01"  # Sample only; replace with your date.
+before = 1
+after = 0
+priority = 100
+
+[[events]]
+name = "Anniversary"
+enabled = false
+theme = "anniversary.toml"
+date = "01-01"  # Sample only; replace with your date.
+before = 0
+after = 0
+priority = 100

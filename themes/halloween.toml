@@ -1,0 +1,59 @@
+# Halloween: Pumpkin orange and violet.
+# Apply with: theme apply themes/halloween.toml
+name = "Harvest Halloween"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#211522"
+surface = "#342335"
+text = "#FAEEDE"
+muted = "#FCDDBB"
+primary = "#FFB469"
+secondary = "#CA9BEC"
+warning = "#ECCC97"
+error = "#F1A2A6"
+border = "#6A4939"
+separator = "#875E43"
+selection = "#402D44"
+urgent_background = "#422432"
+pane_border = "#3C282B"
+gradient_start = "#372529"
+gradient_end = "#322236"
+menu_text = "#FAEEDE"
+panel_separator = "#875E43"
+shade1 = "#2A1B25"
+shade3 = "#332228"
+shade4 = "#382629"
+shade5 = "#3E2A2B"
+shade6 = "#432E2D"
+shade7 = "#49322F"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Orange"
+gtk3 = "Mint-Y-Dark-Orange"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#211522", "#E77376", "#9EB87C", "#E8C080",
+  "#87B0CD", "#A285AF", "#87B0CD", "#FAEEDE",
+  "#6A4939", "#EE8788", "#A3C377", "#F3C67F",
+  "#84BDE1", "#B393C5", "#84BDE1", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

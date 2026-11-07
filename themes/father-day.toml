@@ -1,0 +1,59 @@
+# Father Day: Indigo and leather tan.
+# Apply with: theme apply themes/father-day.toml
+name = "Father Day Indigo"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#172331"
+surface = "#293749"
+text = "#F3EFE8"
+muted = "#DCE3E7"
+primary = "#A8C6E4"
+secondary = "#D9BB94"
+warning = "#EECF8F"
+error = "#EAA3B0"
+border = "#47596C"
+separator = "#5A6E83"
+selection = "#37424F"
+urgent_background = "#3B2E3E"
+pane_border = "#283746"
+gradient_start = "#263343"
+gradient_end = "#2A323B"
+menu_text = "#F3EFE8"
+panel_separator = "#5A6E83"
+shade1 = "#1D2A38"
+shade3 = "#23303F"
+shade4 = "#263444"
+shade5 = "#2A3848"
+shade6 = "#2D3C4D"
+shade7 = "#314051"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Blue"
+gtk3 = "Mint-Y-Dark-Blue"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#172331", "#DD7585", "#A0BC72", "#DEC28F",
+  "#89B4C3", "#9788BD", "#89B4C3", "#F3EFE8",
+  "#47596C", "#E48997", "#A5C76C", "#E8C98E",
+  "#86C1D6", "#A996D4", "#86C1D6", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

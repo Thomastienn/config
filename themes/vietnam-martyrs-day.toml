@@ -1,0 +1,59 @@
+# Vietnam War Invalids and Martyrs Day: Quiet earth, incense gold, muted red.
+# Apply with: theme apply themes/vietnam-martyrs-day.toml
+name = "Vietnam Martyrs Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#211B19"
+surface = "#352D29"
+text = "#F7EEE0"
+muted = "#EEDEC6"
+primary = "#D8B78A"
+secondary = "#D79999"
+warning = "#EECB8F"
+error = "#EEA2A8"
+border = "#5D4E3E"
+separator = "#75634D"
+selection = "#423632"
+urgent_background = "#42282C"
+pane_border = "#372E27"
+gradient_start = "#332B24"
+gradient_end = "#332826"
+menu_text = "#F7EEE0"
+panel_separator = "#75634D"
+shade1 = "#28211E"
+shade3 = "#302722"
+shade4 = "#342B25"
+shade5 = "#392F28"
+shade6 = "#3D332B"
+shade7 = "#42372D"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#211B19", "#E3737A", "#A0B872", "#E3C184",
+  "#89B0C3", "#9D86B2", "#89B0C3", "#F7EEE0",
+  "#5D4E3E", "#EA878C", "#A5C36D", "#EEC783",
+  "#86BDD7", "#AF94C9", "#86BDD7", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

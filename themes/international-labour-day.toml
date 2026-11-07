@@ -1,0 +1,59 @@
+# International Labour Day: Iron brown, brick, brass.
+# Apply with: theme apply themes/international-labour-day.toml
+name = "International Labour Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#241C18"
+surface = "#372D26"
+text = "#F9EDE1"
+muted = "#F5D9C7"
+primary = "#EDA98B"
+secondary = "#E5C388"
+warning = "#EFD08D"
+error = "#F0A1A8"
+border = "#664B3E"
+separator = "#805D4D"
+selection = "#45392E"
+urgent_background = "#44292B"
+pane_border = "#3C2D26"
+gradient_start = "#382A24"
+gradient_end = "#372D23"
+menu_text = "#F9EDE1"
+panel_separator = "#805D4D"
+shade1 = "#2C221D"
+shade3 = "#342721"
+shade4 = "#392B24"
+shade5 = "#3E2E27"
+shade6 = "#43322A"
+shade7 = "#48352D"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Orange"
+gtk3 = "Mint-Y-Dark-Orange"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#241C18", "#E5727A", "#A1BD70", "#E6BF84",
+  "#8AB5C1", "#A084B3", "#8AB5C1", "#F9EDE1",
+  "#664B3E", "#EC868C", "#A7C86B", "#F1C583",
+  "#88C2D5", "#B192C9", "#88C2D5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

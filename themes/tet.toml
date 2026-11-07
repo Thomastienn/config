@@ -1,0 +1,59 @@
+# Tet Nguyen Dan: Apricot gold and lucky red.
+# Apply with: theme apply themes/tet.toml
+name = "Apricot Tet"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#301417"
+surface = "#46262B"
+text = "#FAF0E0"
+muted = "#FCE7C3"
+primary = "#FFD37F"
+secondary = "#F3A39B"
+warning = "#F0CC8F"
+error = "#F1A4A7"
+border = "#745339"
+separator = "#8F6C47"
+selection = "#543034"
+urgent_background = "#4E232A"
+pane_border = "#492B23"
+gradient_start = "#452721"
+gradient_end = "#442224"
+menu_text = "#FAF0E0"
+panel_separator = "#8F6C47"
+shade1 = "#381C1B"
+shade3 = "#41231F"
+shade4 = "#462822"
+shade5 = "#4B2D25"
+shade6 = "#503227"
+shade7 = "#55362A"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Red"
+gtk3 = "Mint-Y-Dark-Red"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#301417", "#E77779", "#A3B973", "#E8C483",
+  "#8CB1C3", "#A289B1", "#8CB1C3", "#FAF0E0",
+  "#745339", "#EE8B8A", "#A8C46D", "#F3CA82",
+  "#89BED7", "#B397C8", "#89BED7", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

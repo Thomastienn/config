@@ -3,6 +3,7 @@
 
 import argparse
 import ast
+from datetime import date, timedelta
 import fcntl
 import hashlib
 import importlib.util
@@ -448,11 +449,89 @@ def reload_desktop(data):
     print("Neovim: focus the editor or run :DesktopThemeReload (restart once after first setup).")
 
 
+def calendar_choice(today=None):
+    """Choose a preset using local civil dates; never infer lunar dates."""
+    today = today or date.today()
+    config = tomllib.loads((THEMES / "calendar.toml").read_text())
+    local = REPO / "local/theme-calendar.toml"
+    if local.exists():
+        overrides = tomllib.loads(local.read_text())
+        config.update({key: value for key, value in overrides.items() if key != "events"})
+        config.setdefault("events", []).extend(overrides.get("events", []))
+    fallback = config["fallback"]
+    load(fallback)
+    if not config.get("enabled", True):
+        return None, "Automatic switching disabled"
+    matches = []
+    for index, event in enumerate(config.get("events", [])):
+        if not event.get("enabled", True):
+            continue
+        load(event["theme"])
+        before, after = event.get("before", 0), event.get("after", 0)
+        priority = event.get("priority", 0)
+        if any(type(n) is not int for n in (before, after, priority)) or not (0 <= before <= 366 and 0 <= after <= 366):
+            raise ValueError("Calendar windows must be 0..366 days; priority must be an integer")
+        if sum(key in event for key in ("date", "dates", "weekday")) != 1:
+            raise ValueError("Each event needs exactly one of date, dates, or weekday")
+        occurrences = []
+        if "dates" in event:
+            occurrences = [date.fromisoformat(value) for value in event["dates"]]
+        else:
+            for year in range(today.year - 1, today.year + 2):
+                if "date" in event:
+                    value = event["date"]
+                    if not re.fullmatch(r"\d{2}-\d{2}", value):
+                        raise ValueError("Annual dates must use MM-DD")
+                    month, day = map(int, value.split("-"))
+                    if (month, day) == (2, 29) and not __import__("calendar").isleap(year):
+                        continue
+                    occurrence = date(year, month, day)
+                else:
+                    month, weekday, nth = event["weekday"]
+                    if not (1 <= month <= 12 and 0 <= weekday <= 6 and 1 <= nth <= 5):
+                        raise ValueError("weekday must be [month, Monday=0..Sunday=6, occurrence=1..5]")
+                    first = date(year, month, 1)
+                    occurrence = first + timedelta(days=(weekday - first.weekday()) % 7 + 7 * (nth - 1))
+                    if occurrence.month != month:
+                        continue
+                occurrences.append(occurrence)
+        for occurrence in occurrences:
+            distance = (occurrence - today).days
+            if -after <= distance <= before:
+                matches.append((-priority, abs(distance), index, event["theme"], event["name"]))
+    if matches:
+        winner = min(matches)
+        return winner[3], winner[4]
+    return fallback, "Default theme"
+
+
+def auto_theme(preview=False, today=None):
+    preset, reason = calendar_choice(today)
+    print(f"Calendar: {reason}" + (f" -> {preset}" if preset else ""))
+    if preview or preset is None:
+        return
+    if not os.environ.get("DISPLAY"):
+        print("Pending: calendar activation needs a desktop session.")
+        return
+    if check(preset):
+        if bridge(check=True):
+            raise ValueError("Run setup.sh link before automatic switching")
+        apply(preset)
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action", choices=["apply", "check", "shell"])
+    parser.add_argument("action", choices=["apply", "check", "shell", "auto", "calendar"])
     parser.add_argument("file", nargs="?", help="preset under this repository's themes/ directory")
+    parser.add_argument("--date", type=date.fromisoformat, help="preview date (calendar action only)")
     args = parser.parse_args()
+    if args.date and args.action != "calendar":
+        parser.error("--date is only available for calendar previews")
+    if args.action in ("auto", "calendar"):
+        if args.file:
+            parser.error("calendar commands do not accept a preset")
+        auto_theme(preview=args.action == "calendar", today=args.date)
+        return 0
     if args.action == "shell":
         data, preset = load(args.file)
         print(render(data, preset)["shell.sh"], end="")

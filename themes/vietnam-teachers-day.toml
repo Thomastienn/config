@@ -1,0 +1,59 @@
+# Vietnam Teachers Day: Chalk green and ochre.
+# Apply with: theme apply themes/vietnam-teachers-day.toml
+name = "Vietnam Teachers Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#1D231C"
+surface = "#303A2B"
+text = "#F6F0E1"
+muted = "#E7E7C8"
+primary = "#C4D28E"
+secondary = "#E4BC8B"
+warning = "#EFCF8E"
+error = "#ECA4A9"
+border = "#545D42"
+separator = "#6A7450"
+selection = "#3E4433"
+urgent_background = "#3F2E2E"
+pane_border = "#31382A"
+gradient_start = "#2E3427"
+gradient_end = "#313227"
+menu_text = "#F6F0E1"
+panel_separator = "#6A7450"
+shade1 = "#242A21"
+shade3 = "#2A3125"
+shade4 = "#2F3528"
+shade5 = "#333A2B"
+shade6 = "#373E2E"
+shade7 = "#3B4231"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#1D231C", "#E0767B", "#A1BC71", "#E1C484",
+  "#8AB4C2", "#9B89B3", "#8AB4C2", "#F6F0E1",
+  "#545D42", "#E78B8C", "#A6C76B", "#ECCA83",
+  "#88C1D5", "#AC97CA", "#88C1D5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

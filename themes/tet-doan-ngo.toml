@@ -1,0 +1,59 @@
+# Tet Doan Ngo: Plum purple and rice gold.
+# Apply with: theme apply themes/tet-doan-ngo.toml
+name = "Tet Doan Ngo"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#211726"
+surface = "#33283B"
+text = "#F6EDE7"
+muted = "#E8D7E4"
+primary = "#C7A5DE"
+secondary = "#D6C58D"
+warning = "#EDD08E"
+error = "#EDA0AF"
+border = "#584663"
+separator = "#6D587B"
+selection = "#403542"
+urgent_background = "#422535"
+pane_border = "#35283C"
+gradient_start = "#322538"
+gradient_end = "#332830"
+menu_text = "#F6EDE7"
+panel_separator = "#6D587B"
+shade1 = "#281D2D"
+shade3 = "#2E2235"
+shade4 = "#322639"
+shade5 = "#37293E"
+shade6 = "#3B2D43"
+shade7 = "#3F3147"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Purple"
+gtk3 = "Mint-Y-Dark-Purple"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#211726", "#E17184", "#9FBD71", "#E1BF8E",
+  "#89B5C2", "#9B84BD", "#89B5C2", "#F6EDE7",
+  "#584663", "#E88596", "#A5C96C", "#ECC58D",
+  "#86C2D5", "#AD92D3", "#86C2D5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

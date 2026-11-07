@@ -1,0 +1,59 @@
+# Canada Labour Day: Steel blue and copper.
+# Apply with: theme apply themes/canada-labour-day.toml
+name = "Canada Labour Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#19252A"
+surface = "#2B383E"
+text = "#F3F0E6"
+muted = "#DCE4DF"
+primary = "#A8C8D0"
+secondary = "#E4B18C"
+warning = "#EFCE8E"
+error = "#EAA3AE"
+border = "#485B61"
+separator = "#5B7076"
+selection = "#3A4244"
+urgent_background = "#3C3038"
+pane_border = "#2A393E"
+gradient_start = "#27353B"
+gradient_end = "#2D3334"
+menu_text = "#F3F0E6"
+panel_separator = "#5B7076"
+shade1 = "#1F2C31"
+shade3 = "#243237"
+shade4 = "#28363B"
+shade5 = "#2C3A40"
+shade6 = "#2F3E44"
+shade7 = "#334248"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Aqua"
+gtk3 = "Mint-Y-Dark-Aqua"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#19252A", "#DD7583", "#A1BB71", "#DEC38C",
+  "#8AB3C2", "#9788BB", "#8AB3C2", "#F3F0E6",
+  "#485B61", "#E48A94", "#A6C66B", "#E8C98B",
+  "#88C0D5", "#A996D2", "#88C0D5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

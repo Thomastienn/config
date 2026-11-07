@@ -1,0 +1,59 @@
+# Vietnam Women Day: Lotus pink and sage.
+# Apply with: theme apply themes/vietnam-women-day.toml
+name = "Vietnam Women Day Lotus"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#2D1C29"
+surface = "#402C3B"
+text = "#F9EDE6"
+muted = "#F5D9E1"
+primary = "#EDA9D5"
+secondary = "#B9D6B6"
+warning = "#EAD292"
+error = "#F0A1AE"
+border = "#6C4B62"
+separator = "#855D78"
+selection = "#4A3A45"
+urgent_background = "#4B2938"
+pane_border = "#442D3E"
+gradient_start = "#402A3A"
+gradient_end = "#3B2F37"
+menu_text = "#F9EDE6"
+panel_separator = "#855D78"
+shade1 = "#352230"
+shade3 = "#3C2737"
+shade4 = "#412B3B"
+shade5 = "#462E3F"
+shade6 = "#4B3244"
+shade7 = "#503548"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Pink"
+gtk3 = "Mint-Y-Dark-Pink"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#2D1C29", "#E57283", "#9CBF76", "#E6BF8D",
+  "#85B7C7", "#A084BB", "#85B7C7", "#F9EDE6",
+  "#6C4B62", "#EC8695", "#A1CB70", "#F1C58C",
+  "#82C4DA", "#B192D2", "#82C4DA", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

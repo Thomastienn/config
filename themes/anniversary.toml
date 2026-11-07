@@ -1,0 +1,59 @@
+# Anniversary: Rose and champagne gold.
+# Apply with: theme apply themes/anniversary.toml
+name = "Anniversary Rose Gold"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#261A27"
+surface = "#3A293B"
+text = "#F9EDE5"
+muted = "#F4D9DC"
+primary = "#E8AAC8"
+secondary = "#E9CC92"
+warning = "#EFD08E"
+error = "#EFA1AD"
+border = "#664A5C"
+separator = "#7F5C71"
+selection = "#483642"
+urgent_background = "#462836"
+pane_border = "#3D2B3A"
+gradient_start = "#392837"
+gradient_end = "#3A2C32"
+menu_text = "#F9EDE5"
+panel_separator = "#7F5C71"
+shade1 = "#2E202D"
+shade3 = "#362634"
+shade4 = "#3A2938"
+shade5 = "#3F2D3C"
+shade6 = "#443040"
+shade7 = "#493444"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Pink"
+gtk3 = "Mint-Y-Dark-Pink"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#261A27", "#E47282", "#A2BE71", "#E5BF8B",
+  "#8BB6C2", "#9F84BA", "#8BB6C2", "#F9EDE5",
+  "#664A5C", "#EC8693", "#A7C96C", "#F0C58A",
+  "#88C3D6", "#B192D1", "#88C3D6", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

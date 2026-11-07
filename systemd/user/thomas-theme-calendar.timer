@@ -1,0 +1,10 @@
+[Unit]
+Description=Check special-date themes at login and every fifteen minutes
+
+[Timer]
+OnStartupSec=30s
+OnCalendar=*:0/15
+Persistent=true
+
+[Install]
+WantedBy=timers.target

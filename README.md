@@ -69,7 +69,8 @@ theme apply                              # reapply selected theme
 theme apply themes/my-theme.toml          # switch preset
 ```
 
-Edit appearance in [`themes/cozy-mint.toml`](themes/cozy-mint.toml). Run full
+Edit appearance in [`themes/cozy-mint.toml`](themes/cozy-mint.toml).
+[Special-date themes](docs/theme-calendar.md) switch automatically from a date registry. Run full
 `apply` again when dependencies change. Conflicts are backed up under
 `~/.local/state/thomas-config/backups/`; reruns preserve unrelated files.
 

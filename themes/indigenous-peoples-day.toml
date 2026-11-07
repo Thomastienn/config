@@ -1,0 +1,59 @@
+# National Indigenous Peoples Day: Earth and summer sage; no borrowed sacred motifs.
+# Apply with: theme apply themes/indigenous-peoples-day.toml
+name = "National Indigenous Peoples Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#241E16"
+surface = "#383025"
+text = "#F7EFE1"
+muted = "#EDE0C9"
+primary = "#D5BD92"
+secondary = "#9DC4B3"
+warning = "#E8D092"
+error = "#EEA2A9"
+border = "#5E523F"
+separator = "#75674F"
+selection = "#403C30"
+urgent_background = "#442A29"
+pane_border = "#393125"
+gradient_start = "#362E22"
+gradient_end = "#302F26"
+menu_text = "#F7EFE1"
+panel_separator = "#75674F"
+shade1 = "#2B241B"
+shade3 = "#322B20"
+shade4 = "#372F23"
+shade5 = "#3B3326"
+shade6 = "#3F3729"
+shade7 = "#443B2C"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#241E16", "#E2747B", "#99BD75", "#E3C185",
+  "#82B5C6", "#9D86B3", "#82B5C6", "#F7EFE1",
+  "#5E523F", "#E9888D", "#9EC870", "#EEC884",
+  "#7FC2DA", "#AE95CA", "#7FC2DA", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

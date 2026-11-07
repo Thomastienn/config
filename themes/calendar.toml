@@ -1,0 +1,333 @@
+# Calendar uses local desktop dates. Windows include both endpoints.
+# Larger priority wins, then closest event, then registry order.
+# Disabled birthday and anniversary examples are at the bottom of this file.
+enabled = true
+fallback = "cozy-mint.toml"
+
+[[events]]
+name = "New Year"
+theme = "new-year.toml"
+date = "01-01"
+before = 14
+after = 1
+priority = 20
+
+[[events]]
+name = "Valentine"
+theme = "valentine.toml"
+date = "02-14"
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "International Women Day"
+theme = "international-women-day.toml"
+date = "03-08"
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "Earth Day"
+theme = "earth-day.toml"
+date = "04-22"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam Reunification"
+theme = "vietnam-reunification.toml"
+date = "04-30"
+before = 1
+after = 0
+priority = 30
+
+[[events]]
+name = "International Labour Day"
+theme = "international-labour-day.toml"
+date = "05-01"
+before = 0
+after = 0
+priority = 30
+
+[[events]]
+name = "Vietnam Children Day"
+theme = "vietnam-children-day.toml"
+date = "06-01"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Canada Day"
+theme = "canada-day.toml"
+date = "07-01"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam War Invalids and Martyrs Day"
+theme = "vietnam-martyrs-day.toml"
+date = "07-27"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam National Day"
+theme = "vietnam-national-day.toml"
+date = "09-02"
+before = 7
+after = 0
+priority = 30
+
+[[events]]
+name = "Vietnam Women Day"
+theme = "vietnam-women-day.toml"
+date = "10-20"
+before = 1
+after = 0
+priority = 30
+
+[[events]]
+name = "Halloween"
+theme = "halloween.toml"
+date = "10-31"
+before = 14
+after = 0
+priority = 20
+
+[[events]]
+name = "Remembrance Day"
+theme = "remembrance.toml"
+date = "11-11"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam Teachers Day"
+theme = "vietnam-teachers-day.toml"
+date = "11-20"
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam Culture Day"
+theme = "vietnam-culture-day.toml"
+date = "11-24"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Christmas"
+theme = "christmas.toml"
+date = "12-25"
+before = 14
+after = 0
+priority = 30
+
+[[events]]
+name = "International Peace Day"
+theme = "international-peace-day.toml"
+date = "09-21"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "International Family Day"
+theme = "international-family-day.toml"
+date = "05-15"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vietnam Family Day"
+theme = "vietnam-family-day.toml"
+date = "06-28"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Mother Day"
+theme = "mother-day.toml"
+weekday = [5, 6, 2]
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "Father Day"
+theme = "father-day.toml"
+weekday = [6, 6, 3]
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "Canada Thanksgiving"
+theme = "canada-thanksgiving.toml"
+weekday = [10, 0, 2]
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "US Thanksgiving"
+theme = "us-thanksgiving.toml"
+weekday = [11, 3, 4]
+before = 1
+after = 0
+priority = 10
+
+[[events]]
+name = "Tet Nguyen Dan"
+theme = "tet.toml"
+dates = ["2026-02-17", "2027-02-06"]
+before = 14
+after = 6
+priority = 40
+
+[[events]]
+name = "Hung Kings Commemoration"
+theme = "hung-kings.toml"
+dates = ["2026-04-26", "2027-04-16"]
+before = 1
+after = 0
+priority = 30
+
+[[events]]
+name = "Tet Doan Ngo"
+theme = "tet-doan-ngo.toml"
+dates = ["2026-06-19", "2027-06-08"]
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Vu Lan"
+theme = "vu-lan.toml"
+dates = ["2026-08-27", "2027-08-16"]
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Mid Autumn"
+theme = "mid-autumn.toml"
+dates = ["2026-09-25", "2027-09-15"]
+before = 7
+after = 0
+priority = 30
+
+[[events]]
+name = "Vesak"
+theme = "vesak.toml"
+dates = ["2026-05-31", "2027-05-20"]
+before = 0
+after = 0
+priority = 10
+
+# Checked against subscribed Google Canada/Vietnam holiday calendars, 2026-11-07.
+# Explicit movable dates below cover 2026–2027; actual days, not substitute days off.
+
+[[events]]
+name = "St Patrick Day"
+theme = "st-patrick-day.toml"
+date = "03-17"
+before = 0
+after = 0
+priority = 10
+
+[[events]]
+name = "Good Friday"
+theme = "good-friday.toml"
+dates = ["2026-04-03", "2027-03-26"]
+before = 0
+after = 0
+priority = 30
+
+[[events]]
+name = "Easter"
+theme = "easter.toml"
+dates = ["2026-04-05", "2027-03-28"]
+before = 1
+after = 1
+priority = 30
+
+[[events]]
+name = "Victoria Day"
+theme = "victoria-day.toml"
+dates = ["2026-05-18", "2027-05-24"]
+before = 1
+after = 0
+priority = 20
+
+[[events]]
+name = "National Indigenous Peoples Day"
+theme = "indigenous-peoples-day.toml"
+date = "06-21"
+before = 0
+after = 0
+priority = 30
+
+[[events]]
+name = "Alberta Heritage Day"
+theme = "alberta-heritage-day.toml"
+weekday = [8, 0, 1]
+before = 0
+after = 0
+priority = 20
+
+[[events]]
+name = "Canada Labour Day"
+theme = "canada-labour-day.toml"
+weekday = [9, 0, 1]
+before = 0
+after = 0
+priority = 30
+
+[[events]]
+name = "National Day for Truth and Reconciliation"
+theme = "truth-and-reconciliation.toml"
+date = "09-30"
+before = 0
+after = 0
+priority = 40
+
+[[events]]
+name = "Boxing Day"
+theme = "boxing-day.toml"
+date = "12-26"
+before = 0
+after = 0
+priority = 30
+
+# Discoverable examples only; keep these disabled.
+# Put real dates in local/theme-calendar.toml (Git-ignored) and enable them there.
+# Private events append to this registry; they do not replace entries by name.
+[[events]]
+name = "Birthday"
+enabled = false
+theme = "birthday.toml"
+date = "13-01"  # Illustrative MM-DD, not a real personal date.
+before = 0
+after = 0
+priority = 100
+
+[[events]]
+name = "Anniversary"
+enabled = false
+theme = "anniversary.toml"
+date = "13-01"  # Illustrative MM-DD, not a real personal date.
+before = 0
+after = 0
+priority = 100

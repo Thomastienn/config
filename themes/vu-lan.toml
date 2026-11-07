@@ -1,0 +1,59 @@
+# Vu Lan: White rose and muted rose pink.
+# Apply with: theme apply themes/vu-lan.toml
+name = "Vu Lan Rose"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#211D26"
+surface = "#332E3B"
+text = "#F9F2E7"
+muted = "#F6EFE5"
+primary = "#EEE8DF"
+secondary = "#DFA5AE"
+warning = "#EECD91"
+error = "#F0A6AF"
+border = "#656063"
+separator = "#7F7A7B"
+selection = "#413844"
+urgent_background = "#422A35"
+pane_border = "#3A353C"
+gradient_start = "#363138"
+gradient_end = "#342B34"
+menu_text = "#F9F2E7"
+panel_separator = "#7F7A7B"
+shade1 = "#29252D"
+shade3 = "#312D35"
+shade4 = "#373239"
+shade5 = "#3C373E"
+shade6 = "#413C43"
+shade7 = "#464247"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Grey"
+gtk3 = "Mint-Y-Dark-Grey"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#211D26", "#E57984", "#A1B975", "#E6C78E",
+  "#8AB1C6", "#A08CBD", "#8AB1C6", "#F9F2E7",
+  "#656063", "#EC8D96", "#A6C570", "#F1CD8D",
+  "#87BFD9", "#B19AD4", "#87BFD9", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

@@ -1,0 +1,59 @@
+# Christmas: Evergreen, holly red, warm white.
+# Apply with: theme apply themes/christmas.toml
+name = "Evergreen Christmas"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#14251D"
+surface = "#25392D"
+text = "#F3F1E3"
+muted = "#DBE9D2"
+primary = "#A2D5A9"
+secondary = "#F2A4A0"
+warning = "#F0CC90"
+error = "#EAA4AB"
+border = "#435F4B"
+separator = "#55765D"
+selection = "#354236"
+urgent_background = "#38302E"
+pane_border = "#253A2E"
+gradient_start = "#22372B"
+gradient_end = "#2A322A"
+menu_text = "#F3F1E3"
+panel_separator = "#55765D"
+shade1 = "#1A2C23"
+shade3 = "#1F3328"
+shade4 = "#23372C"
+shade5 = "#263C2F"
+shade6 = "#2A4033"
+shade7 = "#2E4536"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#14251D", "#DC777E", "#A3B973", "#DDC488",
+  "#8CB1C4", "#9789B6", "#8CB1C4", "#F3F1E3",
+  "#435F4B", "#E38B8F", "#A8C56E", "#E8CA87",
+  "#89BED7", "#A897CD", "#89BED7", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

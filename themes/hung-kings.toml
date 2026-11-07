@@ -1,0 +1,59 @@
+# Hung Kings Commemoration: Bronze and temple green.
+# Apply with: theme apply themes/hung-kings.toml
+name = "Hung Kings Commemoration"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#251E14"
+surface = "#383122"
+text = "#F8EFE0"
+muted = "#EFE0C4"
+primary = "#DBBD84"
+secondary = "#AFC7A6"
+warning = "#EAD090"
+error = "#EEA2A8"
+border = "#615239"
+separator = "#796748"
+selection = "#423D2D"
+urgent_background = "#452A28"
+pane_border = "#3B3121"
+gradient_start = "#372E1F"
+gradient_end = "#332F23"
+menu_text = "#F8EFE0"
+panel_separator = "#796748"
+shade1 = "#2C2418"
+shade3 = "#342B1D"
+shade4 = "#382F20"
+shade5 = "#3D3323"
+shade6 = "#413725"
+shade7 = "#463B28"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#251E14", "#E37479", "#9BBD74", "#E4C183",
+  "#84B5C5", "#9D86B2", "#84B5C5", "#F8EFE0",
+  "#615239", "#EA888B", "#A0C96F", "#EEC882",
+  "#81C3D8", "#AF95C9", "#81C3D8", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

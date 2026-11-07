@@ -1,0 +1,59 @@
+# Alberta Heritage Day: Prairie sky blue and wheat gold.
+# Apply with: theme apply themes/alberta-heritage-day.toml
+name = "Alberta Heritage Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#172435"
+surface = "#29394B"
+text = "#F3EFE8"
+muted = "#D9E3E9"
+primary = "#9DC6ED"
+secondary = "#E7CA86"
+warning = "#EFD08D"
+error = "#E9A3B0"
+border = "#435972"
+separator = "#556F8A"
+selection = "#384550"
+urgent_background = "#3B2F40"
+pane_border = "#27374B"
+gradient_start = "#243447"
+gradient_end = "#2C353D"
+menu_text = "#F3EFE8"
+panel_separator = "#556F8A"
+shade1 = "#1C2A3C"
+shade3 = "#223144"
+shade4 = "#253548"
+shade5 = "#28394D"
+shade6 = "#2C3D52"
+shade7 = "#2F4156"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Blue"
+gtk3 = "Mint-Y-Dark-Blue"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#172435", "#DB7586", "#A1BE70", "#DCC290",
+  "#8BB6C1", "#9688BE", "#8BB6C1", "#F3EFE8",
+  "#435972", "#E38998", "#A7C96B", "#E7C98F",
+  "#88C3D4", "#A896D5", "#88C3D4", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

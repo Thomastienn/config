@@ -1,0 +1,59 @@
+# International Family Day: Warm terracotta and sage.
+# Apply with: theme apply themes/international-family-day.toml
+name = "International Family Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#271E19"
+surface = "#3B3028"
+text = "#F8EEE1"
+muted = "#F1DECA"
+primary = "#E1BA96"
+secondary = "#A4CEBA"
+warning = "#E8D192"
+error = "#EFA2A9"
+border = "#645142"
+separator = "#7D6652"
+selection = "#433D34"
+urgent_background = "#472A2C"
+pane_border = "#3D3128"
+gradient_start = "#3A2E26"
+gradient_end = "#343029"
+menu_text = "#F8EEE1"
+panel_separator = "#7D6652"
+shade1 = "#2E241E"
+shade3 = "#362A23"
+shade4 = "#3B2E26"
+shade5 = "#3F3229"
+shade6 = "#44362C"
+shade7 = "#483A30"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#271E19", "#E4747C", "#99BE76", "#E5C185",
+  "#83B6C7", "#9E86B4", "#83B6C7", "#F8EEE1",
+  "#645142", "#EB888D", "#9FCA71", "#EFC784",
+  "#80C3DB", "#B094CB", "#80C3DB", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

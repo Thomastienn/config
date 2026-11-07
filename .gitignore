@@ -3,4 +3,7 @@ __pycache__/
 toolbox/.local/
 todo.txt
 themes/.generated
+/local/
+.env
+.env.*
 superpowers/

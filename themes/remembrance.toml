@@ -1,0 +1,59 @@
+# Remembrance Day: Poppy red and stone on charcoal wine.
+# Apply with: theme apply themes/remembrance.toml
+name = "Remembrance Day Poppy"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#23191D"
+surface = "#37282F"
+text = "#F9ECE2"
+muted = "#F6D3CF"
+primary = "#EE9AA3"
+secondary = "#D8CFC0"
+warning = "#EED193"
+error = "#F0A0AA"
+border = "#664449"
+separator = "#80545B"
+selection = "#44353B"
+urgent_background = "#44272E"
+pane_border = "#3B282D"
+gradient_start = "#37262A"
+gradient_end = "#352B2D"
+menu_text = "#F9ECE2"
+panel_separator = "#80545B"
+shade1 = "#2B1E22"
+shade3 = "#332328"
+shade4 = "#38272B"
+shade5 = "#3D2A2E"
+shade6 = "#422D32"
+shade7 = "#483035"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Red"
+gtk3 = "Mint-Y-Dark-Red"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#23191D", "#E5707D", "#A0BE77", "#E6BD87",
+  "#89B6C8", "#A082B5", "#89B6C8", "#F9ECE2",
+  "#664449", "#EC848F", "#A5CA72", "#F1C386",
+  "#86C4DB", "#B190CC", "#86C4DB", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

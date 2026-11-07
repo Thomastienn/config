@@ -1,0 +1,7 @@
+[Unit]
+Description=Apply the special-date desktop theme
+
+[Service]
+Type=oneshot
+UMask=0077
+ExecStart=/usr/bin/python3 %h/thomas_config/scripts/theme.py auto

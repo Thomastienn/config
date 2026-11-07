@@ -1,0 +1,59 @@
+# Victoria Day: Royal plum and gold.
+# Apply with: theme apply themes/victoria-day.toml
+name = "Victoria Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#221B31"
+surface = "#342C45"
+text = "#F6EEE8"
+muted = "#E8DBE8"
+primary = "#C8AFE9"
+secondary = "#EDD398"
+warning = "#F0D18F"
+error = "#EDA1B0"
+border = "#594C6E"
+separator = "#6E5F86"
+selection = "#43394C"
+urgent_background = "#43283E"
+pane_border = "#362D47"
+gradient_start = "#332A43"
+gradient_end = "#362D3B"
+menu_text = "#F6EEE8"
+panel_separator = "#6E5F86"
+shade1 = "#292138"
+shade3 = "#2F2740"
+shade4 = "#332B44"
+shade5 = "#382E49"
+shade6 = "#3C324E"
+shade7 = "#403652"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Purple"
+gtk3 = "Mint-Y-Dark-Purple"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#221B31", "#E17286", "#A2BF72", "#E2C08F",
+  "#8BB7C3", "#9B85BE", "#8BB7C3", "#F6EEE8",
+  "#594C6E", "#E88797", "#A7CA6D", "#ECC68E",
+  "#89C4D6", "#AD93D5", "#89C4D6", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

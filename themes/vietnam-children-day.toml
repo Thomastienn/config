@@ -1,0 +1,59 @@
+# Vietnam Children Day: Pool blue, sunshine yellow, aqua.
+# Apply with: theme apply themes/vietnam-children-day.toml
+name = "Vietnam Children Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#132632"
+surface = "#253B48"
+text = "#F2F1E8"
+muted = "#D6EBE8"
+primary = "#94DCE8"
+secondary = "#F5D887"
+warning = "#F0D28D"
+error = "#E9A5B0"
+border = "#3E626E"
+separator = "#4E7A86"
+selection = "#36484D"
+urgent_background = "#38303E"
+pane_border = "#223C48"
+gradient_start = "#203844"
+gradient_end = "#2A383A"
+menu_text = "#F2F1E8"
+panel_separator = "#4E7A86"
+shade1 = "#182D39"
+shade3 = "#1D3541"
+shade4 = "#213945"
+shade5 = "#243E4A"
+shade6 = "#27424E"
+shade7 = "#2A4753"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Aqua"
+gtk3 = "Mint-Y-Dark-Aqua"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#132632", "#DA7885", "#A3BF70", "#DBC58F",
+  "#8CB7C1", "#958ABE", "#8CB7C1", "#F2F1E8",
+  "#3E626E", "#E18C97", "#A8CB6B", "#E6CB8E",
+  "#8AC5D4", "#A698D5", "#8AC5D4", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

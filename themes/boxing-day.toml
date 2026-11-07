@@ -1,0 +1,59 @@
+# Boxing Day: Ice blue and silver lilac.
+# Apply with: theme apply themes/boxing-day.toml
+name = "Boxing Day Winter"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#182630"
+surface = "#293B46"
+text = "#F4F1E9"
+muted = "#E1ECEB"
+primary = "#B5E0F1"
+secondary = "#D0CDEB"
+warning = "#EDD197"
+error = "#EBA5B1"
+border = "#4C6370"
+separator = "#607C89"
+selection = "#364753"
+urgent_background = "#3C303D"
+pane_border = "#2B3C47"
+gradient_start = "#283943"
+gradient_end = "#2A3743"
+menu_text = "#F4F1E9"
+panel_separator = "#607C89"
+shade1 = "#1E2D38"
+shade3 = "#25353F"
+shade4 = "#283A44"
+shade5 = "#2C3E49"
+shade6 = "#30434E"
+shade7 = "#344753"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Aqua"
+gtk3 = "Mint-Y-Dark-Aqua"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#182630", "#DE7887", "#9FBE7C", "#DFC690",
+  "#88B6CD", "#998BBF", "#88B6CD", "#F4F1E9",
+  "#4C6370", "#E58C98", "#A4C977", "#EACC8F",
+  "#85C3E0", "#AA99D6", "#85C3E0", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

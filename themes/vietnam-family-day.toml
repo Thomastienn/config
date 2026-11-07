@@ -1,0 +1,59 @@
+# Vietnam Family Day: Lacquer plum and warm amber.
+# Apply with: theme apply themes/vietnam-family-day.toml
+name = "Vietnam Family Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#231A28"
+surface = "#352B3C"
+text = "#F6EEE8"
+muted = "#E9DCE6"
+primary = "#CBB2E2"
+secondary = "#E8BD94"
+warning = "#EFCF8F"
+error = "#EDA1AF"
+border = "#5A4C65"
+separator = "#70607E"
+selection = "#433743"
+urgent_background = "#442837"
+pane_border = "#372C3E"
+gradient_start = "#34293B"
+gradient_end = "#372A33"
+menu_text = "#F6EEE8"
+panel_separator = "#70607E"
+shade1 = "#2A202F"
+shade3 = "#302637"
+shade4 = "#352A3C"
+shade5 = "#392E40"
+shade6 = "#3D3245"
+shade7 = "#413549"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Purple"
+gtk3 = "Mint-Y-Dark-Purple"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#231A28", "#E17385", "#A2BC72", "#E2C08E",
+  "#8BB4C3", "#9B85BD", "#8BB4C3", "#F6EEE8",
+  "#5A4C65", "#E88796", "#A7C86C", "#ECC68E",
+  "#88C1D6", "#AD93D4", "#88C1D6", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

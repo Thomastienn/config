@@ -1,0 +1,59 @@
+# Vietnam Culture Day: Lacquer brown, antique gold, jade.
+# Apply with: theme apply themes/vietnam-culture-day.toml
+name = "Vietnam Culture Day"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#241C15"
+surface = "#382E22"
+text = "#F8EFE0"
+muted = "#F0DFC4"
+primary = "#DDBB83"
+secondary = "#B6C8BC"
+warning = "#EAD093"
+error = "#EEA2A8"
+border = "#615039"
+separator = "#796548"
+selection = "#423A2E"
+urgent_background = "#442928"
+pane_border = "#3A2F22"
+gradient_start = "#362C20"
+gradient_end = "#332D26"
+menu_text = "#F8EFE0"
+panel_separator = "#796548"
+shade1 = "#2B2219"
+shade3 = "#33291E"
+shade4 = "#372D21"
+shade5 = "#3C3123"
+shade6 = "#413526"
+shade7 = "#453929"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#241C15", "#E37479", "#9CBD76", "#E4C183",
+  "#85B6C7", "#9E86B2", "#85B6C7", "#F8EFE0",
+  "#615039", "#EA888B", "#A1C971", "#EFC782",
+  "#82C3DB", "#AF94C9", "#82C3DB", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

@@ -149,7 +149,16 @@ def firefox_links():
                     yield REPO / "firefox" / name, directory / "chrome" / name
 
 
+def setup_calendar():
+    path = REPO / "local/theme-calendar.toml"
+    if not path.exists():
+        theme.atomic(path, (REPO / "themes/calendar.example").read_bytes())
+        path.chmod(0o600)
+    print("Personal dates: edit local/theme-calendar.toml and enable birthday/anniversary entries.")
+
+
 def apply_links():
+    setup_calendar()
     theme.apply(live=False)
     theme.bridge()
     changes = []
@@ -243,6 +252,7 @@ def services():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text)
     run(["systemctl", "--user", "daemon-reload"])
+    run(["systemctl", "--user", "enable", "--now", "thomas-theme-calendar.timer"])
     environment = [key for key in ["DISPLAY", "XAUTHORITY"] if os.environ.get(key)]
     if environment:
         run(["systemctl", "--user", "import-environment", *environment])
@@ -344,6 +354,11 @@ def check():
             gaps.append("service: PDF index timer not enabled")
     except (OSError, subprocess.SubprocessError):
         gaps.append("service: PDF index timer not enabled or user session unavailable")
+    try:
+        if output(["systemctl", "--user", "is-enabled", "thomas-theme-calendar.timer"]) != "enabled":
+            gaps.append("service: theme calendar timer not enabled")
+    except (OSError, subprocess.SubprocessError):
+        gaps.append("service: theme calendar timer not enabled or user session unavailable")
     gaps.extend(login_tracking.check())
     data = json.loads((ROOT / "desktop/settings.json").read_text())
     for schema, values in theme.gsettings(theme.load()[0]).items():

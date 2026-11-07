@@ -1,0 +1,59 @@
+# Earth Day: Forest green, leaf green, river blue.
+# Apply with: theme apply themes/earth-day.toml
+name = "Earth Day Canopy"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#14251F"
+surface = "#253A30"
+text = "#F3F0E2"
+muted = "#DAE6CE"
+primary = "#9FCEA0"
+secondary = "#8FCBDA"
+warning = "#E6D096"
+error = "#EAA4AA"
+border = "#425D4A"
+separator = "#54735A"
+selection = "#2D463E"
+urgent_background = "#383030"
+pane_border = "#25392E"
+gradient_start = "#22362C"
+gradient_end = "#203632"
+menu_text = "#F3F0E2"
+panel_separator = "#54735A"
+shade1 = "#1A2C24"
+shade3 = "#1F3329"
+shade4 = "#23372D"
+shade5 = "#263B30"
+shade6 = "#2A3F33"
+shade7 = "#2D4336"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#14251F", "#DC767D", "#97BE7A", "#DDC386",
+  "#80B6CB", "#9688B5", "#80B6CB", "#F3F0E2",
+  "#425D4A", "#E38A8E", "#9CC975", "#E7CA86",
+  "#7DC3DE", "#A897CC", "#7DC3DE", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

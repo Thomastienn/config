@@ -1,0 +1,59 @@
+# National Day for Truth and Reconciliation: Orange and quiet linen.
+# Apply with: theme apply themes/truth-and-reconciliation.toml
+name = "Truth and Reconciliation"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#291C15"
+surface = "#3E2D23"
+text = "#F9EEDF"
+muted = "#F7DCC1"
+primary = "#F2B17A"
+secondary = "#DDD0BE"
+warning = "#EED193"
+error = "#F0A1A7"
+border = "#6B4D36"
+separator = "#856143"
+selection = "#4B3A2F"
+urgent_background = "#482928"
+pane_border = "#412E21"
+gradient_start = "#3D2B1F"
+gradient_end = "#3B2E26"
+menu_text = "#F9EEDF"
+panel_separator = "#856143"
+shade1 = "#312219"
+shade3 = "#39281D"
+shade4 = "#3E2C20"
+shade5 = "#432F22"
+shade6 = "#483325"
+shade7 = "#4D3727"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Orange"
+gtk3 = "Mint-Y-Dark-Orange"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#291C15", "#E67378", "#A0BE77", "#E7C082",
+  "#89B6C8", "#A085B1", "#89B6C8", "#F9EEDF",
+  "#6B4D36", "#ED878A", "#A6CA71", "#F1C681",
+  "#87C4DB", "#B293C7", "#87C4DB", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"

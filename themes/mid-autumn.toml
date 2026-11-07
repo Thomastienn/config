@@ -1,0 +1,59 @@
+# Mid Autumn: Moonlit navy, lantern amber, peach.
+# Apply with: theme apply themes/mid-autumn.toml
+name = "Mid Autumn Lanterns"
+mode = "dark"
+wallpaper = "wallpapers/hoppers.png"
+
+[colors]
+background = "#171D32"
+surface = "#29304A"
+text = "#F9F0E0"
+muted = "#F7E5C4"
+primary = "#F1CA83"
+secondary = "#EAA68E"
+warning = "#EFCD8E"
+error = "#F0A3A8"
+border = "#5F564D"
+separator = "#7B6D57"
+selection = "#38394F"
+urgent_background = "#3B2A3E"
+pane_border = "#31323C"
+gradient_start = "#2D2E3A"
+gradient_end = "#2C2B3B"
+menu_text = "#F9F0E0"
+panel_separator = "#7B6D57"
+shade1 = "#202435"
+shade3 = "#282B38"
+shade4 = "#2E2F3B"
+shade5 = "#33333D"
+shade6 = "#39383F"
+shade7 = "#3E3C41"
+
+[fonts]
+ui = "ComicShannsMono Nerd Font"
+proportional = "ComicShannsMono Nerd Font Propo"
+terminal = "ComicShannsMonoNerdFont"
+terminal_size = 12.0
+gtk2 = "Sans 10"
+gtk3 = "ComicShannsMono Nerd Font 10"
+lock = "Lato"
+lock_clock = "Lato Light"
+
+[desktop]
+gtk2 = "Mint-Y-Dark-Orange"
+gtk3 = "Mint-Y-Dark-Orange"
+gtk2_icons = "Mint-Y-Blue"
+icons = "Papirus-Dark"
+cursor = "Bibata-Modern-Classic"
+cursor_size = 0
+wm = "Mint-Y"
+
+[terminal]
+ansi = [
+  "#171D32", "#E67679", "#A2B971", "#E6C383",
+  "#8BB1C2", "#A088B2", "#8BB1C2", "#F9F0E0",
+  "#5F564D", "#ED8A8B", "#A7C56C", "#F1C982",
+  "#88BFD5", "#B296C9", "#88BFD5", "#FFF9F1",
+]
+bat = "Monokai Extended"
+taskwarrior = "solarized-dark-256.theme"
