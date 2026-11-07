@@ -5,6 +5,8 @@ existing Cozy Mint appearance and workflows unless a change is requested.
 
 - Use the installed Caveman skill by default, until Thomas says `normal mode`
   or `stop caveman`. Write code and documentation normally.
+- Do not use Beads (`bd`) in this repository. Track work in the conversation,
+  without adding task-tracking files.
 - Follow `~/.codex/RTK.md` when present; prefix shell commands with `rtk`.
 - Prefer codebase-memory-mcp graph tools for code discovery. Fall back to `rg`
   for shell/config files, literals, or when this repository is not indexed.
@@ -45,5 +47,19 @@ existing Cozy Mint appearance and workflows unless a change is requested.
 - Do not restart the live desktop, replace installed tools, or change power/lid
   policies just to validate a refactor. Prefer an isolated home/display/session.
 - Preserve unrelated edits. Commit only when asked; inspect staged paths/diff.
+
+## Local calendar and sensitive files
+
+- Treat `local/`, real `.env` files, credentials, tokens, and private keys as
+  opaque. Do not read, search, print, summarize, or copy their contents into
+  agent context, logs, messages, examples, or shared files, including through
+  scripts or symlinks.
+- Learn private settings from shared `*.example` and `*.sample` templates
+  outside `local/` (`themes/calendar.example` is the calendar template), using
+  dummy values for checks. Exclude `local/`, `.env`,
+  and `.env.*` from broad searches; select example files explicitly.
+- Metadata checks (existence and permissions) and explicitly requested moves
+  are allowed without opening private files. Applications may load their own
+  private config normally; agent tests must use dummy fixtures.
 
 See [README.md](README.md) for setup commands and supported scope.
