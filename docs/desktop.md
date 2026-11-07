@@ -169,6 +169,11 @@ checkout; repointing the live checkout at temporary state can break the next log
 
 ## ChatGPT context shortcuts
 
+The Firefox toggle normalizes a redundant outer tabbed/stacked workspace when
+its only child is another tabbed/stacked container. This avoids an i3 4.23 gap
+rendering bug that resizes background windows on floating focus changes; inner
+tabs, stacks, splits, and configured gaps remain intact.
+
 Keep a signed-in ChatGPT chat open in the Firefox scratchpad (`Super+G`). These
 shortcuts capture context before showing Firefox and paste into the current draft:
 

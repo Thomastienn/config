@@ -36,6 +36,21 @@ def get_windows():
     return browser_windows(get_tree())
 
 
+def normalize_workspace_layouts(node):
+    # i3 4.23 reapplies gaps when a tab/stack workspace rerenders its tab/stack
+    # child. Floating focus skips that pass, making background windows resize.
+    # With one child, the outer layout is redundant; keep the inner layout.
+    children = node.get("nodes", [])
+    if (node.get("type") == "workspace"
+            and node.get("layout") in ("stacked", "tabbed")
+            and len(children) == 1
+            and children[0].get("layout") in ("stacked", "tabbed")
+            and children[0].get("nodes")):
+        command(f"[con_id={node['id']}] layout default")
+    for child in children:
+        normalize_workspace_layouts(child)
+
+
 def command(action):
     result = subprocess.run(["i3-msg", action], capture_output=True, text=True, check=True)
     if not all(reply.get("success") for reply in json.loads(result.stdout)):
@@ -49,7 +64,9 @@ def main(show=False):
             fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
         except BlockingIOError:
             return
-        existing = get_windows()
+        tree = get_tree()
+        normalize_workspace_layouts(tree)
+        existing = browser_windows(tree)
         for target, window in existing.items():
             if MARK in window.get("marks", []):
                 action = "focus" if show and window["workspace"] != "__i3_scratch" else "scratchpad show"
