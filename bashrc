@@ -468,3 +468,7 @@ command -v thefuck >/dev/null && eval "$(thefuck --alias)"
 
 
 export STM32_PRG_PATH=/home/thomas/STMicroelectronics/STM32Cube/STM32CubeProgrammer/bin
+
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
