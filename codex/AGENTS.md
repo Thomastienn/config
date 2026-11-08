@@ -71,5 +71,5 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 - ALWAYS use cavemen, rtk and codebase-memory-mcp to reduce tokens
 - ALWAYS use ponytail to make better decision
 - HIGHLY recommended use Matt Pocock skills for the workflow, read overall skill first then decide if the problem is suitable for it
-- ONLY use Beads for task tracking for personal project (Must use if it's a single person project)
-- MUST use Impeccable whenever making UI changes and frontend
+- ONLY use Beads for task tracking for personal project (Must use if it's a single person project init with `beads init`)
+- MUST use Impeccable whenever making UI changes and frontend (HIGHLY recommended to use with astryx `astryx init`)
