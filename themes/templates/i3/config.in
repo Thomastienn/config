@@ -78,6 +78,7 @@ client.urgent           $urgent-color       $urgent-bg-color    $text-color     
 # ================================================================
 # AUTOSTART APPLICATIONS
 # ================================================================
+exec --no-startup-id systemctl --user import-environment DISPLAY XAUTHORITY && systemctl --user start thomas-theme-calendar.service
 exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/login_log.py login
 exec_always --no-startup-id feh --bg-scale {{wallpaper_shell}}
 exec_always --no-startup-id $HOME/thomas_config/picom/run.sh

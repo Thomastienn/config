@@ -251,8 +251,15 @@ def services():
                 backup(path)
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text)
+    timer = HOME / ".config/systemd/user/thomas-theme-calendar.timer"
+    obsolete = [timer.parent / "timers.target.wants" / timer.name, timer]
+    if any(path.exists() or path.is_symlink() for path in obsolete):
+        if output(["systemctl", "--user", "show", timer.name, "-p", "ActiveState", "--value"]) == "active":
+            run(["systemctl", "--user", "stop", timer.name])
+        for path in obsolete:
+            if path.exists() or path.is_symlink():
+                backup(path)
     run(["systemctl", "--user", "daemon-reload"])
-    run(["systemctl", "--user", "enable", "--now", "thomas-theme-calendar.timer"])
     environment = [key for key in ["DISPLAY", "XAUTHORITY"] if os.environ.get(key)]
     if environment:
         run(["systemctl", "--user", "import-environment", *environment])
@@ -354,11 +361,10 @@ def check():
             gaps.append("service: PDF index timer not enabled")
     except (OSError, subprocess.SubprocessError):
         gaps.append("service: PDF index timer not enabled or user session unavailable")
-    try:
-        if output(["systemctl", "--user", "is-enabled", "thomas-theme-calendar.timer"]) != "enabled":
-            gaps.append("service: theme calendar timer not enabled")
-    except (OSError, subprocess.SubprocessError):
-        gaps.append("service: theme calendar timer not enabled or user session unavailable")
+    timer = HOME / ".config/systemd/user/thomas-theme-calendar.timer"
+    if any(path.exists() or path.is_symlink() for path in
+           [timer, timer.parent / "timers.target.wants" / timer.name]):
+        gaps.append("service: obsolete theme calendar timer; rerun setup.sh apply --configs-only")
     gaps.extend(login_tracking.check())
     data = json.loads((ROOT / "desktop/settings.json").read_text())
     for schema, values in theme.gsettings(theme.load()[0]).items():

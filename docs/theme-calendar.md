@@ -1,15 +1,16 @@
 # Special-date desktop themes
 
-`themes/calendar.toml` is the shared registry. Setup links and enables
-`thomas-theme-calendar.timer`; it checks at login and every fifteen minutes,
-including after resume. It uses the desktop's local date, not Vietnam time.
+`themes/calendar.toml` is the shared registry. i3 starts
+`thomas-theme-calendar.service` once at login. It does not poll or run again on
+resume or i3 reload. It uses the desktop's local date, not Vietnam time.
+Setup disables and backs up the old fifteen-minute timer when upgrading.
 No downloads or extra packages are needed (Python 3.11 and systemd already required).
 
 ```sh
 theme calendar                         # show today's winner without changing anything
 theme calendar --date 2026-12-20       # preview any date
 theme auto                             # apply today's winner now
-systemctl --user status thomas-theme-calendar.timer
+systemctl --user status thomas-theme-calendar.service
 ```
 
 Every entry names a complete theme file, a date rule, `before` and `after`
@@ -29,7 +30,8 @@ The normal theme engine renders templates into local generated state and reloads
 supported apps. Automatic switching also updates `themes/active`, just like
 `theme apply FILE`; it never commits or pushes. Existing browser/shell reload
 limitations from [desktop themes](desktop.md#desktop-themes) still apply.
-A manual selection lasts until the next calendar check; disable automation to keep it.
+A manual selection lasts until the next login or `theme auto`; disable automation to keep it.
+If a date changes while logged in, the theme stays until the next login or `theme auto`.
 
 ## Local birthdays and anniversaries
 
@@ -42,13 +44,13 @@ prints a reminder to configure it. Existing local files are never overwritten.
 Edit `local/theme-calendar.toml` directly: replace each sample `date = "01-01"`
 with your `MM-DD` and set `enabled = true` on that event. Birthday and anniversary
 use separate presets and priority 100. Adjust `before` and `after` for each event.
-Changes take effect at the next fifteen-minute check or with `theme auto`;
+Changes take effect at the next login or with `theme auto`;
 no setup rerun is needed after editing. Keep the local file to retain your dates.
 
 Local events append to the shared registry; disabled shared examples are skipped.
 Top-level local settings override shared defaults. Set `enabled = false` on an
 event to skip it, or at the top of the local file to stop automatic switching.
-The timer stays enabled but respects that setting. Cozy Mint remains the fallback.
+The login check respects that setting. Cozy Mint remains the fallback.
 
 Use exactly one rule per event:
 `date = "MM-DD"` repeats annually;
@@ -90,7 +92,7 @@ actual occasion dates rather than duplicating every day off. Family Day was
 absent from the returned Canadian feed, so this cross-check cannot verify it.
 Vietnam's feed omits Mid-Autumn, Vu Lan, Doan Ngo and Vesak; their separately
 sourced dates remain. This is a one-time cross-check, not a runtime Google
-Calendar connection. The fifteen-minute timer still reads the local registry.
+Calendar connection. The login check reads the local registry.
 Movable Good Friday, Easter and Victoria Day entries also need dates added
 for 2028 onward.
 
