@@ -66,6 +66,7 @@ Hooks already load caveman, ponytail and codebase-memory-mcp guidance and route
 shell commands through rtk. Do not invoke those skills again to activate them.
 
 - Prefer `trash` over `rm` when removing files, to avoid accidental loss.
+- Prefer integration tests over unit tests and prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
 - Prefer Matt Pocock skills when a skill's description fits the task; load a skill only once you pick it.
 - Use Beads only for single-person personal projects (start with `bd init`); then remind me to run `ralph-tui init`.
 - Use the Impeccable skill for UI and frontend changes, ideally with Astryx (`astryx init`).

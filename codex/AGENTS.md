@@ -68,6 +68,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 # Reminder
 - Also, ALWAYS prefer 'trash' command instead of 'delete' when removing files, to avoid accidental loss.
+- ALWAYS prefer integration tests over unit tests and prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
 - ALWAYS use cavemen, rtk and codebase-memory-mcp to reduce tokens
 - ALWAYS use ponytail to make better decision
 - HIGHLY recommended use Matt Pocock skills for the workflow, read overall skill first then decide if the problem is suitable for it
