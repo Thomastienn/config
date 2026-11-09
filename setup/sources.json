@@ -14,6 +14,11 @@
   "codex-find-skills": {"url": "https://github.com/vercel-labs/skills.git", "rev": "HEAD", "kind": "skills", "skills": ["find-skills"]},
   "codex-humanizer": {"url": "https://github.com/blader/humanizer.git", "rev": "HEAD", "kind": "skills", "skills": ["humanizer"]},
   "codex-impeccable": {"url": "https://github.com/pbakaus/impeccable.git", "rev": "HEAD", "kind": "skills", "skills": ["impeccable"]},
+  "claude-code": {"kind": "claude", "installer_url": "https://claude.ai/install.sh", "skills": {
+    "find-skills": "https://github.com/vercel-labs/skills.git",
+    "humanizer": "https://github.com/blader/humanizer.git",
+    "security-audit": "https://github.com/cloudflare/security-audit-skill.git",
+    "typst": "https://github.com/Thomastienn/typst-skill.git"}},
   "hermes": {
     "url": "https://github.com/NousResearch/hermes-agent.git",
     "rev": "1df95b0a8409a8a9c61c1eba91cbc163255a35fc",

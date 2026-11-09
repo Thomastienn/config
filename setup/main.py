@@ -17,6 +17,7 @@ import sys
 import tools
 import power
 import graphics
+import claude
 import codex
 import hermes
 import login_tracking
@@ -109,7 +110,7 @@ def link(source, target, apply=True):
 def configured_links():
     yield REPO, HOME / "thomas_config"
     for source, target in json.loads((ROOT / "links.json").read_text()).items():
-        if not choices()["extras"] and source.startswith(("codex/", "hermes/")):
+        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/")):
             continue
         yield REPO / source, HOME / target
     activitywatch = HOME / ".local/opt/activitywatch/aw-qt"
@@ -170,6 +171,7 @@ def apply_links():
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
     if choices()["extras"]:
         codex.configuration(HOME, backup)
+        claude.configuration(HOME, backup)
         hermes.configuration(HOME, backup)
     if choices()["nvim"] and not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
         print("Pending: Neovim theme bridge needs the managed AstroNvim configuration.")
@@ -315,7 +317,7 @@ def packages(extras):
 def check():
     gaps = power.check()
     if choices()["extras"]:
-        gaps += codex.configuration(HOME) + hermes.configuration(HOME)
+        gaps += codex.configuration(HOME) + claude.configuration(HOME) + hermes.configuration(HOME)
     gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))
@@ -454,6 +456,7 @@ def main():
         login_tracking.install(run)
         if choices()["extras"] and not args.configs_only:
             codex.install(HOME, run)
+            claude.install(HOME, CACHE, run)
         power.install(run)
         if args.graphics:
             graphics.configure(args.graphics, run)

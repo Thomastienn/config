@@ -5,7 +5,7 @@ An i3/X11 setup for **Linux Mint 22.x, x86_64**.
 - One theme for desktop, terminal, notifications, widgets and lock screen.
 - Polybar, Conky, Rofi, Eww controls, battery saver and timer.
 - Kitty/tmux shell, clipboard, screenshots, PDF search and task helpers.
-- Optional Neovim config, development tools, Codex and Hermes/Ollama.
+- Optional Neovim config, development tools, Codex, Claude Code and Hermes/Ollama.
 
 ## Install
 

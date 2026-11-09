@@ -7,7 +7,7 @@ existing Cozy Mint appearance and workflows unless a change is requested.
   or `stop caveman`. Write code and documentation normally.
 - Do not use Beads (`bd`) in this repository. Track work in the conversation,
   without adding task-tracking files.
-- Follow `~/.codex/RTK.md` when present; prefix shell commands with `rtk`.
+- Prefix shell commands with `rtk` unless a hook already does (Claude Code).
 - Prefer codebase-memory-mcp graph tools for code discovery. Fall back to `rg`
   for shell/config files, literals, or when this repository is not indexed.
 - Keep `README.md` compact: the i3 overview, core features, requirements, setup

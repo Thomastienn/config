@@ -87,6 +87,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/sources.json`, `setup/assets.json` | Pinned desktop revisions and asset checksums |
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `codex/` | Portable Codex preferences and global instructions |
+| `claude/` | Portable Claude Code settings, instructions, status line and hooks |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
@@ -258,7 +259,7 @@ file has mode `600`; rewriting it does not preserve TOML comments. Edit the
 repository defaults to carry preference changes to another machine, then rerun
 setup after pulling. `check` reports differences without writing anything.
 
-Global `AGENTS.md` and `RTK.md` link directly from `codex/`. The whole `.codex`
+Global `AGENTS.md` links directly from `codex/`. The whole `.codex`
 directory and its live config are deliberately kept local: Codex writes private
 and machine-specific state there.
 
@@ -283,6 +284,28 @@ Its optional extension token stays only in the local config. Custom pet assets,
 saved command approvals, conversations, memories and other runtime data require
 a separate private backup. Restart Codex when convenient to load changed settings.
 See the [official configuration precedence](https://learn.chatgpt.com/docs/config-file/config-basic#configuration-precedence).
+
+## Claude Code
+
+`claude/settings.json` stores portable hooks, status line, plugins, marketplaces
+and preferences. `link`, `apply`, and `apply --configs-only` merge it into
+`~/.claude/settings.json`, backing up changes first; other local keys survive.
+Lists such as hook arrays are replaced, not appended. `claude/CLAUDE.md` holds
+Claude's own global instructions, separate from Codex; it, the status
+line and the two codebase-memory hooks link from `claude/`. Credentials, `~/.claude.json`,
+sessions and plugin caches stay local.
+
+The settings turn off claude.ai sync: `disableClaudeAiConnectors` stops account
+connectors (Gmail, Drive, Docs) loading as MCP servers, and
+`syncClaudeAiPlugins`/`syncClaudeAiSkills` stop account plugins and skills.
+
+`./setup.sh apply --extras` installs Claude Code through the official installer
+when `claude` is missing, copies the skills listed under `claude-code` in
+`setup/sources.json` into `~/.claude/skills` (replacing links into other agents'
+skill folders), registers codebase-memory-mcp as a
+user MCP server, and adds missing marketplaces and plugins. Repeat runs skip
+completed work. Sign in with `claude` afterwards, authenticate Figma through
+`/mcp`, and restart Claude Code to load changed settings.
 
 ## Hermes
 
