@@ -58,6 +58,16 @@
           }
         ]
       }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/thomas_config/scripts/claude-notify.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
@@ -65,15 +75,15 @@
     "command": "bash ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "figma@claude-plugins-official": true,
+    "figma@claude-plugins-official": false,
     "mattpocock-skills@claude-plugins-official": true,
     "ponytail@ponytail": true,
     "caveman@caveman": true,
     "impeccable@impeccable": true,
-    "beads@beads-marketplace": true,
+    "beads@beads-marketplace": false,
     "agent-browser@agent-browser": true,
     "drawio@drawio": true,
-    "computer-use-linux@computer-use-linux": true,
+    "computer-use-linux@computer-use-linux": false,
     "canva@claude-plugins-official": false
   },
   "extraKnownMarketplaces": {
@@ -119,6 +129,12 @@
         "repo": "agent-sh/computer-use-linux"
       }
     }
+  },
+  "permissions": {
+    "deny": [
+      "Artifact",
+      "mcp__libreoffice_calc"
+    ]
   },
   "effortLevel": "low",
   "theme": "auto",

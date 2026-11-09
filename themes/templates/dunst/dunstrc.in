@@ -214,6 +214,13 @@
     default_icon = utilities-terminal
     timeout = 5
 
+[claude-code]
+    appname = "Claude Code"
+    format = "<b><span foreground='#D97757'>✻ Claude</span>  <span alpha='70%%'>%s</span></b>\n<span alpha='85%%'>%b</span>"
+    frame_color = "#D97757"
+    highlight = "#D97757"
+    timeout = 5
+
 [brave]
     appname = "Brave*"
     default_icon = brave-browser
