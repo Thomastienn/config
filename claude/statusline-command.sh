@@ -1,23 +1,22 @@
 #!/bin/bash
-# Status line (desktop theme, Nerd Font pills):
+# Status line (desktop theme, Nerd Font icons, │ separators):
 #   model · token budget · folder · git branch and diff · cost and time · 5h and weekly usage
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
 
 # Follow the active desktop theme; fall back to Cozy Mint before the first theme render.
-palette=$(jq -r '.colors | [.background, .surface, .text, .muted, .secondary, .primary, .warning, .error] | join(" ")' \
+palette=$(jq -r '.colors | [.border, .text, .muted, .secondary, .primary, .warning, .error] | join(" ")' \
   "$HOME/thomas_config/themes/.generated/palette.json" 2>/dev/null)
-read -r c_bg c_surface c_text c_muted c_lav c_mint c_sand c_rose \
-  <<<"${palette:-#191B19 #272C27 #EEE8DC #ABAFA4 #C0AFD5 #A7CCAE #DEC28A #DBA0AA}"
+read -r c_border c_text c_muted c_lav c_mint c_sand c_rose \
+  <<<"${palette:-#46534A #EEE8DC #ABAFA4 #C0AFD5 #A7CCAE #DEC28A #DBA0AA}"
 rgb() { printf '%d;%d;%d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
 fg() { printf '\033[38;2;%sm' "$(rgb "$1")"; }
-bg() { printf '\033[48;2;%sm' "$(rgb "$1")"; }
 reset=$'\033[0m'
 bold=$'\033[1m'
-left=$'\ue0b6' right=$'\ue0b4'
-# Nerd Font icons: folder, git branch, dollar, clock.
+# Nerd Font icons: folder, git branch, dollar, clock, memory, hourglass, calendar, refresh.
 i_dir=$'\uf07c' i_git=$'\ue0a0' i_cost=$'\uf155' i_time=$'\uf017'
+i_ctx=$'\U000f035b' i_five=$'\U000f051f' i_week=$'\U000f00ed' i_reset=$'\uf021'
 
 case "$cwd" in "$HOME"|"$HOME"/*) disp="~${cwd#"$HOME"}" ;; *) disp="$cwd" ;; esac
 
@@ -49,10 +48,12 @@ fmt_tok() {
 level() { if [ "$1" -ge 90 ]; then echo "$c_rose"; elif [ "$1" -ge 70 ]; then echo "$c_sand"; else echo "$c_mint"; fi; }
 
 out=""
-# Bright pill: dark text on an accent colour.
-pill() { out+="$(fg "$1")$left$(bg "$1")$(fg "$c_bg")$bold $2 $reset$(fg "$1")$right$reset "; }
-# Quiet pill: coloured text on the surface colour.
-soft() { out+="$(fg "$c_surface")$left$(bg "$c_surface")$1 $reset$(fg "$c_surface")$right$reset "; }
+# Model: bold accent text.
+pill() { out+="$(fg "$1")$bold$2$reset$(fg "$c_border")  │  $reset"; }
+# Section in bright text; callers colour icons and numbers.
+soft() { out+="$(fg "$c_text")$1$reset$(fg "$c_border")  │  $reset"; }
+# Coloured fragment inside a section, back to bright text afterwards.
+hue() { printf '%s%s%s' "$(fg "$1")" "$2" "$(fg "$c_text")"; }
 
 m="✻ $model"
 [ -n "$effort" ] && m="$m $effort"
@@ -62,39 +63,41 @@ if [ -n "$used" ]; then
   # Per-conversation token budget, not the model window: mint below 100k, sand to 150k, rose beyond.
   budget=150000
   if [ "$used" -ge "$budget" ]; then colour=$c_rose; elif [ "$used" -ge 100000 ]; then colour=$c_sand; else colour=$c_mint; fi
-  filled=$(( used * 8 / budget )); [ "$filled" -gt 8 ] && filled=8
-  bar=""; for i in 1 2 3 4 5 6 7 8; do if [ "$i" -le "$filled" ]; then bar+="█"; else bar+="░"; fi; done
-  tok="$(fmt_tok "$used")"
-  [ -n "$size" ] && tok="$tok/$(fmt_tok "$size")"
-  pill "$colour" "󰍛 $bar $tok"
+  filled=$(( used * 10 / budget )); [ "$filled" -gt 10 ] && filled=10
+  full=""; empty=""
+  for i in 1 2 3 4 5 6 7 8 9 10; do if [ "$i" -le "$filled" ]; then full+="━"; else empty+="━"; fi; done
+  tok="$bold$(fmt_tok "$used")$reset$(fg "$c_muted")"
+  [ -n "$size" ] && tok+="/$(fmt_tok "$size")"
+  soft "$(hue "$colour" "$i_ctx $full")$(hue "$c_border" "$empty") $(hue "$colour" "$tok")"
 fi
 
-soft "$(fg "$c_text") $i_dir $disp"
+soft "$(hue "$c_lav" "$i_dir")  $disp"
 if [ -n "$branch" ]; then
-  git_info="$(fg "$c_mint") $i_git $branch$(fg "$c_sand")$dirty"
-  [ "$added$removed" != "00" ] && git_info+="  $(fg "$c_mint")+$added $(fg "$c_rose")-$removed"
+  git_info="$(hue "$c_mint" "$i_git") $branch$(hue "$c_sand" "$dirty")"
+  [ "$added$removed" != "00" ] && git_info+="  $(hue "$c_mint" "+$added") $(hue "$c_rose" "-$removed")"
   soft "$git_info"
 fi
 
 session=""
-[ -n "$cost" ] && session+="$(fg "$c_sand") $i_cost $(printf '%.2f' "$cost")"
+[ -n "$cost" ] && session+="$(hue "$c_sand" "$i_cost") $(printf '%.2f' "$cost")"
 if [ -n "$ms" ]; then
   mins=$(( ms / 60000 ))
   if [ "$mins" -ge 60 ]; then t="$((mins / 60))h$(printf '%02d' $((mins % 60)))m"; else t="${mins}m"; fi
-  session+="  $(fg "$c_muted")$i_time $t"
+  session+="  $(hue "$c_lav" "$i_time")  $t"
 fi
 [ -n "$session" ] && soft "$session"
 
 # Usage limits with reset times: 5h as a clock time, weekly as day and time.
+limits=""
 if [ -n "$five" ]; then
-  text="󰔟 5h ${five}%"
-  [ -n "$five_reset" ] && text+=" ↻$(date -d "@$five_reset" +%H:%M)"
-  pill "$(level "$five")" "$text"
+  limits+="$(hue "$(level "$five")" "$i_five") 5h $(hue "$(level "$five")" "$bold${five}%$reset")"
+  [ -n "$five_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$five_reset" +%H:%M)")"
 fi
 if [ -n "$week" ]; then
-  text="󰃭 7d ${week}%"
-  [ -n "$week_reset" ] && text+=" ↻$(date -d "@$week_reset" '+%a %H:%M')"
-  pill "$(level "$week")" "$text"
+  [ -n "$limits" ] && limits+="   "
+  limits+="$(hue "$(level "$week")" "$i_week") 7d $(hue "$(level "$week")" "$bold${week}%$reset")"
+  [ -n "$week_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$week_reset" '+%a %H:%M')")"
 fi
+[ -n "$limits" ] && soft "$limits"
 
-printf '%s\n' "${out% }"
+printf '%s\n' "${out%  │  *}"
