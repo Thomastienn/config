@@ -25,14 +25,14 @@ if [ -n "$branch" ]; then
   [ -n "$(git -C "$cwd" --no-optional-locks status --porcelain 2>/dev/null | head -n1)" ] && dirty="*"
 fi
 
-IFS=$'\x1f' read -r model effort used size added removed cost ms five five_reset week < <(echo "$input" | jq -r '[
+IFS=$'\x1f' read -r model effort used size added removed cost ms five five_reset week week_reset < <(echo "$input" | jq -r '[
   .model.display_name // "", .effort.level // "",
   (.context_window.total_input_tokens // ((.context_window.current_usage // empty) | (.input_tokens + .cache_creation_input_tokens + .cache_read_input_tokens)) // ""),
   .context_window.context_window_size // "",
   .cost.total_lines_added // 0, .cost.total_lines_removed // 0,
   .cost.total_cost_usd // "", .cost.total_duration_ms // "",
   (.rate_limits.five_hour.used_percentage // "" | if type == "number" then floor else . end), .rate_limits.five_hour.resets_at // "",
-  (.rate_limits.seven_day.used_percentage // "" | if type == "number" then floor else . end)] | map(tostring) | join("\u001f")')
+  (.rate_limits.seven_day.used_percentage // "" | if type == "number" then floor else . end), .rate_limits.seven_day.resets_at // ""] | map(tostring) | join("\u001f")')
 
 # Compact number: 45213 -> 45.2k, 200000 -> 200k, 1000000 -> 1M
 fmt_tok() {
@@ -74,10 +74,15 @@ if [ -n "$ms" ]; then
   if [ "$mins" -ge 60 ]; then t="$((mins / 60))h$(printf '%02d' $((mins % 60)))m"; else t="${mins}m"; fi
   add "${gray}${t}${reset}"
 fi
+# Usage limits with reset times: 5h as a clock time, weekly as day and time.
 if [ -n "$five" ]; then
   limit="$(level "$five")5h ${five}%"
-  [ "$five" -ge 50 ] && [ -n "$five_reset" ] && limit="$limit${dim} ↻$(date -d "@$five_reset" +%H:%M)"
-  [ -n "$week" ] && [ "$week" -ge 50 ] && limit="$limit${dim} · $(level "$week")7d ${week}%"
+  [ -n "$five_reset" ] && limit="$limit${dim} ↻$(date -d "@$five_reset" +%H:%M)"
+  add "${limit}${reset}"
+fi
+if [ -n "$week" ]; then
+  limit="$(level "$week")7d ${week}%"
+  [ -n "$week_reset" ] && limit="$limit${dim} ↻$(date -d "@$week_reset" '+%a %H:%M')"
   add "${limit}${reset}"
 fi
 
