@@ -68,6 +68,17 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/thomas_config/scripts/claude-notify.sh"
+          }
+        ]
+      }
     ]
   },
   "statusLine": {

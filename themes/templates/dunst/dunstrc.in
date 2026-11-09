@@ -221,6 +221,14 @@
     highlight = "#D97757"
     timeout = 5
 
+# Claude is blocked on a permission or question: stay until dismissed.
+[claude-code-needs-you]
+    appname = "Claude Code"
+    msg_urgency = critical
+    format = "<b><span foreground='#D97757'>✻ Claude needs you</span>  <span alpha='70%%'>%s</span></b>\n<span alpha='85%%'>%b</span>"
+    background = "{{colors.urgent_background}}E6"
+    timeout = 0
+
 [brave]
     appname = "Brave*"
     default_icon = brave-browser
