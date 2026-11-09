@@ -1,13 +1,13 @@
 #!/bin/bash
-# Status line (Claude-orange palette, Nerd Font icons, │ separators):
+# Status line (Cozy Mint palette, Nerd Font icons, │ separators):
 #   model · token budget · folder · git branch and diff · cost and time · 5h and weekly usage
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
 
-# Fixed warm analogous palette around Claude's orange; light-to-hot ramp for levels.
-c_line=#6E5648 c_text=#F3E6DA c_muted=#B39C8B
-c_claude=#D97757 c_peach=#F2B091 c_gold=#E8BE78 c_hot=#E5534B
+# Fixed analogous palette around Cozy Mint green (teal to lime); rose only for alerts.
+c_line=#46534A c_text=#EEE8DC c_muted=#ABAFA4
+c_mint=#A7CCAE c_sea=#8CC7BE c_lime=#C6D68C c_hot=#DBA0AA
 rgb() { printf '%d;%d;%d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
 fg() { printf '\033[38;2;%sm' "$(rgb "$1")"; }
 reset=$'\033[0m'
@@ -42,8 +42,8 @@ fmt_tok() {
   }'
 }
 
-# Percent colour: gold below 70, orange to 90, red above.
-level() { if [ "$1" -ge 90 ]; then echo "$c_hot"; elif [ "$1" -ge 70 ]; then echo "$c_claude"; else echo "$c_gold"; fi; }
+# Percent colour: mint below 70, lime to 90, rose above.
+level() { if [ "$1" -ge 90 ]; then echo "$c_hot"; elif [ "$1" -ge 70 ]; then echo "$c_lime"; else echo "$c_mint"; fi; }
 
 out=""
 # Model: bold accent text.
@@ -55,12 +55,12 @@ hue() { printf '%s%s%s' "$(fg "$1")" "$2" "$(fg "$c_text")"; }
 
 m="✻ $model"
 [ -n "$effort" ] && m="$m $effort"
-[ -n "$model" ] && pill "$c_claude" "$m"
+[ -n "$model" ] && pill "$c_mint" "$m"
 
 if [ -n "$used" ]; then
-  # Per-conversation token budget, not the model window: gold below 100k, orange to 150k, red beyond.
+  # Per-conversation token budget, not the model window: mint below 100k, lime to 150k, rose beyond.
   budget=150000
-  if [ "$used" -ge "$budget" ]; then colour=$c_hot; elif [ "$used" -ge 100000 ]; then colour=$c_claude; else colour=$c_gold; fi
+  if [ "$used" -ge "$budget" ]; then colour=$c_hot; elif [ "$used" -ge 100000 ]; then colour=$c_lime; else colour=$c_mint; fi
   filled=$(( used * 10 / budget )); [ "$filled" -gt 10 ] && filled=10
   full=""; empty=""
   for i in 1 2 3 4 5 6 7 8 9 10; do if [ "$i" -le "$filled" ]; then full+="━"; else empty+="━"; fi; done
@@ -69,19 +69,19 @@ if [ -n "$used" ]; then
   soft "$(hue "$colour" "$i_ctx $full")$(hue "$c_line" "$empty") $(hue "$colour" "$tok")"
 fi
 
-soft "$(hue "$c_peach" "$i_dir")  $disp"
+soft "$(hue "$c_sea" "$i_dir")  $disp"
 if [ -n "$branch" ]; then
-  git_info="$(hue "$c_claude" "$i_git") $branch$(hue "$c_gold" "$dirty")"
-  [ "$added$removed" != "00" ] && git_info+="  $(hue "$c_gold" "+$added") $(hue "$c_hot" "-$removed")"
+  git_info="$(hue "$c_mint" "$i_git") $branch$(hue "$c_lime" "$dirty")"
+  [ "$added$removed" != "00" ] && git_info+="  $(hue "$c_mint" "+$added") $(hue "$c_hot" "-$removed")"
   soft "$git_info"
 fi
 
 session=""
-[ -n "$cost" ] && session+="$(hue "$c_gold" "$i_cost") $(printf '%.2f' "$cost")"
+[ -n "$cost" ] && session+="$(hue "$c_lime" "$i_cost") $(printf '%.2f' "$cost")"
 if [ -n "$ms" ]; then
   mins=$(( ms / 60000 ))
   if [ "$mins" -ge 60 ]; then t="$((mins / 60))h$(printf '%02d' $((mins % 60)))m"; else t="${mins}m"; fi
-  session+="  $(hue "$c_peach" "$i_time")  $t"
+  session+="  $(hue "$c_sea" "$i_time")  $t"
 fi
 [ -n "$session" ] && soft "$session"
 
