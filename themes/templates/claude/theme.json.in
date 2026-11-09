@@ -39,6 +39,12 @@
     "memoryBackgroundColor": "rgb({{rgb.surface}})",
     "selectionBg": "rgb({{rgb.selection}})",
     "rate_limit_fill": "rgb({{rgb.primary}})",
-    "rate_limit_empty": "rgb({{rgb.border}})"
+    "rate_limit_empty": "rgb({{rgb.border}})",
+    "diffAdded": "rgb(48, 82, 66)",
+    "diffAddedDimmed": "rgb(56, 70, 64)",
+    "diffAddedWord": "rgb(92, 140, 112)",
+    "diffRemoved": "rgb(96, 52, 62)",
+    "diffRemovedDimmed": "rgb(76, 58, 64)",
+    "diffRemovedWord": "rgb(156, 86, 102)"
   }
 }
