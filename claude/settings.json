@@ -148,12 +148,21 @@
     "deny": [
       "Artifact",
       "mcp__libreoffice_calc"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "effortLevel": "low",
   "theme": "custom:desktop",
   "agentPushNotifEnabled": true,
   "syncClaudeAiPlugins": false,
   "syncClaudeAiSkills": false,
-  "disableClaudeAiConnectors": true
+  "disableClaudeAiConnectors": true,
+  "skillOverrides": {
+    "caveman:caveman-setup": "off",
+    "caveman:caveman-manage": "off",
+    "caveman:caveman-optimize": "off",
+    "caveman:caveman-discover": "off",
+    "caveman:caveman-evidence-review": "off",
+    "caveman:caveman-learn": "off"
+  }
 }
