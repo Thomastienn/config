@@ -1,0 +1,42 @@
+## Current issue
+ID: {{taskId}}
+Title: {{taskTitle}}
+{{taskDescription}}
+{{#if acceptanceCriteria}}
+
+## Acceptance criteria
+{{acceptanceCriteria}}
+{{/if}}
+{{#if dependsOn}}
+Prerequisites: {{dependsOn}}
+{{/if}}
+
+## Instructions
+- Work only on this issue. Read AGENTS.md (or CLAUDE.md), the docs it points to,
+  `bd show {{taskId}} --json` and the relevant code. Stay on the current branch.
+- Implement the acceptance criteria and run the checks relevant to this issue.
+  If already implemented, verify the existing behavior. Fix recoverable failures
+  within this task; record actual evidence and distinguish fixtures from live checks.
+{{#if config.autoCommit}}
+- Ralph creates the Git commit after completion, outside the agent sandbox.
+  Do not stage or commit from the agent. Read-only `.git` is expected.
+{{else}}
+- Review and commit only this task's changes locally; preserve unrelated edits.
+{{/if}}
+
+## Completion
+After the acceptance checks pass, record the result in the issue notes and
+append it to the end of `.ralph-tui/progress.md`, then run:
+```
+bd close {{taskId}} --reason "Verified result"
+bd export -o .beads/issues.jsonl
+```
+The export lets BV link the closed issue to the implementation commit.
+Only after these steps succeed, end the response with:
+<promise>COMPLETE</promise>
+
+If unfinished, record the exact remaining work in the issue notes and end without
+the completion signal; Ralph reopens and retries the issue.
+For a real external blocker, record the resolution needed and run
+`bd update {{taskId}} --status blocked`.
+Do not start another task. Keep all operations local; no push or bd sync.

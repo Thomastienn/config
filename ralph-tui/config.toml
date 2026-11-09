@@ -1,0 +1,11 @@
+# Global Ralph defaults; a project's .ralph-tui/config.toml overrides these.
+configVersion = "2.1"
+# Plugin in plugins/trackers/beads-resume.js: BV selection, resumes unfinished tasks,
+# refuses dirty starts and ships a bd prompt.
+tracker = "beads-resume"
+# The Codex sandbox keeps .git read-only, so the engine must commit.
+autoCommit = true
+
+[agentOptions]
+# Codex CLI 0.167 rejects the --full-auto flag Ralph adds by default.
+fullAuto = false

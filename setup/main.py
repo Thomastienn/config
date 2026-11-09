@@ -110,7 +110,7 @@ def link(source, target, apply=True):
 def configured_links():
     yield REPO, HOME / "thomas_config"
     for source, target in json.loads((ROOT / "links.json").read_text()).items():
-        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/")):
+        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/", "ralph-tui/")):
             continue
         yield REPO / source, HOME / target
     activitywatch = HOME / ".local/opt/activitywatch/aw-qt"

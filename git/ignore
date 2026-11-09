@@ -1,0 +1,7 @@
+**/.claude/settings.local.json
+# Ralph TUI runtime state (autoCommit uses `git add -A`)
+.ralph-tui/iterations/
+.ralph-tui/reports/
+.ralph-tui/ralph.lock
+.ralph-tui/session*.json
+.ralph-tui/progress.md

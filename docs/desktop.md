@@ -88,6 +88,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `codex/` | Portable Codex preferences and global instructions |
 | `claude/` | Portable Claude Code settings, instructions, status line and hooks |
+| `ralph-tui/` | Ralph TUI defaults, Beads tracker plugin and prompt |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
@@ -306,6 +307,22 @@ skill folders), registers codebase-memory-mcp as a
 user MCP server, and adds missing marketplaces and plugins. Repeat runs skip
 completed work. Sign in with `claude` afterwards, authenticate Figma through
 `/mcp`, and restart Claude Code to load changed settings.
+
+## Ralph TUI
+
+`ralph-tui/` links individual files into `~/.config/ralph-tui/` (extras only);
+Ralph's `sessions.json` and other state stay local. `config.toml` sets global
+defaults: the `beads-resume` tracker, engine auto-commit (the Codex sandbox keeps
+`.git` read-only) and `fullAuto = false` (Codex CLI 0.167 rejects `--full-auto`).
+A project's `.ralph-tui/config.toml` overrides them.
+
+`plugins/trackers/beads-resume.js` wraps Ralph's `beads-bv` tracker. It reopens
+and retries unfinished tasks, including tasks left `in_progress` by a run that
+hit its iteration limit or crashed. It refuses to start on uncommitted changes,
+so auto-commit's `git add -A` cannot credit them to the next finished task.
+`templates/beads.hbs` is the default `bd` prompt; Ralph's built-in beads-bv
+prompt uses `br`. `git/ignore` keeps Ralph runtime files out of every repository.
+Ralph, Bun, `bd` and `bv` are installed separately.
 
 ## Hermes
 
