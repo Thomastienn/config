@@ -4,12 +4,17 @@ input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
 
-gray='\033[38;2;171;175;164m'
-dim='\033[38;2;93;109;94m'
-lav='\033[1m\033[38;2;192;175;213m'
-mint='\033[38;2;167;204;174m'
-sand='\033[38;2;222;194;138m'
-rose='\033[38;2;219;160;170m'
+# Follow the active desktop theme; fall back to Cozy Mint before the first theme render.
+palette=$(jq -r '.colors | [.muted, .separator, .secondary, .primary, .warning, .error] | join(" ")' \
+  "$HOME/thomas_config/themes/.generated/palette.json" 2>/dev/null)
+read -r c_gray c_dim c_lav c_mint c_sand c_rose <<<"${palette:-#ABAFA4 #5D6D5E #C0AFD5 #A7CCAE #DEC28A #DBA0AA}"
+fg() { printf '\\033[38;2;%d;%d;%dm' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
+gray=$(fg "$c_gray")
+dim=$(fg "$c_dim")
+lav="\\033[1m$(fg "$c_lav")"
+mint=$(fg "$c_mint")
+sand=$(fg "$c_sand")
+rose=$(fg "$c_rose")
 reset='\033[00m'
 
 case "$cwd" in "$HOME"|"$HOME"/*) disp="~${cwd#"$HOME"}" ;; *) disp="$cwd" ;; esac

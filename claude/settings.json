@@ -148,7 +148,7 @@
     ]
   },
   "effortLevel": "low",
-  "theme": "auto",
+  "theme": "custom:desktop",
   "agentPushNotifEnabled": true,
   "syncClaudeAiPlugins": false,
   "syncClaudeAiSkills": false,

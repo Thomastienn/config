@@ -14,6 +14,7 @@
   "claude/statusline-command.sh": ".claude/statusline-command.sh",
   "claude/hooks/cbm-code-discovery-gate": ".claude/hooks/cbm-code-discovery-gate",
   "claude/hooks/cbm-session-reminder": ".claude/hooks/cbm-session-reminder",
+  "claude/themes/desktop.json": ".claude/themes/desktop.json",
   "hermes/SOUL.md": ".hermes/SOUL.md",
   "XResource/Xresources": ".Xresources",
   "XResource/xinitrc": ".xinitrc",
