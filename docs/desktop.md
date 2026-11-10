@@ -318,8 +318,9 @@ A project's `.ralph-tui/config.toml` overrides them.
 
 `plugins/trackers/beads-resume.js` wraps Ralph's `beads-bv` tracker. It reopens
 and retries unfinished tasks, including tasks left `in_progress` by a run that
-hit its iteration limit or crashed. It refuses to start on uncommitted changes,
-so auto-commit's `git add -A` cannot credit them to the next finished task.
+hit its iteration limit or crashed. Uncommitted changes do not block startup;
+a sole unfinished task is retried first when ready. Auto-commit's `git add -A`
+includes pending edits after a task completes, without a separate startup commit.
 `templates/beads.hbs` is the default `bd` prompt; Ralph's built-in beads-bv
 prompt uses `br`. `git/ignore` keeps Ralph runtime files out of every repository.
 Ralph, Bun, `bd` and `bv` are installed separately.

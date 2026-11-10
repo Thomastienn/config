@@ -1,8 +1,7 @@
 // Ralph tracker: beads-bv plus the fixes Ralph 0.12.0 lacks for local Beads projects.
 // - Unfinished tasks are reopened and retried before other work (bd ready skips in_progress),
 //   including tasks left in_progress by an earlier run that ended or crashed.
-// - A run refuses to start on a dirty worktree (unless the edits belong to the one task it
-//   resumes): autoCommit runs `git add -A`, which would credit them to the next finished task.
+// - Pending edits do not block startup; autoCommit includes them after a task completes.
 // - sync() exports a local JSONL snapshot; it never runs `bd sync`.
 // Default prompt: ~/.config/ralph-tui/templates/beads.hbs (Ralph maps ids containing "beads"
 // there, and that file wins over a tracker-supplied template).
@@ -48,12 +47,8 @@ export default function createTracker() {
       let dirty = '';
       try { dirty = run('git', 'status', '--porcelain', '--', '.', ':(exclude).beads', ':(exclude).ralph-tui'); } catch { /* not a Git repo */ }
       if (dirty) {
-        // Leftover edits from exactly one unfinished task belong to it: resume that task first.
+        // Prefer a sole unfinished task for pending edits; otherwise use normal selection.
         resumed = stale.length === 1 ? await retry(stale[0].id, filter) : undefined;
-        if (!resumed) {
-          throw new Error(`Uncommitted changes in ${tracker.workingDir}. Commit or stash them before starting Ralph; ` +
-            `autoCommit stages everything and would credit them to the next finished task.\n${dirty}`);
-        }
       }
     } else if (previousId) {
       const [issue] = JSON.parse(bd('show', previousId, '--json'));
