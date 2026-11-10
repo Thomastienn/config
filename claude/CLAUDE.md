@@ -62,12 +62,15 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 
 ## 5. Tools and workflow
 
-Hooks already load caveman, ponytail and codebase-memory-mcp guidance and route
-shell commands through rtk. Do not invoke those skills again to activate them.
+Session hooks already load the caveman skill (mode `caveman`) and the ponytail
+skill (level `full`), so do not invoke them again. Follow both in every reply
+until I switch them off. Hooks also rewrite shell commands through rtk, so do
+not add `rtk` yourself. The codebase-memory-mcp hook is only a reminder: call
+its tools yourself, and index the repository first if it is not indexed.
 
 - Prefer `trash` over `rm` when removing files, to avoid accidental loss.
 - Prefer integration tests over unit tests and prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
-- Prefer Matt Pocock skills when a skill's description fits the task; load a skill only once you pick it.
+- Prefer to use codebase-memory-mcp to explore and navigate codebase.
 - Use Beads only for single-person personal projects (start with `bd init`); then remind me to run `ralph-tui init`.
 - Use the Impeccable skill for UI and frontend changes, ideally with Astryx (`astryx init`).
 
