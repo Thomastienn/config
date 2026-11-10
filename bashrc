@@ -81,12 +81,33 @@ fi
 GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 git_prompt() {
-    local s ahead behind
-    s=$(__git_ps1 '%s' 2>/dev/null)
-    [ -n "$s" ] || return
-    read -r behind ahead < <(git rev-list --left-right --count '@{upstream}...HEAD' 2>/dev/null)
-    ((ahead)) && s+=" ↑$ahead"
-    ((behind)) && s+=" ↓$behind"
+    local dir line item s= rare= unstaged= staged= untracked= ahead=0 behind=0
+    dir=$(git rev-parse --git-dir 2>/dev/null) || return
+    # One `git status` replaces __git_ps1's six forks and a rev-list on every prompt.
+    while IFS= read -r line; do
+        case $line in
+            '# branch.oid (initial)'|'# branch.head (detached)') rare=1 ;;
+            '# branch.head '*) s=${line:14} ;;
+            '# branch.ab '*) read -r _ _ ahead behind <<<"$line" ;;
+            '? '*) untracked=% ;;
+            [12u]' '*)
+                [[ ${line:2:1} == . ]] || staged=+
+                [[ ${line:3:1} == . ]] || unstaged='*' ;;
+        esac
+    done < <(git --no-optional-locks status --porcelain=v2 --branch 2>/dev/null)
+    for item in MERGE_HEAD CHERRY_PICK_HEAD REVERT_HEAD BISECT_LOG rebase-merge rebase-apply; do
+        [ -e "$dir/$item" ] && rare=1
+    done
+    # Rare states (no commit, detached, mid-merge/rebase, bare, inside .git) keep __git_ps1's detail.
+    if [ -n "$rare" ] || [ -z "$s" ]; then
+        s=$(__git_ps1 '%s' 2>/dev/null)
+        [ -n "$s" ] || return
+    else
+        line=$unstaged$staged$untracked
+        s+=${line:+ $line}
+    fi
+    ((ahead)) && s+=" ↑${ahead#+}"
+    ((behind)) && s+=" ↓${behind#-}"
     printf '  \uf418 %s' "$s"
 }
 
@@ -96,22 +117,15 @@ prompt_marks=("${THEME_COLOR4@E}" "${THEME_COLOR5@E}")
 # Disable default virtual environment prompt modification
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# Custom function to show venv name
-show_virtual_env() {
-    if [ -n "$VIRTUAL_ENV" ]; then
-        echo "($(basename $VIRTUAL_ENV)) "
-    fi
-}
-
 # user@host only over SSH; locally it never changes
 prompt_host=
 [ -n "$SSH_CONNECTION" ] && prompt_host="\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h "
 
 if [ "$color_prompt" = yes ]; then
 	# Cozy Mint prompt; clock and system status live in the desktop bar/widgets
-	PS1="\[${THEME_GRAY}\]\$(show_virtual_env)${prompt_host}\[${THEME_BOLD}${THEME_COLOR6}\]\w\[${THEME_RESET}${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
+	PS1="\[${THEME_GRAY}\]\${VIRTUAL_ENV:+(\${VIRTUAL_ENV##*/}) }${prompt_host}\[${THEME_BOLD}${THEME_COLOR6}\]\w\[${THEME_RESET}${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
 else
-    PS1='$(show_virtual_env)\u@\h:\w$(git_prompt)\n> '
+    PS1='${VIRTUAL_ENV:+(${VIRTUAL_ENV##*/}) }\u@\h:\w$(git_prompt)\n> '
 fi
 unset color_prompt force_color_prompt
 
@@ -425,12 +439,15 @@ stty -ixon
 if [[ -f "$HOME/.local/share/blesh/ble.sh" ]]; then
     # ble.sh loads ~/.blerc (-> thomas_config/blerc) itself.
     source -- ~/.local/share/blesh/ble.sh
-    # $(...) in PS1 clobbers $?, and wakatime's PROMPT_COMMAND runs first; PRECMD still sees the real status.
-    blehook PRECMD+='prompt_status=$?'
-    source "$HOME/thomas_config/scripts/command-finished.sh"
-    bleopt default_keymap=vi
-    ble-bind -m vi_imap -f 'j j' vi_imap/normal-mode
-    ble-bind -m vi_imap -T j 200
+    # ble.sh skips shells without a terminal (bash -ic); there its commands only hit command-not-found.
+    if [[ ${BLE_VERSION-} ]]; then
+        # $(...) in PS1 clobbers $?, and wakatime's PROMPT_COMMAND runs first; PRECMD still sees the real status.
+        blehook PRECMD+='prompt_status=$?'
+        source "$HOME/thomas_config/scripts/command-finished.sh"
+        bleopt default_keymap=vi
+        ble-bind -m vi_imap -f 'j j' vi_imap/normal-mode
+        ble-bind -m vi_imap -T j 200
+    fi
 else
     set -o vi
     bind 'set keyseq-timeout 200'
