@@ -3,7 +3,7 @@
   "$docs": "https://code.claude.com/docs/en/keybindings",
   "bindings": [
     {
-      "context": "Chat",
+      "context": "Scroll",
       "bindings": {
         "alt+g": "scroll:bottom"
       }
