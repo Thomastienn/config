@@ -5,29 +5,29 @@ mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#19252A"
-surface = "#2B383E"
-text = "#F3F0E6"
-muted = "#DCE4DF"
-primary = "#A8C8D0"
-secondary = "#E4B18C"
-warning = "#EFCE8E"
-error = "#EAA3AE"
-border = "#485B61"
-separator = "#5B7076"
-selection = "#3A4244"
-urgent_background = "#3C3038"
-pane_border = "#2A393E"
-gradient_start = "#27353B"
-gradient_end = "#2D3334"
-menu_text = "#F3F0E6"
-panel_separator = "#5B7076"
-shade1 = "#1F2C31"
-shade3 = "#243237"
-shade4 = "#28363B"
-shade5 = "#2C3A40"
-shade6 = "#2F3E44"
-shade7 = "#334248"
+background = "#181B1C"
+surface = "#252C2F"
+text = "#ECE9DF"
+muted = "#A8AFAB"
+primary = "#A5C5CD"
+secondary = "#E5B38F"
+warning = "#DEC28A"
+error = "#DCA0A9"
+border = "#425257"
+separator = "#576C72"
+selection = "#363E40"
+urgent_background = "#352931"
+pane_border = "#2B3538"
+gradient_start = "#212F35"
+gradient_end = "#272D2D"
+menu_text = "#FFFFFF"
+panel_separator = "#55666B"
+shade1 = "#202628"
+shade3 = "#293235"
+shade4 = "#2C373A"
+shade5 = "#313F45"
+shade6 = "#35444A"
+shade7 = "#3A494F"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -50,10 +50,10 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#19252A", "#DD7583", "#A1BB71", "#DEC38C",
-  "#8AB3C2", "#9788BB", "#8AB3C2", "#F3F0E6",
-  "#485B61", "#E48A94", "#A6C66B", "#E8C98B",
-  "#88C0D5", "#A996D2", "#88C0D5", "#FFF9F1",
+  "#181B1C", "#DA7280", "#A0B970", "#DFC48D",
+  "#89B2C1", "#9182B4", "#89B2C1", "#ECE9DF",
+  "#425257", "#E28892", "#A6C66B", "#EACB8D",
+  "#88C0D5", "#A592CE", "#88C0D5", "#F6F0E8",
 ]
 bat = "Monokai Extended"
 taskwarrior = "solarized-dark-256.theme"

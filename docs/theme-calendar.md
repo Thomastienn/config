@@ -23,7 +23,9 @@ afterward. Most smaller events start zero or one day early. Edit each window fre
 
 Each of the 38 enabled holiday events has its own complete preset and distinct palette.
 Cozy Mint is used only as the fallback outside event windows. Event presets color
-the desktop and terminal, with matching installed Mint-Y GTK accents. Layout,
+the desktop and terminal, with matching installed Mint-Y GTK accents. They share
+Cozy Mint's calibration: a near-neutral dark background with a slight event tint,
+quiet muted text and soft pastel accents in the event's hues. Layout,
 fonts, icons, cursor and wallpaper stay unchanged. Edit the complete preset for
 further customization. Overlapping events still select just one winner.
 The normal theme engine renders templates into local generated state and reloads
