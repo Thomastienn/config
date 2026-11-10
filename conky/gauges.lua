@@ -40,10 +40,12 @@ function conky_history_span()
     return seconds == 0 and 'live' or ('last ' .. seconds .. 's')
 end
 
+-- Reused: Conky's Lua binding never frees extents, so one per call leaked ~180 MB in a day and a half.
+local extents = cairo_text_extents_t:create()
+
 local function centered_text(context, text, x, y, size, weight)
     cairo_select_font_face(context, theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL, weight)
     cairo_set_font_size(context, size)
-    local extents = cairo_text_extents_t:create()
     cairo_text_extents(context, text, extents)
     cairo_move_to(context, x - extents.width/2 - extents.x_bearing,
                   y - extents.height/2 - extents.y_bearing)
