@@ -1,0 +1,128 @@
+#!/usr/bin/env bash
+# Unattended Ralph: one task per run, on the first scheduled agent that still has usage.
+# Being the only launcher, it never meets Ralph's lock. See docs/ralph.md.
+set -euo pipefail
+here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
+root="$(git rev-parse --show-toplevel)"
+cd -- "$root"
+
+# Epics are worked in the order given; the default is the order in .ralph-tui/epics.
+epics=("$@")
+if (( ! $# )); then
+  if [[ ! -f .ralph-tui/epics ]]; then
+    echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
+    exit 1
+  fi
+  mapfile -t epics < <(grep -vE '^[[:space:]]*(#|$)' .ralph-tui/epics)
+fi
+# Space-separated FROM-TO=agents windows in local hours; agents are tried in order.
+# An hour outside every window runs nothing.
+schedule="${RALPH_AFK_SCHEDULE:-00-24=claude,codex}"
+wait_s="${RALPH_AFK_WAIT:-600}"
+log() { echo "[ralph-afk $(date '+%F %T')] $*"; }
+
+# Two supervisors would take over each other's Ralph forever.
+exec 9>.ralph-tui/afk.lock
+flock -n 9 || { echo 'ralph-afk is already running in this checkout.' >&2; exit 1; }
+
+agents_now() {
+  local hour=$((10#$(date +%H))) window hours
+  for window in $schedule; do
+    hours="${window%%=*}"
+    if (( hour >= 10#${hours%-*} && hour < 10#${hours#*-} )); then
+      echo "${window#*=}" | tr ',' ' '
+      return
+    fi
+  done
+}
+
+# Ask the real CLI with a cheap model. Ralph 0.12.0 does not recognise subscription
+# usage-limit errors, and matching its log would also match text the agent prints.
+usable() {
+  local probe reply
+  probe="$(awk -F'|' -v agent="$1" '$1 == agent { sub(/^[^|]*[|][^|]*[|]/, ""); print; exit }' "$here/../agents")"
+  if [[ -z "$probe" ]]; then
+    echo "Unknown agent in RALPH_AFK_SCHEDULE: $1 (add it to $(readlink -f -- "$here/../agents"))" >&2
+    return 1
+  fi
+  reply="$(cd /tmp && timeout --kill-after=5 180 bash -c "$probe" 2>/dev/null)" || return 1
+  [[ "${reply,,}" == *pong* ]]
+}
+
+count() { bd "$@" --parent "$epic" --json --limit 0 | jq length; }
+
+run_pid=''
+timer_pid=''
+cleanup() {
+  [[ -z "$timer_pid" ]] || kill "$timer_pid" 2>/dev/null || :
+  if [[ -n "$run_pid" ]] && kill -0 "$run_pid" 2>/dev/null; then
+    node "$here/ralph-takeover.mjs" "$run_pid" 9>&-
+  fi
+}
+trap cleanup EXIT
+trap 'exit 130' INT
+trap 'exit 143' TERM
+
+last=''
+while :; do
+  # First epic that still has ready or unfinished work: a later phase starts when the earlier ones are out of work.
+  epic=''
+  for e in "${epics[@]}"; do
+    epic="$e"
+    (( $(count ready) + $(count list --status in_progress) == 0 )) || break
+    epic=''
+  done
+  if [[ -z "$epic" ]]; then
+    log "No ready work under ${epics[*]}. Stopping."
+    exit 0
+  fi
+  agent=''
+  candidates=" $(agents_now) "
+  # No favourite: stay on the agent that ran last and switch only when it stops answering.
+  if [[ -n "$last" && "$candidates" == *" $last "* ]]; then candidates="$last ${candidates/ $last / }"; fi
+  for candidate in $candidates; do
+    if usable "$candidate"; then agent="$candidate"; break; fi
+    log "$candidate is not usable now (usage limit, auth or network)."
+  done
+  if [[ -z "$agent" ]]; then
+    log "No agent available. Checking again in ${wait_s}s."
+    sleep "$wait_s"
+    continue
+  fi
+  log "Starting one task of $epic on $agent."
+  last="$agent"
+  started=$SECONDS
+  # 9>&-: a Ralph that outlives this script must not keep the supervisor lock.
+  "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" 9>&- &
+  run_pid=$!
+  interrupted=false
+  while kill -0 "$run_pid" 2>/dev/null; do
+    sleep "$wait_s" 9>&- &
+    timer_pid=$!
+    # Wake on completion as well as the timer; healthy short runs need no extra probe.
+    wait -n "$run_pid" "$timer_pid" 2>/dev/null || :
+    kill "$timer_pid" 2>/dev/null || :
+    wait "$timer_pid" 2>/dev/null || :
+    timer_pid=''
+    kill -0 "$run_pid" 2>/dev/null || break
+    if ! usable "$agent"; then
+      kill -0 "$run_pid" 2>/dev/null || break
+      log "$agent stopped answering mid-task. Stopping Ralph before checking other agents."
+      # A failed stop must not end the supervisor (set -e): keep the run and retry after the next check.
+      if node "$here/ralph-takeover.mjs" "$run_pid" 9>&-; then
+        interrupted=true
+        last=''
+        break
+      fi
+      log "Could not stop Ralph. Trying again in ${wait_s}s."
+    fi
+  done
+  wait "$run_pid" || log "Ralph exited with status $?."
+  run_pid=''
+  "$interrupted" && continue
+  # A run this short did no work (limit hit at once, startup failure, crash): do not spin.
+  if (( SECONDS - started < 120 )); then
+    log "Run ended within 2 minutes. Checking again in ${wait_s}s."
+    sleep "$wait_s"
+  fi
+done

@@ -20,6 +20,8 @@
   "ralph-tui/config.toml": ".config/ralph-tui/config.toml",
   "ralph-tui/plugins/trackers/beads-resume.js": ".config/ralph-tui/plugins/trackers/beads-resume.js",
   "ralph-tui/templates/beads.hbs": ".config/ralph-tui/templates/beads.hbs",
+  "ralph-tui/bin/ralph": ".local/bin/ralph",
+  "ralph-tui/bin/ralph-afk": ".local/bin/ralph-afk",
   "hermes/SOUL.md": ".hermes/SOUL.md",
   "XResource/Xresources": ".Xresources",
   "XResource/xinitrc": ".xinitrc",

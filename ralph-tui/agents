@@ -1,0 +1,9 @@
+# Agents `ralph` and `ralph-afk` can run, one per line: name|work model|probe
+# name: a Ralph agent plugin (`ralph-tui plugins agents`).
+# work model: passed as --model. RALPH_<NAME>_MODEL overrides it, e.g. RALPH_CODEX_MODEL.
+# probe: cheap one-word request, run in /tmp. The agent is usable when the reply contains "pong".
+claude|opus|claude -p 'Reply with exactly: pong' --model haiku --effort low
+codex|gpt-6.1-sol|codex exec --skip-git-repo-check --ephemeral -s read-only -m gpt-6-luna -c 'model_reasoning_effort="low"' 'Reply with exactly: pong'
+cursor|auto|agent -p --trust --mode ask --model auto 'Reply with exactly: pong'
+# Probe checked with Copilot CLI 1.0.40; choose a work model before enabling.
+#github-copilot|MODEL|copilot -s --no-custom-instructions --disable-builtin-mcps -p 'Reply with exactly: pong'

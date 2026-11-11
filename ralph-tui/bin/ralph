@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+# Run Ralph headless on one epic of the current checkout. See docs/ralph.md.
+set -euo pipefail
+here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
+root="$(git rev-parse --show-toplevel)"
+cd -- "$root"
+export PATH="$HOME/.bun/bin:$PATH"
+
+plugin="$HOME/.config/ralph-tui/plugins/trackers/beads-resume.js"
+if [[ ! -f "$plugin" ]]; then
+  echo "Missing Ralph tracker plugin: $plugin (run ~/thomas_config/setup.sh apply --configs-only)" >&2
+  exit 1
+fi
+
+if (( $# )) && [[ "$1" != -* ]]; then
+  epic="$1"
+  shift
+elif [[ -f .ralph-tui/epics ]]; then
+  epic="$(grep -m1 -vE '^[[:space:]]*(#|$)' .ralph-tui/epics)"
+else
+  echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
+  exit 1
+fi
+takeover=false
+agent=''
+model_given=false
+args=()
+prev=''
+for arg in "$@"; do
+  if [[ "$arg" == --takeover ]]; then takeover=true; continue; fi
+  [[ "$prev" != --agent ]] || agent="$arg"
+  [[ "$arg" != --model ]] || model_given=true
+  args+=("$arg")
+  prev="$arg"
+done
+# A project's configured model belongs to its default agent, so a named agent gets its own.
+if [[ -n "$agent" ]] && ! "$model_given"; then
+  var="RALPH_${agent^^}_MODEL"
+  var="${var//-/_}"
+  model="${!var:-$(awk -F'|' -v agent="$agent" '$1 == agent { print $2; exit }' "$here/../agents")}"
+  [[ -z "$model" ]] || args+=(--model "$model")
+fi
+if "$takeover" && [[ " ${args[*]} " != *" --help "* && " ${args[*]} " != *" -h "* ]]; then
+  if [[ " ${args[*]} " == *" --force "* || " ${args[*]} " == *" --resume "* ]]; then
+    echo 'Use --takeover without --force or --resume; takeover stops and archives the previous session safely.' >&2
+    exit 1
+  fi
+  node "$here/ralph-takeover.mjs"
+fi
+exec ralph-tui run --headless --epic "$epic" "${args[@]}"
