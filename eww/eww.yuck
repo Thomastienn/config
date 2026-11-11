@@ -179,24 +179,12 @@
       (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
       (button :class "footer-btn" :onclick "${qs_cmd} updates" {updates}))))
 
-;; Transparent full-screen catcher: clicking outside the card closes it.
-(defwidget closer []
-  (eventbox :timeout "10s" :onclick "${qs_cmd} close" (box)))
-
-(defwindow closer
-  :monitor 0
-  :geometry (geometry :x "0" :y "0" :width "100%" :height "100%")
-  :stacking "fg"
-  :wm-ignore true
-  :windowtype "desktop"
-  (closer))
-
 ;; 22px matches the i3 window edge; 52px sits just under the 8+36px bar.
 (defwindow flyout [?panel_height]
   :monitor 0
   :geometry (geometry :x "-22px" :y "52px" :width "560px" :height {panel_height ?: "780px"} :anchor "top right")
   :stacking "fg"
-  ;; Keep both windows in the same layer, including above fullscreen apps.
+  ;; Keep the panel above fullscreen apps.
   :wm-ignore true
   :windowtype "dialog"
   (flyout))

@@ -36,7 +36,8 @@ raise_flyout() {
     local window
     window=$(timeout -k 1s 2s xdotool search --sync --onlyvisible --name '^Eww - flyout$' | head -1)
     [[ $window ]] || return 1
-    xdotool windowraise "$window" && xdotool windowfocus "$window"
+    xdotool windowraise "$window" && xdotool windowfocus "$window" || return
+    setsid -f /usr/bin/python3 "$DIR/watch.py" "$window" "${EWW[0]}" </dev/null >/dev/null 2>&1 9>&-
 }
 
 status() {
@@ -61,8 +62,16 @@ status() {
 }
 
 close() {
-    local window
-    eww_cmd close-all || return
+    local window pid
+    eww_cmd close-all || :
+    # close-all only queues work; wait for the GTK loop before checking X11.
+    eww_cmd active-windows >/dev/null 2>&1 || :
+    while read -r window; do
+        # Reset only a surviving panel's Eww process, even if IPC reported success.
+        pid=$(timeout -k 1s 2s xdotool getwindowpid "$window") || continue
+        [[ $(readlink -f "/proc/$pid/exe") == "$(readlink -f "${EWW[0]}")" ]] || continue
+        kill -KILL "$pid" || return
+    done < <(timeout -k 1s 2s xdotool search --name '^Eww - (flyout|closer)$')
     # The unmanaged panel borrows keyboard focus from i3's selected window.
     window=$(i3-msg -t get_tree | jq -r '.. | objects | select(.focused == true) | .window // empty') || return
     # i3's focus command is a no-op when that container is already selected.
@@ -73,6 +82,11 @@ close() {
 
 case $1 in
     status) status ;;
+    watch-close)
+        exec 9>"${XDG_RUNTIME_DIR:-/run/user/$UID}/thomas-eww.lock" || exit 1
+        flock -x 9 || exit 1
+        # A queued watcher must not close a newly opened panel.
+        [[ $(timeout -k 1s 2s xdotool getwindowname "$2" 2>/dev/null) == 'Eww - flyout' ]] && close ;;
     toggle|controls)
         # Start immediately: client commands otherwise each retry a missing daemon for a second.
         eww_cmd daemon >/dev/null 2>&1 || exit 1
@@ -82,10 +96,10 @@ case $1 in
         else
             close || exit 1
             height=$(panel_height)
-            # Roll back both windows if opening is interrupted or any step fails.
+            # Roll back the panel if opening is interrupted or any step fails.
             trap close EXIT
             trap 'exit 1' HUP INT TERM
-            eww_cmd update qs_page=0 && eww_cmd open closer &&
+            eww_cmd update qs_page=0 &&
                 eww_cmd open flyout --arg panel_height="$height" &&
                 raise_flyout || exit 1
             trap - EXIT HUP INT TERM

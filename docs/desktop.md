@@ -213,12 +213,14 @@ Click the clock, Wi-Fi, or battery to toggle Quick Settings. Click outside the
 panel, use its Close button, or press **Super+Escape** to close it. Escape alone
 keeps its normal behavior in applications.
 
-Panel actions run one at a time. Monitor queries finish before the transparent
-click catcher opens, and failed or interrupted opens close both Eww windows.
-The panel and catcher both bypass i3 window management, so fullscreen applications
-cannot hide the panel underneath the catcher. The panel receives keyboard focus.
-`./setup.sh apply` installs `coreutils` and `util-linux` for timeouts and locking;
-the existing Eww links and generated i3 configuration carry these changes.
+Panel actions run one at a time. The panel bypasses i3 window management and
+receives keyboard focus, so it also works above fullscreen applications. Outside
+clicks and focus changes close it without a full-screen click catcher. A watcher
+runs only while the panel is open and resets an unresponsive Eww process; Close and
+**Super+Escape** use the same recovery. Failed or interrupted opens close the panel.
+`./setup.sh apply` installs `coreutils`, `util-linux`, and `python3-xlib` for
+timeouts, locking, and passive click detection. The existing Eww links and
+generated i3 configuration carry these changes.
 
 ## Polybar timer
 
