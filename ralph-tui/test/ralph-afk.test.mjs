@@ -51,9 +51,11 @@ if (fs.existsSync('partial.txt')) {
   });
   console.log('Working on usage limit handling; ordinary task output must not trigger a handoff.');
   if (process.env.FIXTURE_RUNNING !== 'healthy') fs.writeFileSync('limited-agent', agent);
+  // A provider that lets the running session finish: new requests fail, the task keeps printing.
+  if (process.env.FIXTURE_RUNNING === 'busy') setInterval(() => console.log('still working'), 20);
   setTimeout(() => {
     child.kill();
-    if (process.env.FIXTURE_RUNNING === 'healthy') fs.writeFileSync(work, String(Number(fs.readFileSync(work)) - 1));
+    if (['healthy', 'busy'].includes(process.env.FIXTURE_RUNNING)) fs.writeFileSync(work, String(Number(fs.readFileSync(work)) - 1));
     else fs.writeFileSync('timed-out', 'yes');
     process.exit(0);
   }, process.env.FIXTURE_RUNNING === 'healthy' ? 300 : 1500);
@@ -157,6 +159,16 @@ test('a healthy task keeps running even when its output mentions usage limits', 
   assert.deepEqual(f.read('stopped'), []);
   assert.ok(f.read('probes').length > 1, 'Healthy provider must remain available during mid-task probes');
   assert.ok(f.read('checks').every(seconds => seconds === '600'), 'Checks default to ten minutes');
+});
+
+test('a limit mid-task does not stop a run that is still producing output', () => {
+  const f = fixture();
+  const result = f.run({ FIXTURE_RUNNING: 'busy', RALPH_AFK_WAIT: '7' });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout, /still producing output/);
+  assert.deepEqual(f.read('stopped'), []);
+  assert.equal(f.runs().length, 1);
+  assert.match(result.stdout, /No ready work/);
 });
 
 test('a failed stop keeps the supervisor alive and is retried at the next check', () => {

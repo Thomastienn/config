@@ -92,8 +92,12 @@ while :; do
   log "Starting one task of $epic on $agent."
   last="$agent"
   started=$SECONDS
+  # Ralph's output is the progress signal: a provider may let a session already running finish after new requests hit the limit.
+  out=.ralph-tui/afk-output.log
+  : > "$out"
+  size=0
   # 9>&-: a Ralph that outlives this script must not keep the supervisor lock.
-  "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" 9>&- &
+  "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" > >(tee "$out" 9>&-) 2>&1 9>&- &
   run_pid=$!
   interrupted=false
   while kill -0 "$run_pid" 2>/dev/null; do
@@ -105,9 +109,15 @@ while :; do
     wait "$timer_pid" 2>/dev/null || :
     timer_pid=''
     kill -0 "$run_pid" 2>/dev/null || break
+    previous=$size
+    size=$(stat -c %s "$out" 2>/dev/null || echo 0)
     if ! usable "$agent"; then
       kill -0 "$run_pid" 2>/dev/null || break
-      log "$agent stopped answering mid-task. Stopping Ralph before checking other agents."
+      if (( size > previous )); then
+        log "$agent stopped answering, but the running task is still producing output. Letting it finish."
+        continue
+      fi
+      log "$agent stopped answering mid-task and the task made no progress. Stopping Ralph before checking other agents."
       # A failed stop must not end the supervisor (set -e): keep the run and retry after the next check.
       if node "$here/ralph-takeover.mjs" "$run_pid" 9>&-; then
         interrupted=true

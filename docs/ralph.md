@@ -73,8 +73,11 @@ within two minutes (limit reached at once, startup failure, crash), it waits
 `RALPH_AFK_WAIT` seconds (default 600) and checks again. That also covers a
 limit that resets while you sleep.
 
-During a run it repeats the probe every `RALPH_AFK_WAIT` seconds. If the CLI
-stops answering (usage limit, auth or network), it stops that Ralph and its
+During a run it repeats the probe every `RALPH_AFK_WAIT` seconds. Ralph's
+output is copied to `.ralph-tui/afk-output.log`. If the CLI stops answering
+(usage limit, auth or network) but that output grew since the last check, the
+run keeps going: some providers let a running session finish after new
+requests hit the limit. If the output did not grow, it stops that Ralph and its
 child agents through the takeover helper and checks the scheduled agents again
 at once. The next available agent resumes the unfinished task and its pending
 edits through `beads-resume`. Task output that mentions limits does not trigger
