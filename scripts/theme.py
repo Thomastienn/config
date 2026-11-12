@@ -66,8 +66,10 @@ def validate(data):
                           ("terminal", {"ansi", "bat", "taskwarrior"})]:
         if not isinstance(data[section], dict):
             raise ValueError(f"{section} must be a table")
-        if set(data[section]) != keys:
-            raise ValueError(f"{section}: missing {keys - set(data[section])}, unknown {set(data[section]) - keys}")
+        # colors.accent is optional; render falls back to secondary.
+        allowed = keys | ({"accent"} if section == "colors" else set())
+        if not keys <= set(data[section]) <= allowed:
+            raise ValueError(f"{section}: missing {keys - set(data[section])}, unknown {set(data[section]) - allowed}")
     ansi = data["terminal"]["ansi"]
     if not isinstance(ansi, list) or len(ansi) != 16:
         raise ValueError("terminal.ansi must contain exactly 16 colors")
@@ -131,7 +133,7 @@ def render(data, preset):
              Path("/usr/share/icons") / data["desktop"]["icons"]]
     for section in ["colors", "fonts", "desktop", "terminal"]:
         values.update({f"{section}.{key}": str(value) for key, value in data[section].items() if not isinstance(value, list)})
-    for key, value in data["colors"].items():
+    for key, value in {"accent": data["colors"]["secondary"], **data["colors"]}.items():
         rgb = [int(value[n:n + 2], 16) for n in (1, 3, 5)]
         values.update({f"hex.{key}": value[1:], f"rgb.{key}": ", ".join(map(str, rgb)),
                        f"float.{key}": ", ".join(f"{n}.0" for n in rgb)})

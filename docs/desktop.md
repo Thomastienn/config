@@ -132,7 +132,10 @@ install them through the existing setup manifests first. Switching downloads
 nothing. `theme check` exits nonzero while generated output differs.
 
 The preset controls colors, wallpaper, fonts, GTK themes, icons, cursors, and
-existing bat/Taskwarrior skin names. Layouts, shortcuts, DPI and power behavior
+existing bat/Taskwarrior skin names. Claude Code's theme and status line follow
+it too. The optional `colors.accent` sets Claude's second accent (permission,
+suggestion and spinner labels, status line folder and clock); presets without it
+use `secondary`. Layouts, shortcuts, DPI and power behavior
 stay in the shared configuration. Login-screen and boot themes are outside this
 version. Applications that ignore system themes need their own integration.
 

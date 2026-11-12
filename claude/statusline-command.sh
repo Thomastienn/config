@@ -1,13 +1,17 @@
 #!/bin/bash
-# Status line (Cozy Mint palette, Nerd Font icons, │ separators):
+# Status line (active desktop theme palette, Nerd Font icons, │ separators):
 #   model · token budget · folder · git branch and diff · cost and time · 5h and weekly usage
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
 
-# Fixed analogous palette around Cozy Mint green (teal to lime); rose only for alerts.
+# Colours follow the generated theme palette; Cozy Mint values are the fallback.
 c_line=#46534A c_text=#EEE8DC c_muted=#ABAFA4
-c_mint=#A7CCAE c_sea=#8CC7BE c_lime=#C6D68C c_hot=#DBA0AA
+c_mint=#A7CCAE c_sea=#8CC7BE c_lime=#DEC28A c_hot=#DBA0AA
+palette="${XDG_STATE_HOME:-$HOME/.local/state}/thomas-config/theme/generated/palette.json"
+if colours=$(jq -er '.colors | [.border, .text, .muted, .primary, (.accent // .secondary), .warning, .error] | join(" ")' "$palette" 2>/dev/null); then
+  read -r c_line c_text c_muted c_mint c_sea c_lime c_hot <<<"$colours"
+fi
 rgb() { printf '%d;%d;%d' "0x${1:1:2}" "0x${1:3:2}" "0x${1:5:2}"; }
 fg() { printf '\033[38;2;%sm' "$(rgb "$1")"; }
 reset=$'\033[0m'
