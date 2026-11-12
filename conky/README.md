@@ -1,10 +1,18 @@
 The system, calendar, and Calgary weather panels start with `conky/run.sh`.
 
-The system panel uses matching circular gauges for CPU, NVIDIA GPU, and RAM.
-CPU/GPU temperatures appear inside their circles; RAM shows used/total memory
-underneath. Storage and battery use vertical stacks of ten horizontal segments
-below CPU activity. Without a battery, the storage stack is centered. CPU and
-network activity histories retain their styles.
+All three are drawn with Lua/Cairo and share one look from `panel.lua`: a soft
+glow from the top, a hairline edge, and headings with fading rules.
+
+- System (`gauges.lua`): clock with a day-progress line; three-quarter rings for
+  CPU, NVIDIA GPU, and RAM with temperatures and used memory inside; a mirrored
+  one-minute CPU waveform; segmented storage and battery bars (storage spans the
+  panel without a battery); download above and upload below one axis, each on
+  its own scale; the five busiest processes. Network interface names live near
+  the top of the file.
+- Calendar (`calendar.lua`): Taskwarrior's report above six months. Today is a
+  filled pill, due dates are outlined, and past days are dimmed.
+- Weather (`weather.lua`): each forecast hour sits on a card whose bar is the
+  precipitation chance; the sun follows the daylight arc.
 
 `telemetry.py` reads named CPU package sensors from Linux hwmon and queries the
 first NVIDIA display adapter every five seconds with a two-second timeout.

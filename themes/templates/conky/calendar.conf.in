@@ -23,9 +23,9 @@ conky.config = {
     use_xft = true,
     font = '{{fonts.ui}}:size=9',
     default_color = '{{hex.text}}',
-    color1 = '{{hex.primary}}',
-    color3 = '{{hex.muted}}',
-    color4 = '{{hex.separator}}',
+    lua_load = os.getenv('HOME') .. '/thomas_config/conky/calendar.lua',
+    lua_draw_hook_pre = 'backdrop',
+    lua_draw_hook_post = 'draw_calendar',
     use_spacer = 'none',
     extra_newline = false,
     text_buffer_size = 16384,
@@ -36,9 +36,9 @@ conky.config = {
     draw_shades = false,
 }
 
+-- calendar.lua draws the headings and the month grid. The last line reserves the grid's
+-- 382 units (its own height included), so a long task list grows the panel instead of overlapping.
 conky.text = [[
-${color1}${font {{fonts.ui}}:bold:size=12}Upcoming${font}${color}
-${voffset 8}${execp python3 $HOME/thomas_config/conky/task_list.py}${font}${color}
-${voffset 20}${color1}${font {{fonts.ui}}:bold:size=11}Calendar${font}${color}
-${voffset 8}${font {{fonts.ui}}:size=8}${execpi 60 python3 $HOME/thomas_config/conky/task_calendar.py}${font}${color}
+${voffset 22}${execp python3 $HOME/thomas_config/conky/task_list.py}${font}${color}
+${execpi 60 python3 $HOME/thomas_config/conky/task_calendar.py}${voffset 366}
 ]]

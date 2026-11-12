@@ -26,6 +26,7 @@ conky.config = {
     font = '{{fonts.ui}}:size=9',
     default_color = '{{hex.text}}',
     lua_load = os.getenv('HOME') .. '/thomas_config/conky/weather.lua',
+    lua_draw_hook_pre = 'backdrop',
     lua_draw_hook_post = 'draw_weather',
     -- Check quickly at startup; the first threaded result sets one-minute redraws.
     update_interval = 1,

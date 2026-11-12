@@ -1,10 +1,6 @@
-local theme = dofile(os.getenv('HOME') .. '/thomas_config/themes/.generated/palette.lua')
-require('cairo')
-
-local mint = theme.colors.primary
-local cream = theme.colors.text
-local muted = theme.colors.muted
-local rail = theme.colors.separator
+-- Weather panel, drawn entirely in Cairo from the numbers weather.py passes in.
+local ui = dofile(os.getenv('HOME') .. '/thomas_config/conky/panel.lua')
+local c = ui.colors
 local state = {}
 
 function conky_weather(...)
@@ -12,20 +8,6 @@ function conky_weather(...)
     for index, value in ipairs({...}) do state[index] = tonumber(value) end
     conky_set_update_interval(60)
     return ''
-end
-
-local function text(context, value, x, y, size, color, centered, bold)
-    cairo_set_source_rgb(context, color[1], color[2], color[3])
-    cairo_select_font_face(context, theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL,
-                           bold and CAIRO_FONT_WEIGHT_BOLD or CAIRO_FONT_WEIGHT_NORMAL)
-    cairo_set_font_size(context, size)
-    if centered then
-        local extents = cairo_text_extents_t:create()
-        cairo_text_extents(context, value, extents)
-        x = x - extents.width/2 - extents.x_bearing
-    end
-    cairo_move_to(context, x, y)
-    cairo_show_text(context, value)
 end
 
 local function temperature(value)
@@ -51,12 +33,13 @@ local function condition(code)
     return 'Weather unavailable', nil
 end
 
-local function icon(context, code, is_day, x, y)
+local function icon(context, code, is_day, x, y, scale)
     local _, kind = condition(code)
     if not kind then return end
     cairo_save(context)
     cairo_translate(context, x, y)
-    cairo_set_source_rgb(context, mint[1], mint[2], mint[3])
+    cairo_scale(context, scale or 1, scale or 1)
+    ui.color(context, c.primary)
     cairo_set_line_width(context, 1.4)
     cairo_new_path(context)
     if kind == 'clear' then
@@ -105,72 +88,94 @@ local function icon(context, code, is_day, x, y)
     cairo_restore(context)
 end
 
-local function daylight(context, now)
-    local rise, setting, next_rise = state[6], state[7], state[8]
-    local fraction = rise and setting and math.max(0, math.min(1, (now - rise)/(setting - rise)))
-    cairo_save(context)
-    cairo_translate(context, 382, 83)
-    cairo_scale(context, 1, 0.48)
-    cairo_set_line_width(context, 1.5)
-    cairo_set_source_rgb(context, rail[1], rail[2], rail[3])
+-- One forecast hour on a soft card; the bar along its foot is the precipitation chance.
+local function hour(context, x, start)
+    local middle, probability = x + 20.5, state[start + 3]
+    ui.rounded(context, x, 40, 41, 96, 9)
+    ui.color(context, c.surface, 0.6)
+    cairo_fill(context)
+    ui.text(context, state[start] and string.format('%02d', state[start]) or '--', middle, 55, 9, c.muted, 0.5)
+    icon(context, state[start + 2], state[start + 4], middle, 74)
+    ui.text(context, temperature(state[start + 1]), middle, 106, 11.5, c.text, 0.5, true)
+    ui.text(context, probability and string.format('%.0f%%', probability) or '--', middle, 121, 8.5, c.muted, 0.5)
+    cairo_set_line_width(context, 2.5)
+    ui.color(context, c.border, 0.8)
     cairo_new_path(context)
-    cairo_arc(context, 0, 0, 57, math.pi, 2*math.pi)
+    cairo_move_to(context, x + 9, 128)
+    cairo_line_to(context, x + 32, 128)
     cairo_stroke(context)
-    if fraction and now >= rise and now <= setting then
-        cairo_set_source_rgb(context, mint[1], mint[2], mint[3])
+    if probability and probability > 0 then
+        ui.color(context, c.secondary)
         cairo_new_path(context)
-        cairo_arc(context, 0, 0, 57, math.pi, math.pi + fraction*math.pi)
+        cairo_move_to(context, x + 9, 128)
+        cairo_line_to(context, x + 9 + 23 * probability/100, 128)
         cairo_stroke(context)
     end
-    cairo_restore(context)
-    if fraction and now >= rise and now <= setting then
-        local angle = math.pi + fraction*math.pi
-        cairo_set_source_rgb(context, cream[1], cream[2], cream[3])
+end
+
+local function daylight(context, now)
+    local rise, setting, next_rise = state[6], state[7], state[8]
+    local x, y, across, up = 400, 100, 48, 36
+    local function arc(finish)
+        cairo_save(context)
+        cairo_translate(context, x, y)
+        cairo_scale(context, 1, up/across)
         cairo_new_path(context)
-        cairo_arc(context, 382 + 57*math.cos(angle), 83 + 27.36*math.sin(angle), 3, 0, 2*math.pi)
+        cairo_arc(context, 0, 0, across, math.pi, finish)
+        cairo_restore(context)
+    end
+    cairo_set_line_width(context, 1)
+    ui.color(context, c.border, 0.8)
+    cairo_new_path(context)
+    cairo_move_to(context, x - across - 8, y)
+    cairo_line_to(context, x + across + 8, y)
+    cairo_stroke(context)
+    cairo_set_line_width(context, 1.6)
+    ui.color(context, c.separator)
+    arc(2*math.pi)
+    cairo_stroke(context)
+    if rise and setting and now >= rise and now <= setting then
+        local angle = math.pi + math.pi * (now - rise)/(setting - rise)
+        local sky = cairo_pattern_create_linear(x - across, 0, x + across, 0)
+        cairo_pattern_add_color_stop_rgb(sky, 0, c.warning[1], c.warning[2], c.warning[3])
+        cairo_pattern_add_color_stop_rgb(sky, 1, c.primary[1], c.primary[2], c.primary[3])
+        cairo_set_source(context, sky)
+        arc(angle)
+        cairo_stroke(context)
+        cairo_pattern_destroy(sky)
+        local sun_x, sun_y = x + across * math.cos(angle), y + up * math.sin(angle)
+        ui.glow(context, sun_x, sun_y, 13, c.warning)
+        ui.color(context, c.text)
+        cairo_new_path(context)
+        cairo_arc(context, sun_x, sun_y, 3.2, 0, 2*math.pi)
         cairo_fill(context)
     end
-    text(context, clock(state[9]), 325, 104, 8, muted, true)
-    text(context, clock(state[10]), 439, 104, 8, muted, true)
+    ui.text(context, clock(state[9]), x - across, y + 13, 8.5, c.muted, 0.5)
+    ui.text(context, clock(state[10]), x + across, y + 13, 8.5, c.muted, 0.5)
     local event, label
     if rise and now < rise then event, label = rise, 'Sunrise'
     elseif setting and now < setting then event, label = setting, 'Sunset'
     elseif next_rise then event, label = next_rise, 'Sunrise' end
     local remaining = event and math.ceil((event - now)/60)
-    local status = remaining and string.format('%s in %dh %02dm', label, math.floor(remaining/60), remaining%60)
-                              or 'Times unavailable'
-    text(context, status, 382, 126, 8, cream, true)
+    ui.text(context, remaining and string.format('%s in %dh %02dm', label, math.floor(remaining/60), remaining%60)
+                               or 'Times unavailable', x, y + 31, 9, c.text, 0.5)
 end
 
 function conky_draw_weather()
     if not conky_window then return end
-    local window = conky_window
-    local surface = cairo_xlib_surface_create(window.display, window.drawable, window.visual,
-                                              window.width, window.height)
-    local context = cairo_create(surface)
-    -- Same Xft scale and padding as the existing system panel.
-    cairo_scale(context, window.width/466, window.width/466)
-    cairo_set_line_cap(context, CAIRO_LINE_CAP_ROUND)
-    text(context, 'Calgary', 12, 24, 12, mint, false, true)
-    text(context, 'Next hours', 155, 24, 9, muted)
-    text(context, 'Daylight', 382, 24, 9, muted, true)
-    text(context, temperature(state[1]), 12, 75, 36, cream, false, true)
-    text(context, 'Feels like ' .. temperature(state[2]), 12, 99, 9, muted)
-    text(context, condition(state[3]), 12, 122, 9, cream)
-    text(context, 'Precip.', 121, 122, 7, muted)
-    for index = 0, 3 do
-        local start, x = 11 + index*5, 165 + index*42
-        local hour = state[start]
-        text(context, hour and string.format('%02d', hour) or '--', x, 50, 8, muted, true)
-        icon(context, state[start + 2], state[start + 4], x, 70)
-        text(context, temperature(state[start + 1]), x, 99, 10, cream, true)
-        local probability = state[start + 3]
-        text(context, probability and string.format('%.0f%%', probability) or '--', x, 122, 8, muted, true)
-    end
+    -- 440 units of content inside 12 units of padding, as sized in weather.conf.
+    local context, surface, height = ui.open(466)
+    ui.section(context, 'Calgary', 14, 26, 128)
+    ui.section(context, 'Next hours', 152, 26, 330)
+    ui.section(context, 'Daylight', 352, 26, 452)
+    ui.text(context, temperature(state[1]), 14, 82, 42, c.text, 0, true)
+    ui.text(context, 'Feels like ' .. temperature(state[2]), 14, 104, 10, c.muted)
+    icon(context, state[3], 1, 25, 124, 0.8)
+    ui.text(context, (condition(state[3])), state[3] and 42 or 14, 128, 10.5, c.text)
+    for index = 0, 3 do hour(context, 152 + index * 46, 11 + index * 5) end
     daylight(context, os.time())
     local footer = state[4] and ((state[5] == 1 and 'Cached ' or 'Updated ') .. clock(state[4]))
                              or 'Weather unavailable'
-    text(context, footer .. ' / Open-Meteo', 233, 151, 8, muted, true)
-    cairo_destroy(context)
-    cairo_surface_destroy(surface)
+    ui.text(context, footer .. ' / Open-Meteo', 233, height - 11, 8.5, c.muted, 0.5)
+    ui.close(context, surface)
 end
