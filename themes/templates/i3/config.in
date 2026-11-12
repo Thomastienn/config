@@ -5,7 +5,7 @@
 # GENERAL SETTINGS
 # ================================================================
 set $mod Mod4
-font pango:{{fonts.proportional}} 11
+font pango:{{fonts.proportional}} 12
 title_align center
 floating_modifier $mod
 focus_follows_mouse no
@@ -409,14 +409,15 @@ bindsym $mod+Shift+e exec "~/thomas_config/polybar/shapes/scripts/powermenu.sh"
 # ================================================================
 # Native icons and padded titles also apply to tabbed and stacked layouts.
 for_window [all] title_window_icon padding 6px
-for_window [class=".*"] title_format "  <b>%title</b>  "
+# for_window [class=".*"] title_format "  <b>%title</b>  "
+for_window [class=".*"] title_format "<span font='11' weight='bold'>%title</span>"
 
 # Border settings: the width matches WIDTH in the picom shaders.
 default_border pixel 2
 default_floating_border pixel 2
 for_window [class=".*"] border pixel 2
 gaps inner 10
-gaps outer 5
+gaps outer 3
 
 # Force borders on Brave - match exact class names
 for_window [class="Brave-browser"] border pixel 2

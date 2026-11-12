@@ -1,7 +1,7 @@
 conky.config = {
     alignment = 'top_left',
     gap_x = 28,
-    gap_y = 52,
+    gap_y = 58,
     minimum_width = 330,
     maximum_width = 330,
     -- Shared with system.conf so both side panels end on one line.

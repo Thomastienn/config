@@ -2,7 +2,7 @@ conky.config = {
     -- Position & Size
     alignment = 'top_right',
     gap_x = 28,
-    gap_y = 52,
+    gap_y = 58,
     minimum_width = 240,
     maximum_width = 240,
     -- Shared with calendar.conf so both side panels end on one line.
