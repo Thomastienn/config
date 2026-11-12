@@ -35,8 +35,9 @@ The `ntp_*` colors also support Chromium's standard new-tab page.
 
 Edit the selected TOML preset and run `theme apply`. `manifest.json` is a generated
 symlink; edit `themes/templates/brave/manifest.json.in` only to change its structure.
-Reload the theme through `brave://extensions`, or load this folder again to apply
-the generated colors. The switcher leaves the browser open.
+Restart Brave through the `brave` launcher (`$mod+b`, menu or default browser) to
+apply the generated colors; it loads this folder at every launch. The switcher
+leaves the browser open.
 
 To remove the theme on Linux, open `brave://settings/appearance` and click
 **Use Classic**.

@@ -161,7 +161,7 @@ bindsym $mod+u exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts
 # shortcut: Open terminal
 bindsym $mod+Return exec kitty
 # shortcut: Open Brave browser
-bindsym $mod+b exec brave-browser; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 1'"
+bindsym $mod+b exec brave; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 1'"
 # shortcut: Open Nemo file explorer
 bindsym $mod+Shift+m exec nemo
 # shortcut: Open Discord

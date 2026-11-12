@@ -448,7 +448,7 @@ def reload_desktop(data):
         except OSError as error:
             print(f"Pending: activation marker: {error}")
     print("Pending: reopen existing shells for prompt/ble.sh/FZF; relaunch TUIs such as Codex if they cache old colors.")
-    print("Pending: restart Firefox when convenient; reload the Brave theme at brave://extensions.")
+    print("Pending: restart Firefox when convenient; restart Brave to load the new theme.")
     print("Neovim: focus the editor or run :DesktopThemeReload (restart once after first setup).")
 
 

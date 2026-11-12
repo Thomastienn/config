@@ -1,0 +1,3 @@
+#!/bin/sh
+# Brave never rereads an unpacked theme on restart; loading it at launch picks up the current preset.
+exec /usr/bin/brave-browser --load-extension="$HOME/thomas_config/brave" "$@"

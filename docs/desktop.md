@@ -154,9 +154,11 @@ without changing its lockfile or pinned version. Restart Neovim once after the
 first setup to load the bridge. Later switches refresh on focus or through
 `:DesktopThemeReload`; without generated data the editor keeps its own theme.
 
-Firefox loads generated CSS on its next restart. Brave keeps its existing theme
-folder; reload that theme through `brave://extensions` after switching, or load
-the folder again if needed. Existing shells need a new tab/session for prompt,
+Firefox loads generated CSS on its next restart. Brave never rereads an unpacked
+theme on restart, so the `brave` launcher (`$mod+b`, the menu entry and the default
+browser) passes `--load-extension` for the theme folder; new colors appear on the
+next Brave launch, and tabs restore as Brave's own startup setting decides. Launching
+`/usr/bin/brave-browser` directly keeps the last loaded colors. Existing shells need a new tab/session for prompt,
 ble.sh and FZF changes. The switcher never restarts these applications. The
 lockscreen image cache rebuilds when wallpaper content changes. Terminal apps
 such as Codex can cache their startup colors; relaunch them if colors stay stale.
