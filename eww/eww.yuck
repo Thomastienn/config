@@ -19,22 +19,38 @@
 (defpoll updates :interval "1800s" :initial "…"
   "$HOME/thomas_config/polybar/shapes/scripts/updates.sh")
 
-(defwidget tile [icon text detail on cmd]
-  (button :timeout "10s" :class "tile ${on ? 'on' : ''}" :onclick cmd
-    (box :space-evenly false :spacing 14
-      (label :class "tile-icon" :text icon)
-      (box :orientation "v" :space-evenly false :spacing 4
-        (label :class "tile-text" :xalign 0 :text text)
-        (label :class "tile-detail" :xalign 0 :limit-width 20 :tooltip detail :text detail)))))
+;; One quick toggle. tone "mode" (amber) marks states that bend normal behaviour.
+;; `more` adds a corner button; it floats so every tile keeps the same width.
+(defwidget tile [icon text detail on cmd ?tone ?active ?timeout ?tooltip ?more]
+  (overlay
+    (button :class "tile ${on ? (tone ?: 'on') : ''}" :timeout {timeout ?: "10s"} :active {active ?: true}
+            :tooltip {tooltip ?: "${text}: ${detail}"} :onclick cmd
+      (box :orientation "v" :space-evenly false :spacing 8
+        (label :class "tile-icon" :xalign 0 :text icon)
+        (box :orientation "v" :space-evenly false :spacing 2
+          (label :class "tile-text" :xalign 0 :text text)
+          (label :class "tile-detail" :xalign 0 :limit-width 15 :text detail))))
+    (button :class "tile-more" :visible {(more ?: "") != ""} :halign "end" :valign "start"
+            :tooltip "Choose apps allowed during Do not disturb" :onclick {more ?: ""} "󰘮")))
 
-(defwidget slider-row [icon text value cmd ?icon-cmd]
-  (box :class "slider-row" :orientation "v" :space-evenly false :spacing 10
-    (box :space-evenly false
-      (label :hexpand true :xalign 0 :text text)
-      (label :class "slider-value" :text "${value}%"))
-    (box :space-evenly false :spacing 16
-      (button :class "slider-icon" :tooltip text :onclick {icon-cmd ?: ""} icon)
-      (scale :class "slider" :hexpand true :min 0 :max 101 :value value :onchange cmd))))
+;; Fat slider: icon and value sit inside the track and turn to ink once the fill reaches them.
+(defwidget fat-slider [icon text value cmd ?icon-cmd ?muted]
+  (overlay
+    (scale :class "fat ${muted == true ? 'dim' : ''}" :min 0 :max 101 :value value :onchange cmd :tooltip text)
+    (button :class "fat-icon ${value > 9 && muted != true ? 'lit' : ''}" :halign "start" :tooltip text
+            :active {(icon-cmd ?: "") != ""} :onclick {icon-cmd ?: ""} icon)
+    (label :class "fat-value ${value > 90 && muted != true ? 'lit' : ''}" :halign "end" :text value)))
+
+(defwidget media []
+  (box :class "media" :space-evenly false :spacing 14
+    (button :class "media-play" :tooltip "Play / pause" :onclick "${qs_cmd} play" {qs.playing ? "󰏤" : "󰐊"})
+    (box :orientation "v" :space-evenly false :hexpand true :valign "center" :spacing 2
+      (label :class "media-title" :xalign 0 :limit-width 30 :tooltip {qs.media}
+             :text {qs.media == "" ? "Nothing playing" : replace(qs.media, "^.*? - ", "")})
+      (label :class "media-artist" :xalign 0 :limit-width 34 :visible {qs.media != ""}
+             :text {replace(qs.media, " - .*$", "")}))
+    (button :class "media-btn" :tooltip "Previous" :onclick "${qs_cmd} prev" "󰒮")
+    (button :class "media-btn" :tooltip "Next" :onclick "${qs_cmd} next" "󰒭")))
 
 (defwidget audio-devices []
   (box :orientation "v" :space-evenly false :spacing 24
@@ -46,7 +62,7 @@
         (for device in {desktop.outputs}
           (button :timeout "10s" :class "device ${device.selected ? 'selected' : ''}"
                   :tooltip {device.name} :onclick "${desktop_cmd} audio output ${device.id}"
-            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '● ' : '○ '}${device.name}")))))
+            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '󰗠' : '󰝦'}  ${device.name}")))))
     (box :visible {desktop.audio_available} :orientation "v" :space-evenly false :spacing 12
       (label :class "section-label" :xalign 0 :text "Microphone")
       (label :visible {arraylength(desktop.inputs) == 0} :class "muted" :xalign 0 :text "No microphone connected")
@@ -54,7 +70,7 @@
         (for device in {desktop.inputs}
           (button :timeout "10s" :class "device ${device.selected ? 'selected' : ''}"
                   :tooltip {device.name} :onclick "${desktop_cmd} audio input ${device.id}"
-            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '● ' : '○ '}${device.name}")))))))
+            (label :xalign 0 :wrap true :wrap-mode "wordchar" :width 456 :text "${device.selected ? '󰗠' : '󰝦'}  ${device.name}")))))))
 
 (defwidget notification-history []
   (box :orientation "v" :space-evenly false :spacing 20
@@ -65,23 +81,27 @@
     (box :orientation "v" :space-evenly false :spacing 24
       (for notice in {desktop.notifications}
         (box :class "notice" :orientation "v" :space-evenly false :spacing 8
-          (label :class "section-label" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {notice.summary})
+          (label :class "notice-title" :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {notice.summary})
           (label :visible {notice.body != ""} :xalign 0 :wrap true :wrap-mode "wordchar" :width 480 :text {notice.body}))))
     (button :visible {arraylength(desktop.notifications) > 0} :class "compact-btn"
             :onclick "${desktop_cmd} clear-history" "Clear history")))
 
-(defwidget settings-tab [text index]
-  (button :class "settings-tab ${qs_page == index ? 'selected' : ''}" :onclick "${qs_cmd} page ${index}" text))
+;; One stop on the page line.
+(defwidget stop [text index]
+  (button :class "stop ${qs_page == index ? 'here' : ''}" :onclick "${qs_cmd} page ${index}"
+    (box :orientation "v" :space-evenly false :spacing 8
+      (box :class "stop-dot" :halign "center")
+      (label :class "stop-name" :text text))))
 
 (defwidget allowed-apps []
   (box :orientation "v" :space-evenly false :spacing 20
     (box :space-evenly false :spacing 12
-      (button :class "compact-btn" :tooltip "Back to Controls" :onclick "${qs_cmd} page 0" "")
+      (button :class "compact-btn" :tooltip "Back to Controls" :onclick "${qs_cmd} page 0" "󰅁")
       (label :class "section-label" :hexpand true :xalign 0 :text "Allowed apps"))
     (label :class "muted" :xalign 0 :wrap true :width 480
            :text "Selected apps can interrupt Do not disturb. Changes save immediately.")
     (button :class "compact-btn" :active {desktop.apps_editable && arraylength(desktop.apps) > 0}
-            :onclick "${qs_cmd} apps-search" "  Search apps…")
+            :onclick "${qs_cmd} apps-search" "󰍉  Search apps…")
     (label :visible {desktop.dnd_available && !desktop.apps_editable} :class "muted" :xalign 0 :wrap true :width 480
            :text "Notifications are paused. Resume them before changing app exceptions.")
     (label :visible {!desktop.apps_available} :class "muted" :xalign 0 :wrap true :width 480 :text {desktop.apps_error})
@@ -95,92 +115,73 @@
                 :tooltip "${app.name}: ${app.allowed ? 'allowed during DND' : 'silenced during DND'}"
                 :onclick "${desktop_cmd} allow-app ${app.id}"
           (box :space-evenly false :spacing 12
-            (label :width 24 :text {app.allowed ? "☑" : "☐"})
-            (label :visible {arraylength(app.icons) == 0} :width 24 :text "")
+            (label :width 24 :text {app.allowed ? "󰗠" : "󰝦"})
+            (label :visible {arraylength(app.icons) == 0} :width 24 :text "󰍹")
             (for icon in {app.icons}
               (image :path icon :image-width 24 :image-height 24))
             (label :hexpand true :xalign 0 :limit-width 25 :tooltip {app.name} :text {app.name})
             (label :text {app.allowed ? "Allowed" : "Silenced"})))))))
 
 (defwidget quick-controls []
-  (box :orientation "v" :space-evenly false :spacing 24
-    (slider-row :icon {qs.vol_muted ? "" : ""} :text {qs.vol_muted ? "Volume · muted" : "Volume"}
-                :value {qs.vol} :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
-    (slider-row :icon "󰃟" :text "Brightness" :value {qs.bright} :cmd "${qs_cmd} bright {}")
-    (button :timeout "10s" :class "compact-btn" :onclick "${qs_cmd} timer"
-            :tooltip "Start a countdown or stopwatch. Active timers appear beside the clock."
-      (box :space-evenly false :spacing 12
-        (label :hexpand true :xalign 0 :text " Timer & stopwatch")
-        (label :text "Open ›")))
-    (box :orientation "v" :space-evenly false :spacing 12
-      (box :spacing 12 :space-evenly true
-        (tile :icon {qs.mic_muted ? "" : ""} :text "Microphone" :detail {qs.mic_muted ? "Muted" : "On"}
+  (box :orientation "v" :space-evenly false :spacing 16
+    (media)
+    (box :orientation "v" :space-evenly false :spacing 10
+      (fat-slider :icon {qs.vol_muted ? "󰖁" : "󰕾"} :text {qs.vol_muted ? "Volume, muted. Click the icon to unmute." : "Volume. Click the icon to mute."}
+                  :value {qs.vol} :muted {qs.vol_muted} :cmd "${qs_cmd} vol {}" :icon-cmd "${qs_cmd} mute")
+      (fat-slider :icon "󰃟" :text "Brightness" :value {qs.bright} :cmd "${qs_cmd} bright {}"))
+    (box :orientation "v" :space-evenly false :spacing 10
+      (box :spacing 10 :space-evenly true
+        (tile :icon {qs.mic_muted ? "󰍭" : "󰍬"} :text "Microphone" :detail {qs.mic_muted ? "Muted" : "On"}
               :on {!qs.mic_muted} :cmd "${qs_cmd} mic")
-        (tile :icon "" :text "Keyboard" :detail {qs.kbd} :on {qs.kbd == "VI"} :cmd "${qs_cmd} kbd"))
-      (box :spacing 12 :space-evenly true
-        (tile :icon "" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz")
-        (tile :icon {qs.wifi == "" ? "󰖪" : ""} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
-              :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")))
-    (box :space-evenly false :spacing 10
-      (button :timeout "10s" :hexpand true :class "afk-toggle ${desktop.dnd ? 'afk-on' : ''}"
+        (tile :icon "󰌌" :text "Keyboard" :detail {qs.kbd} :on {qs.kbd == "VI"} :cmd "${qs_cmd} kbd")
+        (tile :icon "󰍹" :text "Display" :detail "${qs.hz} Hz" :on {qs.hz >= 144} :cmd "${qs_cmd} hz"))
+      (box :spacing 10 :space-evenly true
+        (tile :icon {qs.wifi == "" ? "󰖪" : "󰖩"} :text "Wi-Fi" :detail {qs.wifi == "" ? "Offline" : qs.wifi}
+              :on {qs.wifi != ""} :cmd "${qs_cmd} wifi")
+        (tile :icon {desktop.dnd ? "󰂛" : "󰂚"} :text "Do not disturb" :tone "mode"
+              :detail {desktop.dnd_available ? (desktop.dnd ? (desktop.allowed_count > 0 ? "On · ${desktop.allowed_count} allowed" : "On") : "Off") : "Unavailable"}
               :tooltip "Silence notifications except allowed apps. Keep silenced notifications in History."
-              :active {desktop.dnd_available} :onclick "${desktop_cmd} dnd"
-        (box :space-evenly false :spacing 12
-          (label :width 24 :text {desktop.dnd ? "" : ""})
-          (label :hexpand true :xalign 0 :text "Do not disturb")
-          (label :text {desktop.dnd_available ? (desktop.dnd ? (desktop.allowed_count > 0 ? "On · ${desktop.allowed_count} allowed" : "On") : "Off") : "Unavailable"})))
-      (button :class "compact-btn" :tooltip "Choose apps allowed during Do not disturb"
-              :onclick "${qs_cmd} page 3" ""))
-    (button :class "afk-toggle ${desktop.login_tracking.enabled ? 'afk-on' : ''}"
-            :active {desktop.login_tracking.available}
-            :tooltip "Require your application password to change future login recording. Existing history keeps its seven-day expiry."
-            :onclick "${desktop_cmd} login-tracking"
-      (box :space-evenly false :spacing 12
-        (label :width 24 :text "")
-        (label :hexpand true :xalign 0 :text "Login tracking")
-        (label :text {desktop.login_tracking.available ? (desktop.login_tracking.setup ? "Setup required" : (desktop.login_tracking.enabled ? "On" : "Off")) : "Unavailable"})))
-    (button :timeout "1m" :class "afk-toggle ${qs.battery.enabled ? 'afk-on' : ''}"
-            :tooltip {qs.battery.detail} :active {qs.battery.available}
-            :onclick "${qs_cmd} battery"
-      (box :space-evenly false :spacing 12
-        (label :width 24 :text "")
-        (label :hexpand true :xalign 0 :text "Battery Saver")
-        (label :text {qs.battery.enabled ? "On" : "Off"})))
-    (button :timeout "10s" :class "afk-toggle ${desktop.afk ? 'afk-on' : ''}"
-            :tooltip "Keep screen awake while lid is open. Lid close or sleep turns this off."
-            :onclick "${afk_cmd} toggle"
-      (box :space-evenly false :spacing 12
-        (label :width 24 :text "")
-        (label :hexpand true :xalign 0 :text "AFK · keep awake")
-        (label :text {desktop.afk ? "On" : "Off"})))
-    (box :class "media" :space-evenly false :spacing 12
-      (label :class "media-text" :hexpand true :xalign 0 :limit-width 27 :tooltip {qs.media}
-             :text {qs.media == "" ? "No media playing" : qs.media})
-      (button :class "media-btn" :tooltip "Previous" :onclick "${qs_cmd} prev" "")
-      (button :class "media-btn" :tooltip "Play / pause" :onclick "${qs_cmd} play" {qs.playing ? "" : ""})
-      (button :class "media-btn" :tooltip "Next" :onclick "${qs_cmd} next" ""))))
+              :on {desktop.dnd} :active {desktop.dnd_available} :cmd "${desktop_cmd} dnd" :more "${qs_cmd} page 3")
+        (tile :icon "󰅶" :text "Keep awake" :tone "mode" :detail {desktop.afk ? "AFK on" : "Off"}
+              :tooltip "Keep screen awake while lid is open. Lid close or sleep turns this off."
+              :on {desktop.afk} :cmd "${afk_cmd} toggle"))
+      (box :spacing 10 :space-evenly true
+        (tile :icon "󰌪" :text "Battery Saver" :tone "mode" :detail {qs.battery.enabled ? "On" : "Off"}
+              :tooltip {qs.battery.detail} :timeout "1m"
+              :on {qs.battery.enabled} :active {qs.battery.available} :cmd "${qs_cmd} battery")
+        (tile :icon "󰢏" :text "Login tracking"
+              :detail {desktop.login_tracking.available ? (desktop.login_tracking.setup ? "Setup required" : (desktop.login_tracking.enabled ? "On" : "Off")) : "Unavailable"}
+              :tooltip "Require your application password to change future login recording. Existing history keeps its seven-day expiry."
+              :on {desktop.login_tracking.enabled} :active {desktop.login_tracking.available}
+              :cmd "${desktop_cmd} login-tracking")
+        (tile :icon "󰔛" :text "Timer" :detail "Stopwatch too" :on false
+              :tooltip "Start a countdown or stopwatch. Active timers appear beside the clock."
+              :cmd "${qs_cmd} timer")))))
 
 (defwidget flyout []
-  (box :class "card qs-panel" :orientation "v" :space-evenly false :spacing 20
+  (box :class "qs-panel" :orientation "v" :space-evenly false :spacing 20
     (box :class "header" :space-evenly false :spacing 16
-      (box :orientation "v" :space-evenly false :hexpand true :spacing 8
-        (label :class "settings-title" :xalign 0 :text "Quick settings")
-        (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")})
-        (label :class "date" :xalign 0 :visible {theme_event != ""} :text "󰃭  ${theme_event} theme"))
-      (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
-      (button :class "compact-btn" :tooltip "Close quick settings (Super+Escape)"
-              :timeout "10s" :onclick "${qs_cmd} close" ""))
-    (box :class "settings-tabs" :space-evenly true :spacing 8
-      (settings-tab :text "Controls" :index 0)
-      (settings-tab :text "Audio" :index 1)
-      (settings-tab :text "History" :index 2))
+      ;; Same two-tone tile as the bar clock that opens this panel.
+      (box :class "clock" :space-evenly false :valign "center"
+        (label :class "clock-time" :text {formattime(EWW_TIME, "%I:%M")})
+        (label :class "clock-half" :text {formattime(EWW_TIME, "%p")}))
+      (box :orientation "v" :space-evenly false :hexpand true :valign "center" :spacing 2
+        (label :class "weekday" :xalign 0 :text {formattime(EWW_TIME, "%A")})
+        (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%d %B")})
+        (label :class "event" :xalign 0 :visible {theme_event != ""} :text "${theme_event} theme"))
+      (button :class "close" :valign "start" :tooltip "Close quick settings (Super+Escape)"
+              :timeout "10s" :onclick "${qs_cmd} close" "󰅖"))
     (stack :selected qs_page :transition "none" :same-size false :vexpand true
       (scroll :vexpand true :hscroll false (quick-controls))
       (scroll :vexpand true :hscroll false (audio-devices))
       (scroll :vexpand true :hscroll false (notification-history))
       (scroll :vexpand true :hscroll false (allowed-apps)))
+    (box :class "line" :space-evenly true
+      (stop :text "Controls" :index 0)
+      (stop :text "Audio" :index 1)
+      (stop :text "History" :index 2))
     (box :class "footer" :space-evenly false :spacing 12
-      (label :class "footer-text" :hexpand true :xalign 0 :text "  ${qs.gpu}")
+      (label :class "footer-text" :hexpand true :xalign 0 :text "󰢮  ${qs.gpu}")
       (button :class "footer-btn" :onclick "${qs_cmd} updates" {updates}))))
 
 ;; 22px matches the i3 window edge; 52px sits just under the 8+36px bar.

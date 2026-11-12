@@ -96,14 +96,14 @@ def label(state):
     colors = palette()["colors"]
     value = seconds(state, now())
     if state["mode"] == "countdown" and value == 0:
-        return f"%{{F{colors['error']}}} Done%{{F-}}"
+        return f"%{{F{colors['error']}}}%{{T7}}󰂚%{{T-}} Done%{{F-}}"
     value = math.ceil(value) if state["mode"] == "countdown" else int(value)
     hours, remainder = divmod(value, 3600)
     minutes, seconds_left = divmod(remainder, 60)
     text = f"{hours}:{minutes:02}:{seconds_left:02}" if hours else f"{minutes:02}:{seconds_left:02}"
-    icon = "" if state["mode"] == "countdown" else ""
+    icon = "%{T7}󰔟%{T-}" if state["mode"] == "countdown" else "%{T7}󰔛%{T-}"
     if state["since"] is None:
-        return f"%{{F{colors['muted']}}} {text}%{{F-}}"
+        return f"%{{F{colors['muted']}}}%{{T7}}󰏤%{{T-}} {text}%{{F-}}"
     return f"{icon} {text}"
 
 

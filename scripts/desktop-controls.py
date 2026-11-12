@@ -153,7 +153,7 @@ def watch_dnd():
             reply = bus.call_sync(name, path, interface, "RuleList", None,
                                   GLib.VariantType.new("(aa{sv})"), Gio.DBusCallFlags.NO_AUTO_START, 3000, None)
             if any(rule.get("name") == DND_RULE and rule.get("enabled") is True for rule in reply.unpack()[0]):
-                text = ""
+                text = "%{T7}󰂛%{T-}"
         except GLib.Error:
             pass
         if text != previous:

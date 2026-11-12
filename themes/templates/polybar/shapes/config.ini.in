@@ -74,6 +74,40 @@ offset-y = 0
 ; Background ARGB color (e.g. #f00, #ff992a, #ddff1023)
 background = ${color.bar}
 
+; The line: Polybar runs this gradient from the top border (y=8) to y=height (36),
+; so 29 stops are one per pixel row. Stops 17-19 draw a soft 2px rule through the
+; bar's middle, across the whole screen. Beads and plates cover it; stops sit on it.
+; Recount the stops if height or border-top-size changes.
+background-0 = #00000000
+background-1 = #00000000
+background-2 = #00000000
+background-3 = #00000000
+background-4 = #00000000
+background-5 = #00000000
+background-6 = #00000000
+background-7 = #00000000
+background-8 = #00000000
+background-9 = #00000000
+background-10 = #00000000
+background-11 = #00000000
+background-12 = #00000000
+background-13 = #00000000
+background-14 = #00000000
+background-15 = #00000000
+background-16 = #00000000
+background-17 = #B3{{hex.primary}}
+background-18 = #B3{{hex.primary}}
+background-19 = #B3{{hex.primary}}
+background-20 = #00000000
+background-21 = #00000000
+background-22 = #00000000
+background-23 = #00000000
+background-24 = #00000000
+background-25 = #00000000
+background-26 = #00000000
+background-27 = #00000000
+background-28 = #00000000
+
 ; Foreground ARGB color (e.g. #f00, #ff992a, #ddff1023)
 foreground = ${color.foreground}
 
@@ -142,16 +176,25 @@ font-1 = "{{fonts.proportional}}:style=Bold:size=24;5"
 font-2 = "{{fonts.proportional}}:style=Bold:size=16;4"
 ; Island caps: sized so the rounded ends fill the 36px bar height.
 font-3 = "{{fonts.proportional}}:style=Regular:pixelsize=29;0"
+; Station bullets, all one size. A bullet's advance equals its pixelsize in this
+; font, which the ink disc under each one relies on.
+font-4 = "{{fonts.proportional}}:style=Regular:pixelsize=20;4"
+; Clock digits.
+font-5 = "{{fonts.proportional}}:style=Bold:pixelsize=13;3"
+; Every bead icon, all from the Material Design set, matching the 16px tray icons.
+font-6 = "{{fonts.proportional}}:style=Regular:pixelsize=14;3"
 
 ; Modules are added to one of the available blocks
 ;   modules-left = cpu ram
 ;   modules-center = xwindow xbacklight
 ;   modules-right = ipc clock
 
-modules-left = lcap tray rcap sep lcap title rcap
-modules-center = lcap workspaces rcap
+; One bead per item, with the line showing between them. Beads are split between
+; the two sides so the stops in the middle keep room as workspaces are added.
+modules-left = title sep lcap tray rcap sep lcap playerctl rcap sep lcap microphone rcap sep lcap keyboard rcap
+modules-center = workspaces
 ; Click Wi-Fi or battery for the eww quick-settings flyout (brightness, updates, GPU live there).
-modules-right = dnd afk lcap playerctl microphone keyboard network vga refresh-rate alsa battery rcap timer sep date
+modules-right = dnd afk lcap network rcap sep lcap vga rcap sep lcap refresh-rate rcap sep lcap alsa rcap sep lcap battery rcap timer sep date
 
 ;; _-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 

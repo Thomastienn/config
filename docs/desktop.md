@@ -237,7 +237,15 @@ keep `border pixel` in `themes/templates/i3/config.in` equal to `WIDTH` in
 `themes/templates/picom/shaders/`, and each `client.*` title border equal to its
 background. Stacked containers keep flat titles.
 
-## Eww Quick Settings
+## Polybar and Eww Quick Settings
+
+Polybar is one line across the screen. The window title is the coloured plate at
+its left end, workspaces are numbered stops in the middle (the active stop is
+coloured and underlined), each status item is a bead, and the clock ends the line.
+Beads are split between the two sides so the stops keep room: tray, media,
+microphone and keyboard on the left; Wi-Fi, GPU, display, volume and battery on
+the right. Volume and battery are icons, not numbers. The battery percentage
+appears in Polybar only at 15% or below; the exact volume is in Quick Settings.
 
 Click the clock, Wi-Fi, or battery to toggle Quick Settings. Click outside the
 panel, use its Close button, or press **Super+Escape** to close it. Escape alone
@@ -255,7 +263,7 @@ generated i3 configuration carry these changes.
 ## Polybar timer
 
 Open Eww Quick Settings by clicking the clock or status area, then choose
-**Controls → Timer & stopwatch**. Its menu starts one countdown or stopwatch at a
+**Controls → Timer**. Its menu starts one countdown or stopwatch at a
 time. The timer stays hidden from Polybar until started, then appears beside the
 clock. Paused and finished timers stay visible until cleared:
 

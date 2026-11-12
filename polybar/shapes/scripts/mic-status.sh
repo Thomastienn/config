@@ -3,8 +3,8 @@ source "$HOME/thomas_config/theme.sh"
 
 # Get mic mute status with error handling
 
-icon="%{F${THEME_PRIMARY}}%{F-}"
-icon_muted="%{F${THEME_ERROR}}%{F-}"
+icon="%{F${THEME_PRIMARY}}%{T7}󰍬%{T-}%{F-}"
+icon_muted="%{F${THEME_ERROR}}%{T7}󰍭%{T-}%{F-}"
 
 # A stalled audio connection must not leave the startup hook blank indefinitely.
 status=$(LC_ALL=C timeout -k 1s 2s pactl get-source-mute @DEFAULT_SOURCE@ 2>/dev/null) || {

@@ -1,155 +1,179 @@
 @import "theme.scss";
 
+// Metro line: the primary colour is the line that carries navigation and "on";
+// amber marks modes that bend normal behaviour. Shapes echo the bar's capsules.
+$line: rgba($mint, 0.55);
+$radius: 16px;
+$ease: cubic-bezier(0.16, 1, 0.3, 1);
+
 * {
   all: unset;
   font-family: $theme-font;
-  font-size: 13px;
+  font-size: 16px;
   color: $fg;
 }
 
-.card {
+.qs-panel {
   background-color: $bg;
   border: 1px solid $border;
+  // Matches corner-radius in picom/picom.conf, which clips this window.
   border-radius: 14px;
-  padding: 16px;
+  padding: 24px;
 }
 
-.header { padding: 0 4px; }
-.clock { font-size: 30px; font-weight: bold; color: $mint; }
-.date { color: $dim; }
-
-.tile {
+// Header: the bar's two-tone clock tile, enlarged.
+.clock-time {
+  padding: 8px 4px 8px 18px;
+  border-radius: 14px 0 0 14px;
+  background-color: $mint;
+  color: $ink;
+  font-size: 30px;
+  font-weight: bold;
+}
+.clock-half {
+  padding: 8px 16px 8px 30px;
+  border-radius: 0 14px 14px 0;
+  // Half-pixel gap between the stops softens the slanted join.
+  background-image: linear-gradient(108deg, $mint 24%, $lavender 25%);
+  color: $ink;
+  font-weight: bold;
+}
+.weekday { font-size: 20px; font-weight: bold; }
+.date { font-size: 14px; color: $dim; }
+.event { font-size: 14px; color: $lavender; }
+.close {
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 18px;
   background-color: $surface;
-  border-radius: 12px;
-  padding: 10px 4px;
-  .tile-icon { font-size: 18px; color: $mint; }
-  .tile-text { font-size: 12px; color: $dim; }
-  &:hover { background-color: $surface-hi; }
-  &.on {
-    background-color: $mint;
-    .tile-icon, .tile-text { color: $ink; }
-  }
-}
-
-.slider-row {
-  background-color: $surface;
-  border-radius: 12px;
-  padding: 8px 12px;
-}
-.slider-icon { font-size: 16px; color: $mint; min-width: 20px; }
-.slider-value { color: $dim; min-width: 40px; }
-.slider {
-  trough {
-    background-color: $border;
-    border-radius: 3px;
-    min-height: 6px;
-  }
-  highlight {
-    background-color: $mint;
-    border-radius: 3px;
-  }
-  slider {
-    background-color: $fg;
-    border-radius: 50%;
-    min-width: 14px;
-    min-height: 14px;
-    margin: -4px 0;
-  }
+  transition: background-color 180ms $ease;
+  label { font-size: 18px; color: $dim; }
+  &:hover { background-color: $surface-hi; label { color: $fg; } }
 }
 
 .media {
+  padding: 10px 12px 10px 10px;
+  border-radius: $radius;
   background-color: $surface;
-  border-radius: 12px;
-  padding: 8px 12px;
 }
-.media-icon { font-size: 16px; color: $dim; &.on { color: $mint; } }
+.media-play {
+  min-width: 44px;
+  min-height: 44px;
+  border-radius: 22px;
+  background-color: $mint;
+  transition: background-color 180ms $ease;
+  label { font-size: 22px; color: $ink; }
+  &:hover { background-color: mix($mint, $fg, 65%); }
+}
+.media-title { font-weight: bold; }
+.media-artist { font-size: 14px; color: $dim; }
 .media-btn {
-  font-size: 14px;
-  padding: 2px 6px;
-  border-radius: 8px;
-  &:hover { background-color: $surface-hi; color: $mint; }
+  min-width: 40px;
+  min-height: 40px;
+  border-radius: 20px;
+  transition: background-color 180ms $ease;
+  label { font-size: 22px; color: $dim; }
+  &:hover { background-color: $surface-hi; label { color: $fg; } }
 }
 
-.footer { padding: 0 4px; }
-.footer-text { color: $dim; font-size: 12px; }
-.footer-btn {
-  color: $lavender;
-  font-size: 12px;
-  padding: 3px 10px;
-  border-radius: 8px;
+// Fat sliders: the whole track is the control, so there is no thumb to aim for.
+.fat {
+  trough { min-height: 48px; border-radius: $radius; background-color: $surface; }
+  highlight { border-radius: $radius; background-color: $mint; }
+  slider { min-width: 1px; min-height: 48px; background-color: transparent; }
+  &.dim highlight { background-color: $border; }
+}
+.fat-icon {
+  min-width: 52px;
+  label { font-size: 22px; }
+  &.lit label { color: $ink; }
+  &:disabled { opacity: 1; }
+}
+.fat-value {
+  padding-right: 18px;
+  font-weight: bold;
+  &.lit { color: $ink; }
+}
+
+.tile {
+  padding: 12px 14px;
+  border-radius: $radius;
   background-color: $surface;
-  &:hover { background-color: $surface-hi; color: $fg; }
+  transition: background-color 180ms $ease;
+  &:hover { background-color: $surface-hi; }
+  &.on { background-color: $mint; }
+  &.mode { background-color: $amber; }
+  &.on:hover { background-color: mix($mint, $fg, 65%); }
+  &.mode:hover { background-color: mix($amber, $fg, 65%); }
+  &.on label, &.mode label { color: $ink; }
+}
+.tile-icon { font-size: 24px; color: $mint; }
+.tile-text { font-size: 15px; font-weight: bold; }
+.tile-detail { font-size: 13px; color: $dim; }
+.tile-more {
+  margin: 8px 8px 0 0;
+  min-width: 32px;
+  min-height: 32px;
+  border-radius: 16px;
+  background-color: rgba($ink, 0.18);
+  label { font-size: 16px; }
+  &:hover { background-color: rgba($ink, 0.34); }
 }
 
-.section {
-  padding: 4px 2px;
-  > title { padding: 6px 0; }
+// Pages are stops on the line; the dot is 14px tall, so the line sits 6px down.
+.line {
+  background-image: linear-gradient($line, $line);
+  background-size: 100% 2px;
+  background-repeat: no-repeat;
+  background-position: 0 6px;
 }
-.section-label { font-weight: bold; color: $mint; }
+.stop-dot {
+  min-width: 6px;
+  min-height: 6px;
+  margin: 2px;
+  border: 2px solid $mint;
+  border-radius: 7px;
+  background-color: $ink;
+  transition: background-color 180ms $ease;
+}
+.stop-name { font-size: 14px; color: $dim; }
+.stop:hover .stop-name { color: $fg; }
+.stop.here {
+  .stop-dot { min-width: 14px; min-height: 14px; margin: 0; border: none; background-color: $mint; }
+  .stop-name { color: $mint; font-weight: bold; }
+}
+
+.footer-text { font-size: 14px; color: $dim; }
+.footer-btn {
+  padding: 8px 14px;
+  border-radius: 12px;
+  background-color: $surface;
+  transition: background-color 180ms $ease;
+  label { font-size: 14px; color: $lavender; }
+  &:hover { background-color: $surface-hi; }
+}
+
+// Audio, History and Allowed apps pages.
+.section-label { font-size: 18px; font-weight: bold; color: $mint; }
+.notice-title { font-weight: bold; }
+.notice { padding-bottom: 20px; border-bottom: 1px solid $border; }
 .muted { color: $dim; }
-.device, .compact-btn, .afk-toggle {
-  padding: 8px 10px;
-  border-radius: 8px;
-  background: $surface;
-  &:hover, &:focus { background: $surface-hi; color: $mint; }
+.device, .compact-btn {
+  padding: 14px;
+  border-radius: 12px;
+  background-color: $surface;
+  transition: background-color 180ms $ease;
+  &:hover { background-color: $surface-hi; }
 }
-.device.selected { color: $mint; }
-.afk-toggle.afk-on {
-  background: $amber;
-  label { color: $ink; }
-}
-expander arrow {
-  color: $dim;
-  min-width: 16px;
-  min-height: 16px;
-  -gtk-icon-source: -gtk-icontheme("pan-end-symbolic");
-}
-expander arrow:checked { -gtk-icon-source: -gtk-icontheme("pan-down-symbolic"); }
-expander title:hover label, expander title:focus label { color: $mint; }
+.device.selected label { color: $mint; }
+
+button:focus, scale:focus { outline: 2px solid $lavender; outline-offset: -2px; }
+button:disabled { opacity: 0.5; }
 scrollbar { padding-left: 4px; }
-scrollbar slider { background: $border; border-radius: 4px; min-width: 4px; min-height: 20px; }
-
-
-
-// Quick settings: direct pages, larger controls, one scroll area per page.
-.qs-panel {
-  padding: 24px;
-  * { font-size: 16px; }
-  .settings-title { font-size: 24px; font-weight: bold; color: $fg; }
-  .clock { font-size: 24px; color: $mint; }
-  .date, .footer-text { font-size: 14px; color: $dim; }
-  .settings-tabs { border-bottom: 1px solid $border; }
-  .settings-tab {
-    padding: 12px 4px;
-    border-bottom: 2px solid transparent;
-    label { color: $dim; }
-    &:hover label { color: $fg; }
-    &.selected { border-color: $mint; label { color: $mint; font-weight: bold; } }
-  }
-  .tile {
-    padding: 14px;
-    border-radius: 10px;
-    .tile-icon { font-size: 24px; min-width: 28px; }
-    .tile-text { font-size: 16px; color: $fg; }
-    .tile-detail { font-size: 14px; color: $dim; }
-    &.on .tile-text, &.on .tile-detail { color: $ink; }
-  }
-  .slider-row { background: none; padding: 0; }
-  .slider-icon { font-size: 24px; min-width: 40px; min-height: 36px; }
-  .slider-value { color: $fg; }
-  .slider trough, .slider highlight { min-height: 8px; }
-  .slider slider { min-width: 20px; min-height: 20px; margin: -6px 0; }
-  .device, .compact-btn, .afk-toggle { padding: 14px; border-radius: 10px; }
-  .device.selected label { color: $mint; }
-  .afk-on label { color: $ink; }
-  .section-label { font-size: 18px; }
-  .media { padding: 12px 0; background: none; }
-  .media-btn { padding: 12px 8px; }
-  .notice { padding-bottom: 20px; border-bottom: 1px solid $border; }
-  .footer { padding-top: 12px; border-top: 1px solid $border; }
-  .footer-btn { padding: 10px 14px; label { color: $lavender; } }
-  button:focus, scale:focus { outline: 2px solid $lavender; outline-offset: -2px; }
-  button:disabled { opacity: 0.5; }
+scrollbar slider { background-color: $border; border-radius: 4px; min-width: 4px; min-height: 20px; }
+tooltip {
+  border: 1px solid $border;
+  border-radius: 8px;
+  background-color: $ink;
+  label { padding: 6px 10px; font-size: 14px; }
 }
-
-.qs-panel scrolledwindow > viewport { margin-right: 16px; }
