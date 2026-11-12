@@ -13,6 +13,9 @@
   :initial '{"vol":0,"vol_muted":false,"mic_muted":false,"bright":0,"kbd":"--","hz":0,"wifi":"","gpu":"","media":"","playing":false,"battery":{"enabled":false,"available":false,"detail":"Loading…"}}'
   "$HOME/thomas_config/eww/scripts/qs.sh status")
 
+(defpoll theme_event :interval "600s" :initial ""
+  "jq -r '.event // \"\"' $HOME/thomas_config/themes/.generated/palette.json 2>/dev/null || true")
+
 (defpoll updates :interval "1800s" :initial "…"
   "$HOME/thomas_config/polybar/shapes/scripts/updates.sh")
 
@@ -162,7 +165,8 @@
     (box :class "header" :space-evenly false :spacing 16
       (box :orientation "v" :space-evenly false :hexpand true :spacing 8
         (label :class "settings-title" :xalign 0 :text "Quick settings")
-        (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")}))
+        (label :class "date" :xalign 0 :text {formattime(EWW_TIME, "%a, %d %B")})
+        (label :class "date" :xalign 0 :visible {theme_event != ""} :text "󰃭  ${theme_event} theme"))
       (label :class "clock" :text {formattime(EWW_TIME, "%I:%M %p")})
       (button :class "compact-btn" :tooltip "Close quick settings (Super+Escape)"
               :timeout "10s" :onclick "${qs_cmd} close" ""))

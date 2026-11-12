@@ -139,8 +139,12 @@ def render(data, preset):
                        f"float.{key}": ", ".join(f"{n}.0" for n in rgb)})
     for index, color in enumerate(data["terminal"]["ansi"]):
         values[f"ansi.{index}"] = color
+    # Calendar event behind the active preset, shown in the eww flyout; empty on the fallback.
+    config = calendar_config()
+    event = "" if preset.name == config["fallback"] else next(
+        (item["name"] for item in config.get("events", []) if item.get("theme") == preset.name), "")
     result = {}
-    digest = hashlib.sha256(preset.name.encode() + preset.read_bytes() + Path(__file__).read_bytes())
+    digest = hashlib.sha256(preset.name.encode() + preset.read_bytes() + Path(__file__).read_bytes() + event.encode())
     for source in sorted((THEMES / "templates").rglob("*.in")):
         relative = str(source.relative_to(THEMES / "templates"))[:-3]
         content = source.read_text()
@@ -161,7 +165,7 @@ def render(data, preset):
     bridge = THEMES / "nvim.lua"
     if bridge.exists():
         digest.update(bridge.read_bytes())
-    palette = {**data, "revision": digest.hexdigest(), "preset": preset.name}
+    palette = {**data, "revision": digest.hexdigest(), "preset": preset.name, "event": event}
     result["palette.json"] = json.dumps(palette, indent=2) + "\n"
     colors = data["colors"]
     lua = ["return {", "  colors = {"]
@@ -452,15 +456,20 @@ def reload_desktop(data):
     print("Neovim: focus the editor or run :DesktopThemeReload (restart once after first setup).")
 
 
-def calendar_choice(today=None):
-    """Choose a preset using local civil dates; never infer lunar dates."""
-    today = today or date.today()
+def calendar_config():
     config = tomllib.loads((THEMES / "calendar.toml").read_text())
     local = REPO / "local/theme-calendar.toml"
     if local.exists():
         overrides = tomllib.loads(local.read_text())
         config.update({key: value for key, value in overrides.items() if key != "events"})
         config.setdefault("events", []).extend(overrides.get("events", []))
+    return config
+
+
+def calendar_choice(today=None):
+    """Choose a preset using local civil dates; never infer lunar dates."""
+    today = today or date.today()
+    config = calendar_config()
     fallback = config["fallback"]
     load(fallback)
     if not config.get("enabled", True):

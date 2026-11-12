@@ -34,6 +34,8 @@ supported apps. Automatic switching also updates the local, gitignored
 limitations from [desktop themes](desktop.md#desktop-themes) still apply.
 A manual selection lasts until the next login or `theme auto`; disable automation to keep it.
 If a date changes while logged in, the theme stays until the next login or `theme auto`.
+The quick-settings flyout (click the clock) names the event under the date,
+for example "Remembrance Day theme"; the line is hidden on Cozy Mint.
 
 ## Local birthdays and anniversaries
 
