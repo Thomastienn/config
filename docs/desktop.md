@@ -212,6 +212,31 @@ change tabs, start a new conversation, or submit a message. If accessibility is
 unavailable, check the desktop accessibility setting and reopen Firefox when
 convenient. ChatGPT website changes can require updating the prompt locator.
 
+## The line: windows, tmux, Rofi, prompt and lockscreen
+
+One visual language runs through the desktop, in every preset's colours. The
+primary colour is the line; a bead on it marks what is current; amber marks a
+mode that bends normal behaviour.
+
+- **Windows:** the focused frame is a 2px line running from the primary colour
+  (top left) into the secondary (bottom right). An armed split (`Super+S`/`Super+V`)
+  turns that side amber. In tabbed containers the active tab is a bead on a dark strip.
+- **tmux:** the session is the badge on the left (amber while the prefix is held),
+  windows are numbered stops, and copy mode or synchronised panes show an amber bead
+  on the right and recolour the active pane border.
+- **Rofi:** the chosen row is a bead, modes are stops along the bottom, and the power
+  menu (`Super+Shift+E`) is five stops on one line.
+- **Prompt:** `● folder ── branch ── virtualenv`, then `❯`. While the folder stays
+  the same, scrollback keeps only `❯ command`; remove `prompt_ps1_transient` from
+  `blerc` to keep every full prompt.
+- **Lockscreen:** clock and date sit above one line across the screen. Keys pulse
+  along it; it turns to the secondary colour while checking and rose when wrong.
+
+The frame and beads are drawn by the picom shaders from the colours i3 paints:
+keep `border pixel` in `themes/templates/i3/config.in` equal to `WIDTH` in
+`themes/templates/picom/shaders/`, and each `client.*` title border equal to its
+background. Stacked containers keep flat titles.
+
 ## Eww Quick Settings
 
 Click the clock, Wi-Fi, or battery to toggle Quick Settings. Click outside the

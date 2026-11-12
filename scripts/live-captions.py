@@ -62,7 +62,7 @@ def main():
         ipc(f"{target} floating enable, move scratchpad")
         ipc(f"{target} scratchpad show")
         width, height, x, y = geometry(workspace["rect"])
-        ipc(f"{target} border pixel 1, resize set {width} px {height} px")
+        ipc(f"{target} border pixel 2, resize set {width} px {height} px")
         # GTK may constrain the requested size; center the actual outer rectangle.
         actual = find_window(ipc("get_tree", True))[0]["rect"]
         rect = workspace["rect"]

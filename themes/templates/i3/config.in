@@ -65,15 +65,20 @@ set $text-color          {{colors.text}}
 set $inactive-text-color {{colors.muted}}
 set $urgent-bg-color     {{colors.urgent_background}}
 set $urgent-color        {{colors.error}}
-set $indicator-color     {{colors.secondary}}
+# Amber marks a mode that bends normal behaviour: here, an armed split.
+set $indicator-color     {{colors.warning}}
 set $border-color        {{colors.primary}}
 
+# The picom shaders read these colours back: the frame painted in $border-color
+# becomes the line-to-transfer gradient, and every tab whose title border differs
+# from $inactive-bg-color becomes a bead. Keep each title border equal to its
+# background, and idle tabs entirely on $inactive-bg-color.
 # Window colors         border              background          text                 indicator           child_border
 client.focused          $border-color       $border-color       $inactive-bg-color   $indicator-color    $border-color
 client.focused_tab_title $border-color      $border-color       $inactive-bg-color
-client.unfocused        $bg-color           $inactive-bg-color  $inactive-text-color $inactive-bg-color  $inactive-border-color
-client.focused_inactive $inactive-border-color $bg-color        $border-color        $inactive-bg-color  $inactive-border-color
-client.urgent           $urgent-color       $urgent-bg-color    $text-color          $urgent-color       $urgent-color
+client.unfocused        $inactive-bg-color  $inactive-bg-color  $inactive-text-color $inactive-bg-color  $inactive-border-color
+client.focused_inactive $bg-color           $bg-color           $border-color        $inactive-bg-color  $inactive-border-color
+client.urgent           $urgent-bg-color    $urgent-bg-color    $text-color          $urgent-color       $urgent-color
 
 # ================================================================
 # AUTOSTART APPLICATIONS
@@ -161,7 +166,7 @@ bindsym $mod+u exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts
 # shortcut: Open terminal
 bindsym $mod+Return exec kitty
 # shortcut: Open Brave browser
-bindsym $mod+b exec brave; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 1'"
+bindsym $mod+b exec brave; exec --no-startup-id "sleep 0.5 && i3-msg '[class=^Brave-browser$] border pixel 2'"
 # shortcut: Open Nemo file explorer
 bindsym $mod+Shift+m exec nemo
 # shortcut: Open Discord
@@ -406,15 +411,15 @@ bindsym $mod+Shift+e exec "~/thomas_config/polybar/shapes/scripts/powermenu.sh"
 for_window [all] title_window_icon padding 6px
 for_window [class=".*"] title_format "  <b>%title</b>  "
 
-# Border settings
-default_border pixel 1
-default_floating_border pixel 1
-for_window [class=".*"] border pixel 1
+# Border settings: the width matches WIDTH in the picom shaders.
+default_border pixel 2
+default_floating_border pixel 2
+for_window [class=".*"] border pixel 2
 gaps inner 10
 gaps outer 5
 
 # Force borders on Brave - match exact class names
-for_window [class="Brave-browser"] border pixel 1
+for_window [class="Brave-browser"] border pixel 2
 
 # Floating windows
 for_window [class="^quick-tools$"] floating enable, resize set 80 ppt 75 ppt, move position center

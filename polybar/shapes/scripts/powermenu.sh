@@ -8,14 +8,15 @@
 dir="~/.config/polybar/shapes/scripts/rofi"
 uptime=$(uptime -p | sed -e 's/up //g')
 
-rofi_command="rofi -i"
+# Five stops on the line; icons from the Material Design set.
+rofi_command="rofi -i -theme $HOME/.config/rofi/powermenu.rasi"
 
 # Options
-shutdown=" Shutdown"
-reboot=" Restart"
-lock=" Lock"
-suspend=" Sleep"
-logout=" Logout"
+shutdown="󰐥  Shutdown"
+reboot="󰜉  Restart"
+lock="󰌾  Lock"
+suspend="󰤄  Sleep"
+logout="󰍃  Logout"
 
 # Confirmation
 confirm_exit() {

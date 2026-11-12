@@ -1,0 +1,40 @@
+/*
+ * Power menu: five stops on the line. Loaded by polybar/shapes/scripts/powermenu.sh.
+ */
+@import "config.rasi"
+
+window {
+    width: 780px;
+}
+
+mainbox {
+    children: [ "inputbar", "listview" ];
+    spacing: 22px;
+}
+
+entry {
+    placeholder: "Last stop?";
+}
+
+/* One soft rule behind the row; the beads cover it and the gaps show it. */
+listview {
+    lines: 1;
+    columns: 5;
+    fixed-height: false;
+    spacing: 26px;
+    background-image: linear-gradient(to bottom, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, {{colors.primary}}, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent);
+}
+
+element {
+    children: [ "element-text" ];
+    padding: 14px 0;
+}
+
+element-text {
+    horizontal-align: 0.5;
+}
+
+element normal.normal,
+element alternate.normal {
+    background-color: @plate;
+}

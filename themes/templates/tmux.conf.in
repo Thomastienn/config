@@ -76,92 +76,91 @@ bind -r Right resize-pane -R 5
 bind r source-file ~/.tmux.conf \; display-message "Config reloaded!"
 
 # ----------------------------------------------------------------
-# VISUAL DESIGN - COZY MINT
+# VISUAL DESIGN - THE LINE
 # ----------------------------------------------------------------
+# Same language as Polybar and Eww: windows are numbered stops on one line,
+# the session is the line's badge, and amber marks a mode that bends normal
+# behaviour (prefix held, copy mode, zoom, synchronised panes).
+%hidden line="{{colors.primary}}"
+%hidden transfer="{{colors.secondary}}"
+%hidden mode="{{colors.warning}}"
+%hidden alert="{{colors.error}}"
+%hidden ink="{{colors.background}}"
+%hidden text="{{colors.text}}"
+%hidden dim="{{colors.muted}}"
+%hidden rail="{{colors.separator}}"
+%hidden plate="{{colors.surface}}"
+%hidden idle="{{colors.pane_border}}"
 
-# Cozy Mint colors, coordinated with theme.sh
-color_bg="default"             # Background (dark)
-color_fg="{{colors.text}}"            # Foreground (light)
-
-# Base colors - grayscale for text
-color_base03="black"           # Darkest - background
-color_base02="{{colors.surface}}"       # Dark gray - background highlights
-color_base01="{{colors.muted}}"       # Medium gray - comments
-color_base00="colour244"       # Light gray - secondary text
-color_base0="colour247"        # Lighter gray - body text
-color_base1="{{colors.text}}"        # Very light gray - emphasized
-color_base2="colour254"        # Almost white
-color_base3="white"            # White - brightest text
-
-# Accent colors
-color_primary="{{colors.primary}}"       # Mint
-color_bright="{{colors.secondary}}"       # Lavender
-color_light="{{colors.muted}}"        # Muted text
-color_medium="{{colors.surface}}"       # Sage surface
-color_forest="{{colors.muted}}"       # Muted text
-color_brown="{{colors.warning}}"        # Amber
-color_sage="{{colors.separator}}"         # Sage, inactive window numbers
-color_border="{{colors.pane_border}}"       # Inactive pane borders
+# Stop numbers 1-10 from the Material Design set, filled for the current window;
+# later windows share the 9+ stop.
+%hidden stop_on="#{?#{==:#I,1},\U000F0CA0,}#{?#{==:#I,2},\U000F0CA2,}#{?#{==:#I,3},\U000F0CA4,}#{?#{==:#I,4},\U000F0CA6,}#{?#{==:#I,5},\U000F0CA8,}#{?#{==:#I,6},\U000F0CAA,}#{?#{==:#I,7},\U000F0CAC,}#{?#{==:#I,8},\U000F0CAE,}#{?#{==:#I,9},\U000F0CB0,}#{?#{==:#I,10},\U000F0FEC,}#{?#{e|>:#I,10},\U000F0CB2,}"
+%hidden stop_off="#{?#{==:#I,1},\U000F0CA1,}#{?#{==:#I,2},\U000F0CA3,}#{?#{==:#I,3},\U000F0CA5,}#{?#{==:#I,4},\U000F0CA7,}#{?#{==:#I,5},\U000F0CA9,}#{?#{==:#I,6},\U000F0CAB,}#{?#{==:#I,7},\U000F0CAD,}#{?#{==:#I,8},\U000F0CAF,}#{?#{==:#I,9},\U000F0CB1,}#{?#{==:#I,10},\U000F0FED,}#{?#{e|>:#I,10},\U000F0CB3,}"
 
 # ----------------------------------------------------------------
-# STATUS BAR DESIGN - MINT AND LAVENDER ACCENTS
+# STATUS BAR - STOPS ON THE LINE
 # ----------------------------------------------------------------
-# Status bar general settings
 set -g status-position bottom
 set -g status-justify absolute-centre
-set -g status-style "bg=$color_bg,fg=$color_fg"
+set -g status-style "bg=default,fg=$text"
 set -g status-left-length 100
 set -g status-right-length 100
 
-# Left status: session pill (lavender while prefix is held), then the ssh target when a pane is ssh'd
-set -g status-left "#{?client_prefix,#[fg=$color_bright],#[fg=$color_primary]}#[bg=$color_bg]#{?client_prefix,#[bg=$color_bright],#[bg=$color_primary]}#[fg=$color_base03,bold] #S #[bg=$color_bg]#{?client_prefix,#[fg=$color_bright],#[fg=$color_primary]}#[fg=$color_light,nobold] #(ps -t #{pane_tty} -o command= 2>/dev/null | awk '\$1 ~ \"(^|/)ssh\$\" {print \"⇄\", (\$2 == \"--\" ? \$3 : \$2); exit}')"
+# Left: the line badge (amber while prefix is held), then a transfer bead naming the ssh target of an ssh'd pane.
+set -g status-left "#{?client_prefix,#[fg=$mode],#[fg=$line]}#{?client_prefix,#[bg=$mode],#[bg=$line]}#[fg=$ink,bold] \U000F06AC #S #[bg=default]#{?client_prefix,#[fg=$mode],#[fg=$line]}#[nobold] #(ps -t #{pane_tty} -o command= 2>/dev/null | awk '\$1 ~ \"(^|/)ssh\$\" {print \"#[fg=$transfer]#[bg=$transfer,fg=$ink] \U000F06AE \" (\$2 == \"--\" ? \$3 : \$2) \" #[bg=default,fg=$transfer]\"; exit}')"
 
-# System status lives in Polybar and Conky; Git state lives in the shell prompt.
-set -g status-right ""
+# Right: one amber bead per active mode. System status lives in Polybar and Conky; Git state in the shell prompt.
+set -g status-right "#{?pane_synchronized,#[fg=$mode]#[bg=$mode]#[fg=$ink]#[bold] \U000F04E6 sync #[bg=default]#[fg=$mode] ,}#{?pane_in_mode,#[fg=$mode]#[bg=$mode]#[fg=$ink]#[bold] \U000F018F #{s/-mode//:pane_mode} #[bg=default]#[fg=$mode],}"
 
-# Active window as a mint pill, others muted
-setw -g window-status-current-format "#[fg=$color_primary,bg=$color_bg]#[bg=$color_primary,fg=$color_base03,bold] #I #W#{?window_zoomed_flag, 󰊓,} #[fg=$color_primary,bg=$color_bg,nobold]"
-setw -g window-status-format "#[fg=$color_sage] #I #[fg=$color_light]#W#{?window_zoomed_flag, 󰊓,} "
+# Current stop filled in the line colour; a bell turns a stop rose, activity lavender.
+setw -g window-status-current-format "#[fg=$line]$stop_on #[fg=$text,bold]#W#{?window_zoomed_flag, #[fg=$mode]\U000F0293,}#[default]"
+setw -g window-status-format "#{?window_bell_flag,#[fg=$alert],#{?window_activity_flag,#[fg=$transfer],#[fg=$dim]}}$stop_off #[fg=$dim]#W#{?window_zoomed_flag, #[fg=$mode]\U000F0293,}#[default]"
+setw -g window-status-separator "#[fg=$rail] ── #[default]"
+# The formats above colour bells and activity themselves.
+setw -g window-status-activity-style default
+setw -g window-status-bell-style default
 
 # Window names: folder for a shell, program otherwise (node's script name, so codex reads "codex")
 set -g automatic-rename on
 set -g automatic-rename-format '#{=/15/…:#{?#{==:#{pane_current_command},bash},#{b:pane_current_path},#{?#{==:#{pane_current_command},node},#(ps -o args= --ppid #{pane_pid} | head -1 | cut -d" " -f2 | xargs basename),#{pane_current_command}}}}'
 
-# Window status separator
-setw -g window-status-separator " "
-
-# Activity and bell styling
-setw -g window-status-activity-style "fg=$color_bright,bold"
-setw -g window-status-bell-style "fg=$color_bright,bold"
-
 # ----------------------------------------------------------------
-# PANE BORDERS - MINIMALIST STYLE
+# PANE BORDERS
 # ----------------------------------------------------------------
-# Pane border colors
-set -g pane-border-style "fg=$color_border"
-set -g pane-active-border-style "fg=$color_primary"
-
-# No pane border status (border is part of status bar now)
+# The active pane wears the line colour, amber in a mode, rose while input is synchronised.
+set -g pane-border-lines single
+set -g pane-border-indicators colour
+set -g pane-border-style "fg=$idle"
+set -g pane-active-border-style "#{?pane_in_mode,fg=$mode,#{?pane_synchronized,fg=$alert,fg=$line}}"
 set -g pane-border-status off
+set -g display-panes-colour "$rail"
+set -g display-panes-active-colour "$line"
 
 # ----------------------------------------------------------------
-# MESSAGE STYLING
+# MESSAGES, MENUS AND POPUPS
 # ----------------------------------------------------------------
-# Command line/message text
-set -g message-style "bg=$color_primary,fg=$color_base03,bold"
-set -g message-command-style "bg=$color_base02,fg=$color_base1"
+set -g message-style "bg=$plate,fg=$text"
+set -g message-command-style "bg=$plate,fg=$mode"
+set -g menu-style "fg=$text"
+set -g menu-selected-style "bg=$line,fg=$ink,bold"
+set -g menu-border-style "fg=$rail"
+set -g menu-border-lines rounded
+set -g popup-border-style "fg=$line"
+set -g popup-border-lines rounded
 
 # ----------------------------------------------------------------
-# COPY MODE STYLING
+# COPY MODE
 # ----------------------------------------------------------------
-# Copy mode colors (pale steel when in copy mode with prefix)
-setw -g mode-style "bg=$color_bright,fg=$color_base03,bold"
+# Selection and tree-mode highlight are amber; search matches sit on a plate, the current one on the line colour.
+setw -g mode-style "bg=$mode,fg=$ink,bold"
+setw -g copy-mode-match-style "bg=$plate,fg=$line"
+setw -g copy-mode-current-match-style "bg=$line,fg=$ink,bold"
+setw -g copy-mode-mark-style "bg=$transfer,fg=$ink"
 
 # ----------------------------------------------------------------
-# CLOCK STYLING
+# CLOCK
 # ----------------------------------------------------------------
-# Clock mode colors
-setw -g clock-mode-colour "$color_primary"
+setw -g clock-mode-colour "$line"
 setw -g clock-mode-style 12
 
 # ----------------------------------------------------------------

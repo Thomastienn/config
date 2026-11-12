@@ -4,10 +4,10 @@ if [[ -f "$HOME/thomas_config/theme.sh" ]]; then
 fi
 
 # ================================================================
-# BLE.SH THEME CONFIGURATION (COZY MINT)
+# BLE.SH THEME CONFIGURATION (THE LINE)
 # ================================================================
-# Professional dark theme with mint and lavender accents
-# Easy on the eyes, high readability
+# Follows the selected desktop preset: line colour for commands, transfer
+# colour for names, amber for anything selected or in a mode
 # ================================================================
 
 # General text and defaults
@@ -74,7 +74,7 @@ ble-face filename_other="fg=${THEME_TEXT}"               # Cream
 ble-face filename_url="fg=${THEME_PRIMARY},underline"        # Mint
 
 # Highlighting and UI
-ble-face region="bg=${THEME_SELECTION},fg=${THEME_TEXT}"                # Lavender selection bg, light text
+ble-face region="bg=${THEME_WARNING},fg=${THEME_BACKGROUND}"            # Amber selection, like tmux copy mode
 ble-face region_insert="bg=${THEME_PRIMARY},fg=${THEME_TEXT}"         # Mint bg
 ble-face region_match="bg=${THEME_SELECTION},fg=${THEME_TEXT}"          # Lavender selection bg
 ble-face region_target="bg=${THEME_PRIMARY},fg=${THEME_BACKGROUND}"          # Mint bg
@@ -94,16 +94,21 @@ ble-face filename_setgid="fg=${THEME_BACKGROUND},underline,bg=${THEME_SECONDARY}
 ble-face filename_ls_colors="underline"
 
 # Autocomplete menu
-ble-face auto_complete="bg=${THEME_SURFACE},fg=${THEME_MUTED}"             # Dark bg, dim suggestion
+ble-face auto_complete="fg=${THEME_MUTED}"                                # Ghost suggestion, no plate behind it
 ble-face menu_filter_input="bg=${THEME_SELECTION},fg=${THEME_TEXT},bold"     # Lavender selection bg, light text
 ble-face menu_filter_fixed="fg=${THEME_PRIMARY},bold"            # Mint
 ble-face menu_complete_match="fg=${THEME_PRIMARY},bold"          # Mint for matched text
 ble-face menu_complete_selected="bg=${THEME_PRIMARY},fg=${THEME_BACKGROUND},bold" # Mint bg, dark text
 ble-face cmdinfo_cd_cdpath="fg=${THEME_PRIMARY},bg=${THEME_SELECTION}"           # Mint on gunmetal
 
-# Blank line between commands; quiet rose exit mark
+# Blank line between commands; marks continue the prompt's line: rose exit status, muted run time
 bleopt prompt_ruler=empty-line
-bleopt exec_errexit_mark="${THEME_COLOR5@E}✘ %d${THEME_RESET@E}"
+bleopt exec_errexit_mark="${THEME_COLOR5@E}── "$'\U000f0159'" exit %d${THEME_RESET@E}"
+bleopt exec_elapsed_mark="${THEME_GRAY@E}── "$'\U000f051b'" %s (CPU %s%%)${THEME_RESET@E}"
+bleopt exec_exit_mark="${THEME_GRAY@E}── "$'\U000f0343'" exit${THEME_RESET@E}"
+
+# Scrollback keeps only "❯ command" while the folder stays the same; the full line of stops returns after a cd.
+bleopt prompt_ps1_transient=same-dir:trim
 
 # Vi mode shown by cursor shape (bar insert, block normal) instead of a "-- INSERT --" line.
 # The vi keymap loads lazily, so its options only exist after load.

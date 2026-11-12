@@ -1,6 +1,7 @@
 /*
- * ROFI THEME: COZY MINT
- * Frosted card, pill search, fuzzy everything
+ * ROFI THEME: THE LINE
+ * Same language as Polybar, Eww and tmux: the chosen row is a bead in the line
+ * colour, and modes are stops on a line along the bottom.
  */
 
 configuration {
@@ -15,7 +16,7 @@ configuration {
     display-run: "Run";
     display-ssh: "SSH";
     display-filebrowser: "Files";
-    drun-display-format: "{name}[<span size='small' foreground='{{colors.muted}}'>  ·  {generic}</span>]";
+    drun-display-format: "{name}[<span size='small' alpha='60%'>  ·  {generic}</span>]";
     window-format: "{w:3}{c:14}{t}";
     drun-match-fields: "name,generic,exec,keywords";
     matching: "fuzzy";
@@ -31,28 +32,30 @@ configuration {
 }
 
 * {
-    /* Mint on warm charcoal with sage surfaces, matching Conky and Polybar */
     bg: {{colors.background}}D1;
     bg-alt: {{colors.surface}}99;
+    plate: {{colors.surface}};
+    ink: {{colors.background}};
     fg: {{colors.text}};
     fg-dim: {{colors.muted}};
     accent: {{colors.primary}};
     urgent: {{colors.error}};
-    lavender: {{colors.secondary}};
+    transfer: {{colors.secondary}};
     selected-bg: {{colors.shade4}};
-    border-color: {{colors.border}};
 
     background-color: transparent;
     text-color: @fg;
 }
 
+/* The frame is drawn in the line colour so picom's window-edge shader turns it
+   into the same gradient as every i3 window; width and radius match that shader. */
 window {
-    width: 600px;
+    width: 640px;
     background-color: @bg;
-    border: 1px solid;
-    border-color: @border-color;
-    border-radius: 16px;
-    padding: 14px;
+    border: 2px solid;
+    border-color: @accent;
+    border-radius: 14px;
+    padding: 16px;
 }
 
 mainbox {
@@ -65,20 +68,26 @@ inputbar {
     border: 0;
     children: [ "textbox-search", "entry", "prompt" ];
     spacing: 12px;
-    padding: 12px 16px;
+    padding: 6px;
     background-color: @bg-alt;
-    border-radius: 12px;
+    border-radius: 100%;
 }
 
+/* A stop: ink glyph on a disc in the line colour. */
 textbox-search {
     expand: false;
-    str: "";
-    text-color: @accent;
+    str: "󰍉";
+    width: 36px;
+    padding: 8px 0;
+    horizontal-align: 0.5;
     vertical-align: 0.5;
+    background-color: @accent;
+    text-color: @ink;
+    border-radius: 100%;
 }
 
 entry {
-    placeholder: "Search...";
+    placeholder: "Where to?";
     placeholder-color: @fg-dim;
     text-color: @fg;
     cursor-color: @accent;
@@ -87,10 +96,10 @@ entry {
 }
 
 prompt {
-    padding: 2px 10px;
-    background-color: @selected-bg;
-    text-color: @accent;
-    border-radius: 8px;
+    padding: 0 14px;
+    background-color: @transfer;
+    text-color: @ink;
+    border-radius: 100%;
     vertical-align: 0.5;
 }
 
@@ -98,7 +107,7 @@ message {
     border: 0;
     padding: 8px 16px;
     background-color: @bg-alt;
-    border-radius: 10px;
+    border-radius: 12px;
 }
 
 textbox {
@@ -109,18 +118,17 @@ listview {
     border: 0;
     lines: 8;
     columns: 1;
-    spacing: 4px;
+    spacing: 2px;
     fixed-height: true;
     cycle: true;
     scrollbar: false;
 }
 
 element {
-    padding: 8px 14px;
+    padding: 7px 14px;
     spacing: 14px;
-    border: 0 0 0 3px;
-    border-color: transparent;
-    border-radius: 10px;
+    border: 0;
+    border-radius: 100%;
     cursor: pointer;
 }
 
@@ -130,9 +138,10 @@ element-icon {
     cursor: inherit;
 }
 
+/* Matches are bold and underlined in the row's own colour, so they stay legible on the bead. */
 element-text {
     text-color: inherit;
-    highlight: bold {{colors.primary}};
+    highlight: bold underline;
     vertical-align: 0.5;
     cursor: inherit;
 }
@@ -156,35 +165,33 @@ element alternate.active {
 }
 
 element selected.normal,
-element selected.urgent,
 element selected.active {
-    background-color: @selected-bg;
-    border-color: @lavender;
-    text-color: @accent;
+    background-color: @accent;
+    text-color: @ink;
 }
 
 element selected.urgent {
-    text-color: @urgent;
+    background-color: @urgent;
+    text-color: @ink;
 }
 
-element selected.active {
-    text-color: @accent;
-}
-
+/* Modes are stops on the line: nineteen even steps with only the middle one lit
+   draw one soft rule, and the beads cover it. */
 mode-switcher {
     border: 0;
-    spacing: 8px;
+    spacing: 28px;
+    background-image: linear-gradient(to bottom, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, {{colors.primary}}, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent, transparent);
 }
 
 button {
-    padding: 6px 0;
-    background-color: @bg-alt;
+    padding: 5px 0;
+    background-color: @plate;
     text-color: @fg-dim;
-    border-radius: 10px;
+    border-radius: 100%;
     cursor: pointer;
 }
 
 button selected {
-    background-color: @selected-bg;
-    text-color: @accent;
+    background-color: @accent;
+    text-color: @ink;
 }

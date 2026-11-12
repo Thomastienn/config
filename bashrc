@@ -108,22 +108,23 @@ git_prompt() {
     fi
     ((ahead)) && s+=" ↑${ahead#+}"
     ((behind)) && s+=" ↓${behind#-}"
-    printf '  \uf418 %s' "$s"
+    printf ' ── \U000f062c %s' "$s"
 }
 
+# The prompt is a line of stops, like the bar and tmux: ● folder ── branch ── virtualenv.
 # ❯ is mint, rose after a failed command; prompt_status is set by the ble.sh PRECMD hook below.
 prompt_marks=("${THEME_COLOR4@E}" "${THEME_COLOR5@E}")
 
 # Disable default virtual environment prompt modification
 export VIRTUAL_ENV_DISABLE_PROMPT=1
 
-# user@host only over SSH; locally it never changes
+# user@host is the first stop only over SSH; locally it never changes
 prompt_host=
-[ -n "$SSH_CONNECTION" ] && prompt_host="\[${THEME_COLOR2}\]\u\[${THEME_COLOR4}\]@\[${THEME_COLOR3}\]\h "
+[ -n "$SSH_CONNECTION" ] && prompt_host="\[${THEME_COLOR3}\]\u@\h\[${THEME_COLOR1}\] ── "
 
 if [ "$color_prompt" = yes ]; then
-	# Cozy Mint prompt; clock and system status live in the desktop bar/widgets
-	PS1="\[${THEME_GRAY}\]\${VIRTUAL_ENV:+(\${VIRTUAL_ENV##*/}) }${prompt_host}\[${THEME_BOLD}${THEME_COLOR6}\]\w\[${THEME_RESET}${THEME_COLOR1}\]\$(git_prompt)\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
+	# Clock and system status live in the desktop bar/widgets. Glyphs: Material Design circle and Python.
+	PS1="\[${THEME_COLOR1}\]"$'\U000f012f'" ${prompt_host}\[${THEME_BOLD}${THEME_COLOR6}\]\w\[${THEME_RESET}${THEME_COLOR1}\]\$(git_prompt)\${VIRTUAL_ENV:+ ── \[${THEME_GRAY}\]"$'\U000f0320'" \${VIRTUAL_ENV##*/}}\[${THEME_RESET}\]\n\[\${prompt_marks[prompt_status > 0]}\]❯ \[${THEME_RESET}\]"
 else
     PS1='${VIRTUAL_ENV:+(${VIRTUAL_ENV##*/}) }\u@\h:\w$(git_prompt)\n> '
 fi

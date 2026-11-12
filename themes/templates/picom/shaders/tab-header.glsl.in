@@ -3,15 +3,68 @@ in vec2 texcoord;
 uniform sampler2D tex;
 vec4 default_post_processing(vec4 color);
 
+// Matches window-edge.glsl, which continues this frame below the header.
+const float WIDTH = 2.0;
+// Gap above and below a bead, and between a bead and its tab's edge.
+const float INSET = 2.0;
+const float PAD = 3.0;
+const vec3 STRIP = vec3({{float.background}}) / 255.0;
+const vec3 LINE = vec3({{float.primary}}) / 255.0;
+const vec3 TRANSFER = vec3({{float.secondary}}) / 255.0;
+const vec3 IDLE = vec3({{float.border}}) / 255.0;
+
+// Row 0 is each tab's own colour: titles never reach it.
+vec3 plate(float x) {
+    return texelFetch(tex, ivec2(x, 0), 0).rgb;
+}
+
+bool differs(vec3 a, vec3 b) {
+    return any(greaterThan(abs(a - b), vec3(0.02)));
+}
+
 vec4 window_shader() {
     vec2 size = vec2(textureSize(tex, 0));
-    vec4 color = default_post_processing(texelFetch(tex, ivec2(texcoord), 0));
+    vec4 color = texelFetch(tex, ivec2(texcoord), 0);
+    // shortcut: a stacked header holds one title per row and stays flat; bead each row if stacks get used.
+    vec3 here = plate(texcoord.x);
+    if (size.y <= 40.0 && differs(here, STRIP)) {
+        // Every tab that is not idle is a bead on the strip: find how far its plate runs each way.
+        float reach = size.y / 2.0 - INSET;
+        float left = reach + PAD;
+        float right = reach + PAD;
+        for (int step = 1; step <= 24; step++) {
+            float offset = float(step);
+            if (offset > reach + PAD) {
+                break;
+            }
+            if (left > offset && (texcoord.x - offset < 0.0 || differs(plate(texcoord.x - offset), here))) {
+                left = offset - 0.5;
+            }
+            if (right > offset && (texcoord.x + offset >= size.x || differs(plate(texcoord.x + offset), here))) {
+                right = offset - 0.5;
+            }
+        }
+        vec2 inside = vec2(min(left, right) - PAD, min(texcoord.y, size.y - texcoord.y) - INSET);
+        float bead = length(max(vec2(reach) - inside, vec2(0.0))) - reach;
+        color.rgb = mix(STRIP, color.rgb, clamp(0.5 - bead, 0.0, 1.0));
+    }
+    color = default_post_processing(color);
     float radius = min(14.0, min(size.x, size.y) / 2.0);
     vec2 edge = vec2(min(texcoord.x, size.x - texcoord.x), texcoord.y);
     float distance = length(max(vec2(radius) - edge, vec2(0.0))) - radius;
-    color *= clamp(1.0 - distance, 0.0, 1.0);
-    if (texcoord.x >= size.x - 2.0) {
-        color.rgb = vec3({{float.secondary}}) / 255.0 * color.a;
+    float band = clamp(distance + WIDTH + 0.5, 0.0, 1.0);
+    if (band > 0.0) {
+        // The frame is focused when any tab carries the line colour; 48 samples find tabs down to 1/48 of the strip.
+        bool focused = false;
+        for (int probe = 0; probe < 48 && !focused; probe++) {
+            focused = !differs(plate((float(probe) + 0.5) * size.x / 48.0), LINE);
+        }
+        vec3 border = IDLE;
+        if (focused) {
+            border = mix(LINE, TRANSFER, smoothstep(0.15, 0.85, texcoord.x / size.x * 0.5));
+        }
+        color = mix(color, vec4(border, 1.0) * color.a, band);
     }
+    color *= clamp(1.0 - distance, 0.0, 1.0);
     return color;
 }
