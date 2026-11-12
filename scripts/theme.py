@@ -41,7 +41,8 @@ def state():
 
 def load(file=None):
     if file is None:
-        file = SELECTOR.read_text().strip()
+        # Local selector, gitignored; fresh clones start on Cozy Mint.
+        file = SELECTOR.read_text().strip() if SELECTOR.exists() else "cozy-mint.toml"
         if not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_-]*\.toml", file):
             raise ValueError("themes/active must contain one preset filename, for example cozy-mint.toml")
         path = THEMES / file
@@ -303,7 +304,7 @@ def apply(file=None, live=True):
             if live:
                 changed_settings = apply_settings(data)
             if file is not None:
-                old[SELECTOR] = SELECTOR.read_bytes()
+                old[SELECTOR] = SELECTOR.read_bytes() if SELECTOR.exists() else None
                 atomic(SELECTOR, (preset.name + "\n").encode())
         except Exception:
             for schema, key, value in reversed(changed_settings):

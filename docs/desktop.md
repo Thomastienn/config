@@ -124,9 +124,9 @@ theme apply themes/cozy-mint.toml    # return to the regular theme
 
 Holiday presets are included alongside Cozy Mint. Presets live directly under `themes/`; use filenames
 such as `halloween.toml`. `theme apply FILE` changes the one-line `themes/active`
-selector after successful activation. Commit the preset and selector deliberately
-to share the choice. After pulling on another machine, `apply --configs-only`
-generates and applies that selection. There are no automatic commits or pushes.
+selector after successful activation. The selector is local, gitignored state, so
+each machine keeps its own choice; without it, setup starts on Cozy Mint. Commit
+new presets to share them. There are no automatic commits or pushes.
 If selected assets are missing, activation stops before changing appearance;
 install them through the existing setup manifests first. Switching downloads
 nothing. `theme check` exits nonzero while generated output differs.

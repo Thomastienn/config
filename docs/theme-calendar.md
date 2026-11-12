@@ -29,8 +29,8 @@ quiet muted text and soft pastel accents in the event's hues. Layout,
 fonts, icons, cursor and wallpaper stay unchanged. Edit the complete preset for
 further customization. Overlapping events still select just one winner.
 The normal theme engine renders templates into local generated state and reloads
-supported apps. Automatic switching also updates `themes/active`, just like
-`theme apply FILE`; it never commits or pushes. Existing browser/shell reload
+supported apps. Automatic switching also updates the local, gitignored
+`themes/active`, just like `theme apply FILE`; it never commits or pushes. Existing browser/shell reload
 limitations from [desktop themes](desktop.md#desktop-themes) still apply.
 A manual selection lasts until the next login or `theme auto`; disable automation to keep it.
 If a date changes while logged in, the theme stays until the next login or `theme auto`.
