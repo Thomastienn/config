@@ -166,16 +166,5 @@
     "caveman:caveman-discover": "off",
     "caveman:caveman-evidence-review": "off",
     "caveman:caveman-learn": "off",
-    "mattpocock-skills:diagnosing-bugs": "user-invocable-only",
-    "mattpocock-skills:tdd": "user-invocable-only",
-    "mattpocock-skills:prototype": "user-invocable-only",
-    "mattpocock-skills:research": "user-invocable-only",
-    "mattpocock-skills:domain-modeling": "user-invocable-only",
-    "mattpocock-skills:codebase-design": "user-invocable-only",
-    "mattpocock-skills:code-review": "user-invocable-only",
-    "mattpocock-skills:pr": "user-invocable-only",
-    "mattpocock-skills:wizard": "user-invocable-only",
-    "mattpocock-skills:grilling": "user-invocable-only",
-    "mattpocock-skills:writing-for-agents": "user-invocable-only"
   }
 }
