@@ -6,9 +6,15 @@ here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
 root="$(git rev-parse --show-toplevel)"
 cd -- "$root"
 
+# Agent names from the agents table limit this run to those agents; other arguments are epics.
 # Epics are worked in the order given; the default is the order in .ralph-tui/epics.
-epics=("$@")
-if (( ! $# )); then
+mapfile -t known < <(awk -F'|' '!/^[[:space:]]*#/ && NF > 2 { print $1 }' "$here/../agents")
+only=()
+epics=()
+for arg; do
+  if [[ " ${known[*]} " == *" $arg "* ]]; then only+=("$arg"); else epics+=("$arg"); fi
+done
+if (( ! ${#epics[@]} )); then
   if [[ ! -f .ralph-tui/epics ]]; then
     echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
     exit 1
@@ -19,6 +25,9 @@ fi
 # An hour outside every window runs nothing.
 schedule="${RALPH_AFK_SCHEDULE:-00-24=claude,codex}"
 wait_s="${RALPH_AFK_WAIT:-600}"
+for agent in "${only[@]}"; do
+  [[ " ${schedule//[=,]/ } " == *" $agent "* ]] || { echo "$agent is in no RALPH_AFK_SCHEDULE window: $schedule" >&2; exit 1; }
+done
 log() { echo "[ralph-afk $(date '+%F %T')] $*"; }
 
 # Two supervisors would take over each other's Ralph forever.
@@ -26,11 +35,14 @@ exec 9>.ralph-tui/afk.lock
 flock -n 9 || { echo 'ralph-afk is already running in this checkout.' >&2; exit 1; }
 
 agents_now() {
-  local hour=$((10#$(date +%H))) window hours
+  local hour=$((10#$(date +%H))) window hours list agent
   for window in $schedule; do
     hours="${window%%=*}"
     if (( hour >= 10#${hours%-*} && hour < 10#${hours#*-} )); then
-      echo "${window#*=}" | tr ',' ' '
+      list="${window#*=}"
+      for agent in ${list//,/ }; do
+        if (( ! ${#only[@]} )) || [[ " ${only[*]} " == *" $agent "* ]]; then printf '%s ' "$agent"; fi
+      done
       return
     fi
   done

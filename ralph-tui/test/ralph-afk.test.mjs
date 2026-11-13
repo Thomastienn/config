@@ -71,7 +71,7 @@ if [[ $(cat "${cwd}/limited-agent" 2>/dev/null) == '${name}' || ( " $FIXTURE_LIM
 echo "$1" >> "${cwd}/sleeps"; [[ -z $FIXTURE_WAIT_ENDS_WORK ]] || rm -f "${cwd}"/work-*`);
   bin('date', `if [[ $1 == +%H ]]; then echo "\${FIXTURE_HOUR:-12}"; else exec /usr/bin/date "$@"; fi`);
   const read = name => existsSync(join(cwd, name)) ? readFileSync(join(cwd, name), 'utf8').trim().split('\n') : [];
-  const run = (env = {}) => spawnSync('bash', [fileURLToPath(new URL('../bin/ralph-afk', import.meta.url))], {
+  const run = (env = {}, args = []) => spawnSync('bash', [fileURLToPath(new URL('../bin/ralph-afk', import.meta.url)), ...args], {
     cwd, encoding: 'utf8', timeout: 20000,
     env: { ...process.env, HOME: cwd, PATH: `${cwd}/bin:${process.env.PATH}`, BEADS_ACTOR: 'fixture', ...env },
   });
@@ -122,6 +122,20 @@ test('any agent in the table runs with its own probe and model; an unknown one n
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.match(result.stderr, /Unknown agent in RALPH_AFK_SCHEDULE: nobody/);
   assert.deepEqual(unknown.runs(), []);
+});
+
+test('agent names among the arguments limit the run to those agents; the rest are epics', () => {
+  const f = fixture({ 'TreeTutor-sh8': 1 });
+  const result = f.run({}, ['codex', 'TreeTutor-sh8']);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-sh8 --iterations 1 --agent codex --model gpt-6.1-sol']);
+  assert.ok(!f.read('probes').includes('claude'));
+
+  const unscheduled = fixture();
+  const refused = unscheduled.run({ RALPH_AFK_SCHEDULE: '00-24=claude' }, ['codex']);
+  assert.equal(refused.status, 1);
+  assert.match(refused.stderr, /codex is in no RALPH_AFK_SCHEDULE window/);
+  assert.deepEqual(unscheduled.runs(), []);
 });
 
 test('when an epic runs out of work it moves to the next one that has some', () => {
