@@ -171,7 +171,6 @@ def apply_links():
     print(f"Applied {len(changes)} links. Existing conflicts backed up under {BACKUP}.")
     if choices()["extras"]:
         codex.configuration(HOME, backup)
-        claude.configuration(HOME, backup)
         hermes.configuration(HOME, backup)
     if choices()["nvim"] and not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
         print("Pending: Neovim theme bridge needs the managed AstroNvim configuration.")
@@ -317,7 +316,7 @@ def packages(extras):
 def check():
     gaps = power.check()
     if choices()["extras"]:
-        gaps += codex.configuration(HOME) + claude.configuration(HOME) + hermes.configuration(HOME)
+        gaps += codex.configuration(HOME) + hermes.configuration(HOME)
     gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))

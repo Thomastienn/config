@@ -1,47 +1,11 @@
-"""Portable Claude Code preferences; credentials, sessions and project state stay in the local home."""
+"""Install Claude Code, its skills, MCP server and plugins; settings.json is symlinked via links.json."""
 
-import copy
 import json
-import os
 from pathlib import Path
 import shutil
-import tempfile
 
 
 ROOT = Path(__file__).resolve().parent.parent / "claude"
-
-
-def merge(current, defaults):
-    for key, value in defaults.items():
-        if isinstance(value, dict):
-            if not isinstance(current.setdefault(key, {}), dict):
-                raise ValueError(f"Claude setting {key} must be an object; kept local settings")
-            merge(current[key], value)
-        else:
-            current[key] = value
-    return current
-
-
-def configuration(home, backup=None):
-    path = home / ".claude/settings.json"
-    current = json.loads(path.read_text()) if path.exists() else {}
-    desired = merge(copy.deepcopy(current), json.loads((ROOT / "settings.json").read_text()))
-    if current == desired:
-        return []
-    if backup is not None:
-        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        fd, temporary = tempfile.mkstemp(prefix=".settings-", dir=path.parent)
-        try:
-            with os.fdopen(fd, "w") as stream:
-                json.dump(desired, stream, indent=2)
-                stream.write("\n")
-            if path.exists() or path.is_symlink():
-                backup(path)
-            os.replace(temporary, path)
-        finally:
-            Path(temporary).unlink(missing_ok=True)
-        print("Applied portable Claude Code settings; local state preserved.")
-    return ["Claude Code: portable settings differ"]
 
 
 def install(home, cache, run):

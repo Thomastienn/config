@@ -16,6 +16,7 @@
   "claude/CLAUDE.md": ".claude/CLAUDE.md",
   "claude/statusline-command.sh": ".claude/statusline-command.sh",
   "claude/keybindings.json": ".claude/keybindings.json",
+  "claude/settings.json": ".claude/settings.json",
   "claude/hooks/cbm-code-discovery-gate": ".claude/hooks/cbm-code-discovery-gate",
   "claude/hooks/cbm-session-reminder": ".claude/hooks/cbm-session-reminder",
   "claude/themes/desktop.json": ".claude/themes/desktop.json",
