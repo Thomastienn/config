@@ -1,7 +1,37 @@
 {
+  "syncClaudeAiSkills": false,
+  "syncClaudeAiPlugins": false,
   "env": {
     "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
   },
+  "permissions": {
+    "deny": [
+      "Artifact",
+      "mcp__libreoffice_calc",
+      "SendFeedback",
+      "ScheduleWakeup",
+      "ReportFindings",
+      "ListAgents",
+      "EnterPlanMode",
+      "ExitPlanMode",
+      "DesignSync",
+      "NotebookEdit",
+      "SendMessage",
+      "SendToProject",
+      "SendToProjectContext",
+      "PushNotification",
+      "RemoteTrigger",
+      "CronCreate",
+      "CronDelete",
+      "CronList",
+      "AskUserQuestion"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "fable",
+  "disableClaudeAiConnectors": true,
+  "skillOverrides": {},
+  "disableBundledSkills": true,
   "hooks": {
     "PreToolUse": [
       {
@@ -144,21 +174,15 @@
       }
     }
   },
-  "permissions": {
-    "deny": [
-      "Artifact",
-      "mcp__libreoffice_calc",
-      "SendFeedback",
-      "ScheduleWakeup"
-    ],
-    "defaultMode": "auto"
+  "effortLevel": "medium",
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "autoCompactWindow": "auto"
+    }
   },
-  "effortLevel": "low",
+  "autoMemoryEnabled": false,
   "theme": "custom:desktop",
+  "switchModelsOnFlag": false,
   "agentPushNotifEnabled": true,
-  "syncClaudeAiPlugins": false,
-  "syncClaudeAiSkills": false,
-  "disableClaudeAiConnectors": true,
-  "skillOverrides": {
-  }
+  "hasCompletedOnboarding": true
 }
