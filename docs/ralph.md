@@ -56,14 +56,14 @@ with `nohup`:
 ralph-afk                              # whichever of Claude or Codex has usage
 RALPH_AFK_SCHEDULE='00-07=codex 07-24=claude,codex,cursor' ralph-afk
 ralph-afk my-epic other-epic           # only these epics, in this order
-ralph-afk codex                        # only Codex this run
-ralph-afk claude codex my-epic         # only Claude and Codex, only this epic
+ralph-afk -a codex                     # only Codex this run
+ralph-afk -a claude,codex my-epic      # only Claude and Codex, only this epic
 ```
 
-Arguments that name an agent in `ralph-tui/agents` limit that run to those
-agents; the other arguments are epics. The schedule still applies: chosen
-agents run only in windows that list them, in schedule order. A chosen agent
-that is in no window is refused at start.
+`-a` limits that run to a comma-separated list of agents from
+`ralph-tui/agents`; put it before the epics. The schedule still applies: chosen
+agents run only in windows that list them, in schedule order. An unknown agent,
+or one that is in no window, is refused at start.
 
 It is the only launcher, so Ralph's single-session lock never blocks it. Each
 cycle it starts one `ralph --takeover --iterations 1` run (one task) and waits

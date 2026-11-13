@@ -6,14 +6,20 @@ here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
 root="$(git rev-parse --show-toplevel)"
 cd -- "$root"
 
-# Agent names from the agents table limit this run to those agents; other arguments are epics.
-# Epics are worked in the order given; the default is the order in .ralph-tui/epics.
+usage='Usage: ralph-afk [-a agent,agent] [epic...]'
+# -a limits this run to agents from the agents table.
 mapfile -t known < <(awk -F'|' '!/^[[:space:]]*#/ && NF > 2 { print $1 }' "$here/../agents")
 only=()
-epics=()
-for arg; do
-  if [[ " ${known[*]} " == *" $arg "* ]]; then only+=("$arg"); else epics+=("$arg"); fi
+while getopts a: opt; do
+  [[ $opt == a ]] || { echo "$usage" >&2; exit 2; }
+  IFS=, read -ra only <<< "$OPTARG"
 done
+shift $((OPTIND - 1))
+for agent in "${only[@]}"; do
+  [[ " ${known[*]} " == *" $agent "* ]] || { echo "Unknown agent: $agent (known: ${known[*]})" >&2; exit 2; }
+done
+# Epics are worked in the order given; the default is the order in .ralph-tui/epics.
+epics=("$@")
 if (( ! ${#epics[@]} )); then
   if [[ ! -f .ralph-tui/epics ]]; then
     echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2

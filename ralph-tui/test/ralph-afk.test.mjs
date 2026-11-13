@@ -124,18 +124,24 @@ test('any agent in the table runs with its own probe and model; an unknown one n
   assert.deepEqual(unknown.runs(), []);
 });
 
-test('agent names among the arguments limit the run to those agents; the rest are epics', () => {
+test('-a limits the run to those agents; typos and unscheduled agents are refused at start', () => {
   const f = fixture({ 'TreeTutor-sh8': 1 });
-  const result = f.run({}, ['codex', 'TreeTutor-sh8']);
+  const result = f.run({}, ['-a', 'codex', 'TreeTutor-sh8']);
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-sh8 --iterations 1 --agent codex --model gpt-6.1-sol']);
   assert.ok(!f.read('probes').includes('claude'));
 
   const unscheduled = fixture();
-  const refused = unscheduled.run({ RALPH_AFK_SCHEDULE: '00-24=claude' }, ['codex']);
+  const refused = unscheduled.run({ RALPH_AFK_SCHEDULE: '00-24=claude' }, ['-a', 'claude,codex']);
   assert.equal(refused.status, 1);
   assert.match(refused.stderr, /codex is in no RALPH_AFK_SCHEDULE window/);
   assert.deepEqual(unscheduled.runs(), []);
+
+  const typo = fixture();
+  const unknown = typo.run({}, ['-a', 'codx']);
+  assert.equal(unknown.status, 2);
+  assert.match(unknown.stderr, /Unknown agent: codx/);
+  assert.deepEqual(typo.runs(), []);
 });
 
 test('when an epic runs out of work it moves to the next one that has some', () => {
