@@ -1,6 +1,6 @@
 #!/bin/bash
 # Status line (active desktop theme palette, Nerd Font icons, │ separators):
-#   model · token budget · folder · git branch and diff · cost and time · 5h and weekly usage
+#   model · token budget · prompt cache · folder · git branch and diff · cost and time · 5h and weekly usage
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
@@ -18,7 +18,7 @@ reset=$'\033[0m'
 bold=$'\033[1m'
 # Nerd Font icons: folder, git branch, dollar, clock, memory, hourglass, calendar, refresh.
 i_dir=$'\uf07c' i_git=$'\ue0a0' i_cost=$'\uf155' i_time=$'\uf017'
-i_ctx=$'\U000f035b' i_five=$'\U000f051f' i_week=$'\U000f00ed' i_reset=$'\uf021'
+i_ctx=$'\U000f035b' i_cache=$'\uf2dc' i_five=$'\U000f051f' i_week=$'\U000f00ed' i_reset=$'\uf021'
 
 case "$cwd" in "$HOME"|"$HOME"/*) disp="~${cwd#"$HOME"}" ;; *) disp="$cwd" ;; esac
 
@@ -71,6 +71,26 @@ if [ -n "$used" ]; then
   tok="$bold$(fmt_tok "$used")$reset$(fg "$c_muted")"
   [ -n "$size" ] && tok+="/$(fmt_tok "$size")"
   soft "$(hue "$colour" "$i_ctx $full")$(hue "$c_line" "$empty") $(hue "$colour" "$tok")"
+fi
+
+# Prompt cache: time left since the last API call; 1h TTL when the last cache write used it, else 5m.
+transcript=$(echo "$input" | jq -r '.transcript_path // empty')
+if [ -f "$transcript" ]; then
+  read -r cache_ts cache_ttl < <(tac "$transcript" | grep -m 20 '"usage"' | jq -rs '
+    map(select(.type == "assistant" and .message.usage)) as $a
+    | ($a | map(.message.usage.cache_creation // {} | select((.ephemeral_1h_input_tokens // 0) + (.ephemeral_5m_input_tokens // 0) > 0)) | first) as $w
+    | select($a | length > 0)
+    | "\($a[0].timestamp | sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601) \(if ($w.ephemeral_1h_input_tokens // 0) > 0 then 3600 else 300 end)"' 2>/dev/null)
+  if [ -n "$cache_ts" ]; then
+    left=$(( cache_ts + cache_ttl - $(date +%s) ))
+    if [ "$left" -le 0 ]; then
+      soft "$(hue "$c_hot" "$i_cache cold")"
+    else
+      if [ "$left" -ge 60 ]; then t="$((left / 60))m"; else t="${left}s"; fi
+      if [ $(( left * 5 )) -le "$cache_ttl" ]; then colour=$c_lime; else colour=$c_mint; fi
+      soft "$(hue "$colour" "$i_cache") warm $(hue "$colour" "$t")"
+    fi
+  fi
 fi
 
 soft "$(hue "$c_sea" "$i_dir")  $disp"
