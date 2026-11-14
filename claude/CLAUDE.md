@@ -69,7 +69,7 @@ not add `rtk` yourself. The codebase-memory-mcp hook is only a reminder: call
 its tools yourself, and index the repository first if it is not indexed.
 
 - Prefer `trash` over `rm` when removing files, to avoid accidental loss.
-- Prefer integration tests over unit tests and prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
+- Prefer unit tests over integration tests and integration prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
 - Prefer to use codebase-memory-mcp to explore and navigate codebase.
 - Use Beads only for single-person personal projects (start with `bd init`); then remind me to run `ralph-tui init`.
 - Use the Impeccable skill for UI and frontend changes, ideally with Astryx (`astryx init`).
