@@ -18,15 +18,19 @@ shift $((OPTIND - 1))
 for agent in "${only[@]}"; do
   [[ " ${known[*]} " == *" $agent "* ]] || { echo "Unknown agent: $agent (known: ${known[*]})" >&2; exit 2; }
 done
-# Epics are worked in the order given; the default is the order in .ralph-tui/epics.
-epics=("$@")
-if (( ! ${#epics[@]} )); then
+# Epics are worked in the order given; the default is the order in .ralph-tui/epics,
+# re-read before every task so epics added or reordered mid-run take effect.
+given=("$@")
+load_epics() {
+  epics=("${given[@]}")
+  (( ${#epics[@]} )) && return
   if [[ ! -f .ralph-tui/epics ]]; then
     echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
     exit 1
   fi
   mapfile -t epics < <(grep -vE '^[[:space:]]*(#|$)' .ralph-tui/epics)
-fi
+}
+load_epics
 # Space-separated FROM-TO=agents windows in local hours; agents are tried in order.
 # An hour outside every window runs nothing.
 schedule="${RALPH_AFK_SCHEDULE:-00-24=claude,codex}"
@@ -78,11 +82,23 @@ cleanup() {
   fi
 }
 trap cleanup EXIT
-trap 'exit 130' INT
 trap 'exit 143' TERM
+# First Ctrl+C: let the current task finish, then exit. Second Ctrl+C: stop now.
+stop=false
+on_int() {
+  if "$stop"; then exit 130; fi
+  stop=true
+  log "Stopping after the current task. Press Ctrl+C again to stop now."
+}
+trap on_int INT
 
 last=''
 while :; do
+  if "$stop"; then
+    log "Stop requested. Stopping."
+    exit 0
+  fi
+  load_epics
   # First epic that still has ready or unfinished work: a later phase starts when the earlier ones are out of work.
   epic=''
   for e in "${epics[@]}"; do
@@ -104,7 +120,7 @@ while :; do
   done
   if [[ -z "$agent" ]]; then
     log "No agent available. Checking again in ${wait_s}s."
-    sleep "$wait_s"
+    sleep "$wait_s" || :
     continue
   fi
   log "Starting one task of $epic on $agent."
@@ -115,7 +131,8 @@ while :; do
   : > "$out"
   size=0
   # 9>&-: a Ralph that outlives this script must not keep the supervisor lock.
-  "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" > >(tee "$out" 9>&-) 2>&1 9>&- &
+  # setsid, and tee ignoring INT: Ctrl+C in this terminal reaches only the supervisor, never the running task.
+  setsid "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" < /dev/null > >(trap '' INT; exec tee "$out" 9>&-) 2>&1 9>&- &
   run_pid=$!
   interrupted=false
   while kill -0 "$run_pid" 2>/dev/null; do
@@ -123,6 +140,12 @@ while :; do
     timer_pid=$!
     # Wake on completion as well as the timer; healthy short runs need no extra probe.
     wait -n "$run_pid" "$timer_pid" 2>/dev/null || :
+    if kill -0 "$run_pid" 2>/dev/null && kill -0 "$timer_pid" 2>/dev/null; then
+      # Woken by a signal, not by the run or the timer: keep waiting.
+      kill "$timer_pid" 2>/dev/null || :
+      wait "$timer_pid" 2>/dev/null || :
+      continue
+    fi
     kill "$timer_pid" 2>/dev/null || :
     wait "$timer_pid" 2>/dev/null || :
     timer_pid=''
@@ -151,6 +174,6 @@ while :; do
   # A run this short did no work (limit hit at once, startup failure, crash): do not spin.
   if (( SECONDS - started < 120 )); then
     log "Run ended within 2 minutes. Checking again in ${wait_s}s."
-    sleep "$wait_s"
+    sleep "$wait_s" || :
   fi
 done

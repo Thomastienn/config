@@ -71,6 +71,11 @@ for it to end. A Ralph already running in the checkout, including an
 interactive one, is stopped by that first takeover. A second `ralph-afk` in the
 same checkout is refused.
 
+Press Ctrl+C once to stop after the current task: the task finishes and commits,
+then `ralph-afk` exits. Press it again to stop now. The task runs in its own
+session, so Ctrl+C never reaches it directly. `.ralph-tui/epics` is re-read
+before every task, so epics added or reordered mid-run take effect.
+
 Before each run it probes the scheduled agents and uses the first that answers.
 It stays on the agent that ran last and switches only when that agent stops
 answering. Ralph 0.12.0's own `fallbackAgents` is not used: it does not
