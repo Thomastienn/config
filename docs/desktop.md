@@ -168,6 +168,13 @@ the selected preset. Setup records XFCE's lock command; i3 starts `xss-lock` to
 lock before sleep. After pulling this change, run `./setup.sh apply --configs-only`;
 an existing session's old `xss-lock` command needs a logout/login to be replaced.
 
+Idle timing belongs to xidlehook alone; i3 turns off the X server's own
+screensaver and DPMS timeouts, which ignored audio and fullscreen video. Without
+input, the screen dims at 1:40 and dims deeper at 9:30, 30 seconds before the
+10:00 lock. Suspend follows at 25:00. Touch the mouse or a key during a dim to
+restore brightness and restart the countdown. Playing audio or a fullscreen
+window pauses the countdown.
+
 For isolated setup/theme checks, copy the repository into the temporary directory
 as well as using an isolated home. Its `themes/.generated` link belongs to that
 checkout; repointing the live checkout at temporary state can break the next login.

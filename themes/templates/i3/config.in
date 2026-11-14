@@ -106,13 +106,21 @@ exec --no-startup-id ibus engine xkb:us::eng
 #   -killer "systemctl suspend" \
 #   -detectsleep
 
+# The X server's own timers ignore audio and fullscreen, and xss-lock locks when
+# they fire, so xidlehook alone owns idle. DPMS stays enabled for idle-blank.
+exec_always --no-startup-id xset s off dpms 0 0 0
+# Timers are relative to the previous one: dim at 1:40, blank at 2:00 (Battery
+# Saver only), dim deeper at 9:30, lock at 10:00, suspend at 25:00. Any input
+# restores brightness.
 exec --no-startup-id xidlehook \
   --socket "$XDG_RUNTIME_DIR/thomas-xidlehook.sock" \
   --not-when-audio \
   --not-when-fullscreen \
-  --timer 120 '/usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" idle-blank' '' \
-  --timer 480 'betterlockscreen --lock dimblur' '' \
-  --timer 900 'systemctl suspend' ''
+  --timer 100 '"$HOME/thomas_config/scripts/idle-dim.sh" 0.6' '"$HOME/thomas_config/scripts/idle-dim.sh" 1' \
+  --timer 20 '/usr/bin/python3 "$HOME/thomas_config/scripts/battery-mode.py" idle-blank' '"$HOME/thomas_config/scripts/idle-dim.sh" 1' \
+  --timer 450 '"$HOME/thomas_config/scripts/idle-dim.sh" 0.25' '"$HOME/thomas_config/scripts/idle-dim.sh" 1' \
+  --timer 30 'betterlockscreen --lock dimblur' '"$HOME/thomas_config/scripts/idle-dim.sh" 1' \
+  --timer 900 'systemctl suspend' '"$HOME/thomas_config/scripts/idle-dim.sh" 1'
 
 # Dunst (Notification)
 # exec --no-startup-id dunst
