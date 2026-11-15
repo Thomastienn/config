@@ -172,8 +172,10 @@ Idle timing belongs to xidlehook alone; i3 turns off the X server's own
 screensaver and DPMS timeouts, which ignored audio and fullscreen video. Without
 input, the screen dims at 1:40 and dims deeper at 9:30, 30 seconds before the
 10:00 lock. Suspend follows at 25:00. Touch the mouse or a key during a dim to
-restore brightness and restart the countdown. Playing audio or a fullscreen
-window pauses the countdown.
+restore brightness and restart the countdown. Media that a player reports as
+playing over MPRIS (`playerctl -a status`) pauses the countdown; paused videos,
+idle browser audio streams, and fullscreen windows do not. Calls and games
+without MPRIS do not pause it; use AFK mode for those.
 
 For isolated setup/theme checks, copy the repository into the temporary directory
 as well as using an isolated home. Its `themes/.generated` link belongs to that
@@ -458,8 +460,8 @@ off restores only the panels and PDF timer that were running beforehand, along
 with captured settings except those subsequently adjusted by hand.
 
 After logging out/in once to activate the updated xidlehook configuration, saver
-blanks idle displays after two minutes. Audio, fullscreen applications, AFK mode,
-and logind idle inhibitors prevent this early blanking. Input wakes the screen;
+blanks idle displays after two minutes. Playing MPRIS media, AFK mode, and logind
+idle inhibitors prevent this early blanking. Input wakes the screen;
 the existing ten-minute lock and twenty-five-minute suspend timing is unchanged.
 Disabled/unavailable DPMS or failed inhibitor checks leave the screen on. Refresh
 and brightness changes affect the internal panel only; idle blanking uses DPMS
