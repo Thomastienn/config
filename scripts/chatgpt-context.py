@@ -174,7 +174,17 @@ def timeout(_signum, _frame):
     raise RuntimeError("ChatGPT handoff timed out. Captured context is on the clipboard.")
 
 
+def use_session_accessibility_bus():
+    # Root GUI apps (e.g. pkexec gufw) overwrite the X root AT_SPI_BUS with root's bus; trust our session instead.
+    bus = dbus.SessionBus().get_object("org.a11y.Bus", "/org/a11y/bus")
+    address = str(bus.GetAddress(dbus_interface="org.a11y.Bus"))
+    os.environ["AT_SPI_BUS_ADDRESS"] = address
+    # Repair the property too, so apps started later (Firefox) register on the right bus.
+    subprocess.run(["xprop", "-root", "-f", "AT_SPI_BUS", "8s", "-set", "AT_SPI_BUS", address], timeout=3)
+
+
 def main(action):
+    use_session_accessibility_bus()
     runtime = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"))
     with (runtime / "chatgpt-context.lock").open("a") as lock:
         try:

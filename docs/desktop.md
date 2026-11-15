@@ -221,6 +221,11 @@ change tabs, start a new conversation, or submit a message. If accessibility is
 unavailable, check the desktop accessibility setting and reopen Firefox when
 convenient. ChatGPT website changes can require updating the prompt locator.
 
+Root GUI apps such as `pkexec gufw` can point the X `AT_SPI_BUS` property at
+root's accessibility bus. The helper always asks the session D-Bus for the
+correct bus and restores the property. Firefox opened while it was wrong has no
+accessibility until restarted.
+
 ## The line: windows, tmux, Rofi, prompt and lockscreen
 
 One visual language runs through the desktop, in every preset's colours. The
