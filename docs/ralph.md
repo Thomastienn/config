@@ -84,21 +84,15 @@ It stays on the agent that ran last and switches only when that agent stops
 answering. Ralph 0.12.0's own `fallbackAgents` is not used: it does not
 recognise subscription usage-limit errors, so a limited agent fails every few
 seconds until the iteration limit. If no scheduled agent answers, or a run ends
-within two minutes (limit reached at once, startup failure, crash), it waits
-`RALPH_AFK_WAIT` seconds (default 600) and checks again. That also covers a
-limit that resets while you sleep.
+within two minutes without closing or blocking a task (limit reached at once,
+startup failure, crash), it waits `RALPH_AFK_WAIT` seconds (default 600) and
+checks again. That also covers a limit that resets while you sleep. A task that
+finishes fast starts the next one at once. A probe times out after 180 seconds.
+A cheap-model probe can miss a limit that applies only to the work model.
 
-During a run it repeats the probe every `RALPH_AFK_WAIT` seconds. Ralph's
-output is copied to `.ralph-tui/afk-output.log`. If the CLI stops answering
-(usage limit, auth or network) but that output grew since the last check, the
-run keeps going: some providers let a running session finish after new
-requests hit the limit. If the output did not grow, it stops that Ralph and its
-child agents through the takeover helper and checks the scheduled agents again
-at once. The next available agent resumes the unfinished task and its pending
-edits through `beads-resume`. Task output that mentions limits does not trigger
-a switch. A probe times out after 180 seconds. If the stop fails, the
-supervisor keeps that run and tries again after the next probe. A cheap-model
-probe can miss a limit that applies only to the work model.
+A running task is not probed. A limit hit mid-task fails the iteration and
+ends that Ralph run. The next cycle probes again and the next available agent
+resumes the unfinished task and its pending edits through `beads-resume`.
 
 Each cycle first runs `bd epic close-eligible`, which closes every epic whose
 children are all closed and so unblocks the epics that depend on it. With no

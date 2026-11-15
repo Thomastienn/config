@@ -77,9 +77,7 @@ usable() {
 count() { bd "$@" --parent "$epic" --json --limit 0 | jq length; }
 
 run_pid=''
-timer_pid=''
 cleanup() {
-  [[ -z "$timer_pid" ]] || kill "$timer_pid" 2>/dev/null || :
   if [[ -n "$run_pid" ]] && kill -0 "$run_pid" 2>/dev/null; then
     node "$here/ralph-takeover.mjs" "$run_pid" 9>&-
   fi
@@ -133,54 +131,22 @@ while :; do
   log "Starting one task of $epic on $agent."
   last="$agent"
   started=$SECONDS
-  # Ralph's output is the progress signal: a provider may let a session already running finish after new requests hit the limit.
-  out=.ralph-tui/afk-output.log
-  : > "$out"
-  size=0
+  finished=$(count list --status closed,blocked)
   # 9>&-: a Ralph that outlives this script must not keep the supervisor lock.
-  # setsid, and tee ignoring INT: Ctrl+C in this terminal reaches only the supervisor, never the running task.
-  setsid "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" < /dev/null > >(trap '' INT; exec tee "$out" 9>&-) 2>&1 9>&- &
+  # setsid: Ctrl+C in this terminal reaches only the supervisor, never the running task.
+  # A limit hit mid-task fails the iteration and ends Ralph; the next cycle probes again.
+  setsid "$here/ralph" "$epic" --takeover --iterations 1 --agent "$agent" < /dev/null 9>&- &
   run_pid=$!
-  interrupted=false
-  while kill -0 "$run_pid" 2>/dev/null; do
-    sleep "$wait_s" 9>&- &
-    timer_pid=$!
-    # Wake on completion as well as the timer; healthy short runs need no extra probe.
-    wait -n "$run_pid" "$timer_pid" 2>/dev/null || :
-    if kill -0 "$run_pid" 2>/dev/null && kill -0 "$timer_pid" 2>/dev/null; then
-      # Woken by a signal, not by the run or the timer: keep waiting.
-      kill "$timer_pid" 2>/dev/null || :
-      wait "$timer_pid" 2>/dev/null || :
-      continue
-    fi
-    kill "$timer_pid" 2>/dev/null || :
-    wait "$timer_pid" 2>/dev/null || :
-    timer_pid=''
+  while :; do
+    wait "$run_pid" && status=0 || status=$?
+    # A trapped Ctrl+C also ends wait: keep waiting while the task runs.
     kill -0 "$run_pid" 2>/dev/null || break
-    previous=$size
-    size=$(stat -c %s "$out" 2>/dev/null || echo 0)
-    if ! usable "$agent"; then
-      kill -0 "$run_pid" 2>/dev/null || break
-      if (( size > previous )); then
-        log "$agent stopped answering, but the running task is still producing output. Letting it finish."
-        continue
-      fi
-      log "$agent stopped answering mid-task and the task made no progress. Stopping Ralph before checking other agents."
-      # A failed stop must not end the supervisor (set -e): keep the run and retry after the next check.
-      if node "$here/ralph-takeover.mjs" "$run_pid" 9>&-; then
-        interrupted=true
-        last=''
-        break
-      fi
-      log "Could not stop Ralph. Trying again in ${wait_s}s."
-    fi
   done
-  wait "$run_pid" || log "Ralph exited with status $?."
   run_pid=''
-  "$interrupted" && continue
-  # A run this short did no work (limit hit at once, startup failure, crash): do not spin.
-  if (( SECONDS - started < 120 )); then
-    log "Run ended within 2 minutes. Checking again in ${wait_s}s."
+  (( status == 0 )) || log "Ralph exited with status $status."
+  # A short run that closed or blocked nothing did no work (limit hit at once, startup failure, crash): do not spin.
+  if (( SECONDS - started < 120 && $(count list --status closed,blocked) <= finished )); then
+    log "Run ended within 2 minutes without finishing a task. Checking again in ${wait_s}s."
     sleep "$wait_s" || :
   fi
 done
