@@ -15,11 +15,10 @@ fi
 if (( $# )) && [[ "$1" != -* ]]; then
   epic="$1"
   shift
-elif [[ -f .ralph-tui/epics ]]; then
-  epic="$(grep -m1 -vE '^[[:space:]]*(#|$)' .ralph-tui/epics)"
 else
-  echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
-  exit 1
+  # Default: the oldest ready epic; dependencies between epics hold later ones back.
+  epic="$(bd ready --type epic --sort oldest --json --limit 1 | jq -r '.[0].id // empty')"
+  [[ -n "$epic" ]] || { echo 'No epic given and no ready epic in Beads.' >&2; exit 1; }
 fi
 takeover=false
 agent=''

@@ -13,14 +13,25 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
   execFileSync('git', ['init', '-q', cwd]);
   for (const dir of ['.ralph-tui', 'bin', '.config/ralph-tui/plugins/trackers']) mkdirSync(join(cwd, dir), { recursive: true });
   writeFileSync(join(cwd, '.config/ralph-tui/plugins/trackers/beads-resume.js'), '');
-  writeFileSync(join(cwd, '.ralph-tui/epics'), '# fixture order\nTreeTutor-7t3\n\nTreeTutor-vm4\nTreeTutor-sh8\n');
+  // Ready epics in Beads order; close-eligible drops the ones whose work is done.
+  writeFileSync(join(cwd, 'epics'), 'TreeTutor-7t3\nTreeTutor-vm4\nTreeTutor-sh8\n');
   for (const [epic, n] of Object.entries(work)) writeFileSync(join(cwd, `work-${epic}`), String(n));
   const epicWork = flag => `"${cwd}/work-$(sed -n 's/.*${flag} \\([^ ]*\\).*/\\1/p' <<< "$*")"`;
   const bin = (name, body) => writeFileSync(join(cwd, 'bin', name), `#!/usr/bin/env bash\n${body}\n`, { mode: 0o755 });
   bin('bd', `case "$1" in
-    ready) jq -n --argjson n "$(cat ${epicWork('--parent')} 2>/dev/null || echo 0)" '[range($n)]' ;;
+    ready) if [[ " $* " == *" --type epic "* ]]; then jq -R . "${cwd}/epics" | jq -s 'map({id: .})'; exit; fi
+      jq -n --argjson n "$(cat ${epicWork('--parent')} 2>/dev/null || echo 0)" '[range($n)]' ;;
     show) cat "${cwd}/issue.json" ;;
     update) echo '[{"id":"task-1","status":"in_progress","assignee":"fixture"}]' > "${cwd}/issue.json" ;;
+    list) [[ " $* " == *" --type epic "* ]] || { echo '[]'; exit; }
+      # Newest first, so the script must sort; sh8 is already ordered, and so is any epic given a dependency.
+      jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
+        dependency_count: (if $id == "TreeTutor-sh8" or ($deps | contains("add " + $id + " ")) then 1 else 0 end)}) | reverse' ;;
+    dep) echo "$*" >> "${cwd}/deps" ;;
+    epic) open=(); closed=()
+      while read -r e; do if [[ $(cat "${cwd}/work-$e" 2>/dev/null) == 0 ]]; then closed+=("$e"); else open+=("$e"); fi; done < "${cwd}/epics"
+      printf '%s\n' "\${open[@]}" | grep . > "${cwd}/epics" || :
+      jq -n '{closed: $ARGS.positional}' --args "\${closed[@]}" ;;
     *) echo '[]' ;;
   esac`);
   bin('ralph-tui', `if [[ -n $FIXTURE_RUNNING ]]; then exec "${process.execPath}" "${cwd}/running.cjs" "$0" "$@"; fi
@@ -144,11 +155,35 @@ test('-a limits the run to those agents; typos and unscheduled agents are refuse
   assert.deepEqual(typo.runs(), []);
 });
 
-test('when an epic runs out of work it moves to the next one that has some', () => {
+test('when an epic runs out of work it closes and the next ready epic starts', () => {
   const f = fixture({ 'TreeTutor-7t3': 1, 'TreeTutor-sh8': 1 });
   const result = f.run();
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.deepEqual(f.runs().map(run => run.split(' ')[3]), ['TreeTutor-7t3', 'TreeTutor-sh8']);
+  assert.match(result.stdout, /Closed finished epics: TreeTutor-7t3\n/);
+  assert.match(result.stdout, /Closed finished epics: TreeTutor-sh8\n/);
+});
+
+test('epics without a dependency wait for the one created before them; ordered ones are left alone', () => {
+  const f = fixture({ 'TreeTutor-vm4': 1 });
+  const result = f.run();
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.deepEqual(f.read('deps'), ['dep add TreeTutor-vm4 TreeTutor-7t3']);
+  assert.match(result.stdout, /Epic TreeTutor-vm4 now waits for TreeTutor-7t3/);
+
+  const given = fixture({ 'TreeTutor-sh8': 1 });
+  assert.equal(given.run({}, ['TreeTutor-sh8']).status, 0);
+  assert.deepEqual(given.read('deps'), []);
+});
+
+test('ralph with no epic takes the first ready epic from Beads', () => {
+  const f = fixture();
+  const ralph = fileURLToPath(new URL('../bin/ralph', import.meta.url));
+  const result = spawnSync('bash', [ralph, '--iterations', '1'], {
+    cwd: f.cwd, encoding: 'utf8', env: { ...process.env, HOME: f.cwd, PATH: `${f.cwd}/bin:${process.env.PATH}` },
+  });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-7t3 --iterations 1']);
 });
 
 for (const agent of ['claude', 'codex']) test(`a ${agent} limit mid-task stops Ralph and its agent, then resumes pending edits on the other provider`, () => {

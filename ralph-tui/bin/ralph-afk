@@ -18,19 +18,22 @@ shift $((OPTIND - 1))
 for agent in "${only[@]}"; do
   [[ " ${known[*]} " == *" $agent "* ]] || { echo "Unknown agent: $agent (known: ${known[*]})" >&2; exit 2; }
 done
-# Epics are worked in the order given; the default is the order in .ralph-tui/epics,
-# re-read before every task so epics added or reordered mid-run take effect.
+# Epics are worked in the order given; the default is every ready epic, oldest first.
+# Blocking dependencies between epics set the release order. Re-read before every task.
 given=("$@")
+# Epics nobody ordered run one after another: each open epic without a dependency waits
+# for the open epic created just before it. Add or change dependencies to reorder.
+chain_epics() {
+  local previous='' id deps
+  while IFS=$'\t' read -r id deps; do
+    if [[ -n "$previous" && "$deps" == 0 ]] && bd dep add "$id" "$previous" > /dev/null; then log "Epic $id now waits for $previous."; fi
+    previous="$id"
+  done < <(bd list --type epic --status open,in_progress,blocked --json --limit 0 | jq -r 'sort_by(.created_at)[] | [.id, .dependency_count] | @tsv')
+}
 load_epics() {
   epics=("${given[@]}")
-  (( ${#epics[@]} )) && return
-  if [[ ! -f .ralph-tui/epics ]]; then
-    echo "No epic given and no $PWD/.ralph-tui/epics: list this project's epic IDs there, one per line." >&2
-    exit 1
-  fi
-  mapfile -t epics < <(grep -vE '^[[:space:]]*(#|$)' .ralph-tui/epics)
+  (( ${#epics[@]} )) || mapfile -t epics < <(bd ready --type epic --sort oldest --json --limit 0 | jq -r '.[].id')
 }
-load_epics
 # Space-separated FROM-TO=agents windows in local hours; agents are tried in order.
 # An hour outside every window runs nothing.
 schedule="${RALPH_AFK_SCHEDULE:-00-24=claude,codex}"
@@ -98,6 +101,10 @@ while :; do
     log "Stop requested. Stopping."
     exit 0
   fi
+  # A finished epic closes here, which unblocks the epics that depend on it.
+  closed="$(bd epic close-eligible --json | jq -r '.closed | join(" ")')" || closed=''
+  [[ -z "$closed" ]] || log "Closed finished epics: $closed"
+  (( ${#given[@]} )) || chain_epics
   load_epics
   # First epic that still has ready or unfinished work: a later phase starts when the earlier ones are out of work.
   epic=''
@@ -107,7 +114,7 @@ while :; do
     epic=''
   done
   if [[ -z "$epic" ]]; then
-    log "No ready work under ${epics[*]}. Stopping."
+    log "No ready work under ${epics[*]:-any epic}. Stopping."
     exit 0
   fi
   agent=''

@@ -25,13 +25,13 @@ function fixture(t) {
   for (const dir of ['.ralph-tui', 'bin', '.config/ralph-tui/plugins/trackers']) mkdirSync(join(cwd, dir), { recursive: true });
   const env = { ...process.env, HOME: cwd, PATH: `${cwd}/bin:${process.env.PATH}`, BEADS_ACTOR: 'fixture', RALPH_CODEX_MODEL: 'fixture-model' };
   writeFileSync(join(cwd, '.config/ralph-tui/plugins/trackers/beads-resume.js'), '');
-  writeFileSync(join(cwd, '.ralph-tui/epics'), '# fixture order\nTreeTutor-7t3\nTreeTutor-vm4\n');
   writeFileSync(join(cwd, 'issue.json'), JSON.stringify({ id: 'task-1', status: 'in_progress', assignee: 'fixture' }));
   writeFileSync(join(cwd, 'bin/bd'), `#!${process.execPath}
 const fs = require('node:fs');
 const issue = JSON.parse(fs.readFileSync('issue.json'));
 const args = process.argv.slice(2);
 if (args[0] === 'show') console.log(JSON.stringify([issue]));
+else if (args[0] === 'ready' && args.includes('epic')) console.log(JSON.stringify([{ id: 'TreeTutor-7t3' }, { id: 'TreeTutor-vm4' }]));
 else if (args[0] === 'update' && args.includes('--if-status') && args.includes('--if-assignee')) {
   if (issue.status !== args[args.indexOf('--if-status') + 1] || issue.assignee !== args[args.indexOf('--if-assignee') + 1]) process.exit(1);
   issue.status = args[args.indexOf('--status') + 1];

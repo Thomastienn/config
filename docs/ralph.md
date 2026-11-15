@@ -4,9 +4,12 @@
 up. Run them from anywhere inside the checkout. They live in `ralph-tui/bin/`
 and are linked into `~/.local/bin` by setup (extras only).
 
-A project needs `.ralph-tui/epics`: the epic IDs Ralph may work on, one per
-line in the order to work them, `#` for comments. Its `.ralph-tui/config.toml`
-is optional; global defaults are in `ralph-tui/config.toml`.
+Ralph works on the project's Beads epics one after another, oldest first.
+`ralph-afk` makes each open epic that has no dependency wait for the open epic
+created just before it (`bd dep add`), so agents planning epics need no rule.
+To reorder, change the dependencies yourself; an epic that already has one is
+left alone. A blocked epic's children are not ready either. The project's `.ralph-tui/config.toml` is optional; global
+defaults are in `ralph-tui/config.toml`.
 
 ## Agents
 
@@ -29,7 +32,7 @@ Ralph runs. Cursor has only had its probe checked.
 ## ralph
 
 ```bash
-ralph                                  # first epic in .ralph-tui/epics, project's default agent
+ralph                                  # oldest ready epic, project's default agent
 ralph my-epic --iterations 10
 ralph --agent codex                    # Codex with its model from the agents table
 ralph --agent codex --takeover         # stop the Ralph running here, then start
@@ -73,8 +76,8 @@ same checkout is refused.
 
 Press Ctrl+C once to stop after the current task: the task finishes and commits,
 then `ralph-afk` exits. Press it again to stop now. The task runs in its own
-session, so Ctrl+C never reaches it directly. `.ralph-tui/epics` is re-read
-before every task, so epics added or reordered mid-run take effect.
+session, so Ctrl+C never reaches it directly. Ready epics are re-read
+before every task, so epics added or unblocked mid-run take effect.
 
 Before each run it probes the scheduled agents and uses the first that answers.
 It stays on the agent that ran last and switches only when that agent stops
@@ -97,9 +100,10 @@ a switch. A probe times out after 180 seconds. If the stop fails, the
 supervisor keeps that run and tries again after the next probe. A cheap-model
 probe can miss a limit that applies only to the work model.
 
-With no arguments it works the epics in `.ralph-tui/epics` from top to bottom:
-each cycle takes the first epic that has a ready or in-progress issue. It stops
-when none has one; blocked issues do not count.
+Each cycle first runs `bd epic close-eligible`, which closes every epic whose
+children are all closed and so unblocks the epics that depend on it. With no
+arguments it then chains unordered epics as above and takes the oldest ready epic that has a ready or in-progress
+issue. It stops when none has one; blocked issues do not count.
 
 `RALPH_AFK_SCHEDULE` is a space-separated list of `FROM-TO=agents` windows in
 local hours, with agents tried in order. The default is `00-24=claude,codex`.
