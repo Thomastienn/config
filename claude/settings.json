@@ -28,7 +28,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "fable",
+  "model": "opus",
   "disableClaudeAiConnectors": true,
   "skillOverrides": {},
   "disableBundledSkills": true,
