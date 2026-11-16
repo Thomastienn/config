@@ -82,7 +82,11 @@ def main(show=False):
                 window = next((window for window in candidates if window.get("focused")), candidates[0])
                 target = window["id"]
                 command(f"[con_id={target}] mark --add {MARK}, floating enable, move scratchpad")
-                command(f"[con_id={target}] scratchpad show, resize set 60 ppt 75 ppt, move position center")
+                # Fit the usable workspace height; ppt heights use the whole output and cover the bar.
+                workspaces = json.loads(subprocess.run(["i3-msg", "-t", "get_workspaces"], capture_output=True,
+                                                       text=True, check=True).stdout)
+                height = next(space["rect"]["height"] for space in workspaces if space["focused"])
+                command(f"[con_id={target}] scratchpad show, resize set 50 ppt {height} px, move position center")
                 return window["window"]
             if process.poll() not in (None, 0):
                 raise RuntimeError("Firefox could not start. Check that firefox opens normally.")
