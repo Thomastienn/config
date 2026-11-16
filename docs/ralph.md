@@ -79,6 +79,11 @@ then `ralph-afk` exits. Press it again to stop now. The task runs in its own
 session, so Ctrl+C never reaches it directly. Ready epics are re-read
 before every task, so epics added or unblocked mid-run take effect.
 
+Ralph 0.12.0 headless does not report a failed auto-commit. When a run closes a
+task but leaves `HEAD` unchanged and the tree dirty, `ralph-afk` commits
+everything as `<type>: <id> <title>`, retrying with `--no-verify` if a hook
+rejects it.
+
 Before each run it probes the scheduled agents and uses the first that answers.
 It stays on the agent that ran last and switches only when that agent stops
 answering. Ralph 0.12.0's own `fallbackAgents` is not used: it does not

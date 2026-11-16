@@ -75,6 +75,20 @@ usable() {
 }
 
 count() { bd "$@" --parent "$epic" --json --limit 0 | jq length; }
+closed() { bd list --parent "$epic" --status closed --json --limit 0; }
+# Ralph 0.12.0 headless never reports a failed auto-commit, so a closed task's edits can stay
+# uncommitted. Commit them here in Ralph's message format; a hook that rejects it is skipped.
+commit_leftovers() {
+  local msg
+  [[ "$(git rev-parse -q --verify HEAD || :)" == "$head" && -n "$(git status --porcelain)" ]] || return 0
+  msg="$(closed | jq -r --argjson before "$closed_before" '[.[] | select(.id | IN($before[]) | not)][0] // empty | "\(.issue_type): \(.id) \(.title)"')"
+  [[ -n "$msg" ]] || return 0
+  if git add -A && { git commit -q -m "$msg" || git commit -q --no-verify -m "$msg"; }; then
+    log "Ralph left the task uncommitted. Committed: $msg"
+  else
+    log "Could not commit the finished task ($msg). Its edits are still uncommitted."
+  fi
+}
 
 run_pid=''
 cleanup() {
@@ -132,6 +146,8 @@ while :; do
   last="$agent"
   started=$SECONDS
   finished=$(count list --status closed,blocked)
+  head="$(git rev-parse -q --verify HEAD || :)"
+  closed_before="$(closed | jq -c 'map(.id)')"
   # 9>&-: a Ralph that outlives this script must not keep the supervisor lock.
   # setsid: Ctrl+C in this terminal reaches only the supervisor, never the running task.
   # A limit hit mid-task fails the iteration and ends Ralph; the next cycle probes again.
@@ -144,6 +160,7 @@ while :; do
   done
   run_pid=''
   (( status == 0 )) || log "Ralph exited with status $status."
+  commit_leftovers
   # A short run that closed or blocked nothing did no work (limit hit at once, startup failure, crash): do not spin.
   if (( SECONDS - started < 120 && $(count list --status closed,blocked) <= finished )); then
     log "Run ended within 2 minutes without finishing a task. Checking again in ${wait_s}s."

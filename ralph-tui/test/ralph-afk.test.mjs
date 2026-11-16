@@ -21,7 +21,8 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
   bin('bd', `case "$1" in
     ready) if [[ " $* " == *" --type epic "* ]]; then jq -R . "${cwd}/epics" | jq -s 'map({id: .})'; exit; fi
       jq -n --argjson n "$(cat ${epicWork('--parent')} 2>/dev/null || echo 0)" '[range($n)]' ;;
-    list) if [[ $* == *closed,blocked* ]]; then jq -n --argjson n "$(cat ${epicWork('--parent')}.done 2>/dev/null || echo 0)" '[range($n)]'; exit; fi
+    list) if [[ " $* " == *" --status closed "* ]]; then cat "${cwd}/closed.json" 2>/dev/null || echo '[]'; exit; fi
+      if [[ $* == *closed,blocked* ]]; then jq -n --argjson n "$(cat ${epicWork('--parent')}.done 2>/dev/null || echo 0)" '[range($n)]'; exit; fi
       [[ " $* " == *" --type epic "* ]] || { echo '[]'; exit; }
       # Newest first, so the script must sort; sh8 is already ordered, and so is any epic given a dependency.
       jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
@@ -35,6 +36,9 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
   esac`);
   bin('ralph-tui', `echo "$*" >> "${cwd}/runs"; f=${epicWork('--epic')}
 [[ -z $FIXTURE_SLOW ]] || /usr/bin/sleep "$FIXTURE_SLOW"
+# FIXTURE_CLOSE: the agent closes a task and leaves an edit; FIXTURE_RALPH_COMMITS: Ralph's auto-commit works.
+[[ -z $FIXTURE_CLOSE ]] || { echo edit > work.txt; echo '[{"id":"TreeTutor-7t3.1","issue_type":"task","title":"Fix it"}]' > "${cwd}/closed.json"; }
+[[ -z $FIXTURE_RALPH_COMMITS ]] || { git add -A && git commit -q --no-verify -m 'task: by Ralph'; }
 [[ -n $FIXTURE_NO_PROGRESS ]] || { echo $(( $(cat "$f") - 1 )) > "$f"; echo $(( $(cat "$f.done" 2>/dev/null) + 1 )) > "$f.done"; }`);
   // Limited until the first wait has passed, like a usage window that resets.
   const agent = name => bin(name, `echo '${name}' >> "${cwd}/probes"
@@ -177,4 +181,19 @@ test('Ctrl+C lets the running task finish, then stops', async () => {
   assert.match(stdout, /Stop requested/);
   assert.equal(f.runs().length, 1);
   assert.equal(f.read('work-TreeTutor-7t3')[0], '1', 'The running task must finish');
+});
+
+test('a finished task Ralph left uncommitted is committed, even past a failing hook', () => {
+  for (const ralphCommits of [false, true]) {
+    const f = fixture();
+    execFileSync('git', ['-C', f.cwd, 'config', 'core.hooksPath', join(f.cwd, 'hooks')]);
+    mkdirSync(join(f.cwd, 'hooks'));
+    writeFileSync(join(f.cwd, 'hooks/pre-commit'), '#!/bin/sh\nexit 1\n', { mode: 0o755 });
+    const git = { GIT_AUTHOR_NAME: 'fixture', GIT_AUTHOR_EMAIL: 'f@example.invalid', GIT_COMMITTER_NAME: 'fixture', GIT_COMMITTER_EMAIL: 'f@example.invalid' };
+    const result = f.run({ ...git, FIXTURE_CLOSE: '1', ...(ralphCommits && { FIXTURE_RALPH_COMMITS: '1' }) });
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const log = execFileSync('git', ['-C', f.cwd, 'log', '--format=%s'], { encoding: 'utf8' }).trim();
+    assert.equal(log, ralphCommits ? 'task: by Ralph' : 'task: TreeTutor-7t3.1 Fix it');
+    assert.equal(execFileSync('git', ['-C', f.cwd, 'status', '--porcelain', '--', 'work.txt'], { encoding: 'utf8' }), '', 'The task edit must be committed');
+  }
 });
