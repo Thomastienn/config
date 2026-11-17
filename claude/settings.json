@@ -1,181 +1,182 @@
 {
-  "syncClaudeAiSkills": false,
-  "syncClaudeAiPlugins": false,
-  "env": {
-    "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
-  },
-  "permissions": {
-    "deny": [
-      "Artifact",
-      "SendFeedback",
-      "ScheduleWakeup",
-      "ReportFindings",
-      "ListAgents",
-      "EnterPlanMode",
-      "ExitPlanMode",
-      "DesignSync",
-      "NotebookEdit",
-      "SendMessage",
-      "SendToProject",
-      "SendToProjectContext",
-      "PushNotification",
-      "RemoteTrigger",
-      "CronCreate",
-      "CronDelete",
-      "CronList",
-      "AskUserQuestion"
-    ],
-    "defaultMode": "auto"
-  },
-  "model": "opus",
-  "disableClaudeAiConnectors": true,
-  "skillOverrides": {},
-  "disableBundledSkills": true,
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "rtk hook claude"
-          }
-        ]
-      },
-      {
-        "matcher": "Grep|Glob",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-code-discovery-gate",
-            "timeout": 5
-          }
-        ]
-      }
-    ],
-    "SessionStart": [
-      {
-        "matcher": "startup",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "resume",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "clear",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      },
-      {
-        "matcher": "compact",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/.claude/hooks/cbm-session-reminder"
-          }
-        ]
-      }
-    ],
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/thomas_config/scripts/claude-notify.sh"
-          }
-        ]
-      }
-    ],
-    "Notification": [
-      {
-        "matcher": "permission_prompt|elicitation_dialog",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "~/thomas_config/scripts/claude-notify.sh"
-          }
-        ]
-      }
-    ]
-  },
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh",
-    "refreshInterval": 15
-  },
-  "enabledPlugins": {
-    "figma@claude-plugins-official": false,
-    "mattpocock-skills@claude-plugins-official": true,
-    "ponytail@ponytail": true,
-    "caveman@caveman": true,
-    "impeccable@impeccable": true,
-    "beads@beads-marketplace": false,
-    "agent-browser@agent-browser": true,
-    "drawio@drawio": true,
-    "canva@claude-plugins-official": false
-  },
-  "extraKnownMarketplaces": {
-    "ponytail": {
-      "source": {
-        "source": "github",
-        "repo": "DietrichGebert/ponytail"
-      }
+    "syncClaudeAiSkills": false,
+    "syncClaudeAiPlugins": false,
+    "env": {
+        "CLAUDE_CODE_TMUX_TRUECOLOR": "1"
     },
-    "caveman": {
-      "source": {
-        "source": "github",
-        "repo": "JuliusBrussee/caveman"
-      }
+    "permissions": {
+        "deny": [
+            "Artifact",
+            "SendFeedback",
+            "ScheduleWakeup",
+            "ReportFindings",
+            "ListAgents",
+            "EnterPlanMode",
+            "ExitPlanMode",
+            "DesignSync",
+            "NotebookEdit",
+            "SendMessage",
+            "SendToProject",
+            "SendToProjectContext",
+            "PushNotification",
+            "RemoteTrigger",
+            "CronCreate",
+            "CronDelete",
+            "CronList",
+            "AskUserQuestion"
+        ],
+        "defaultMode": "auto"
     },
-    "impeccable": {
-      "source": {
-        "source": "github",
-        "repo": "pbakaus/impeccable"
-      }
+    "model": "opus",
+    "disableClaudeAiConnectors": true,
+    "skillOverrides": {},
+    "disableBundledSkills": true,
+    "hooks": {
+        "PreToolUse": [
+            {
+                "matcher": "Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "rtk hook claude"
+                    }
+                ]
+            },
+            {
+                "matcher": "Grep|Glob",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-code-discovery-gate",
+                        "timeout": 5
+                    }
+                ]
+            }
+        ],
+        "SessionStart": [
+            {
+                "matcher": "startup",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "resume",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "clear",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            },
+            {
+                "matcher": "compact",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/.claude/hooks/cbm-session-reminder"
+                    }
+                ]
+            }
+        ],
+        "Stop": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/thomas_config/scripts/claude-notify.sh"
+                    }
+                ]
+            }
+        ],
+        "Notification": [
+            {
+                "matcher": "permission_prompt|elicitation_dialog",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "~/thomas_config/scripts/claude-notify.sh"
+                    }
+                ]
+            }
+        ]
     },
-    "beads-marketplace": {
-      "source": {
-        "source": "github",
-        "repo": "steveyegge/beads"
-      }
+    "statusLine": {
+        "type": "command",
+        "command": "bash ~/.claude/statusline-command.sh",
+        "refreshInterval": 15
     },
-    "agent-browser": {
-      "source": {
-        "source": "github",
-        "repo": "vercel-labs/agent-browser"
-      }
+    "enabledPlugins": {
+        "figma@claude-plugins-official": false,
+        "mattpocock-skills@claude-plugins-official": true,
+        "ponytail@ponytail": true,
+        "caveman@caveman": true,
+        "impeccable@impeccable": true,
+        "beads@beads-marketplace": false,
+        "agent-browser@agent-browser": true,
+        "drawio@drawio": true,
+        "canva@claude-plugins-official": false
     },
-    "drawio": {
-      "source": {
-        "source": "github",
-        "repo": "jgraph/drawio-mcp"
-      }
-    }
-  },
-  "effortLevel": "medium",
-  "modelSettings": {
-    "claude-opus-5-5": {
-      "autoCompactWindow": "auto"
-    }
-  },
-  "autoMemoryEnabled": false,
-  "theme": "custom:desktop",
-  "switchModelsOnFlag": false,
-  "agentPushNotifEnabled": true,
-  "hasCompletedOnboarding": true
+    "extraKnownMarketplaces": {
+        "ponytail": {
+            "source": {
+                "source": "github",
+                "repo": "DietrichGebert/ponytail"
+            }
+        },
+        "caveman": {
+            "source": {
+                "source": "github",
+                "repo": "JuliusBrussee/caveman"
+            }
+        },
+        "impeccable": {
+            "source": {
+                "source": "github",
+                "repo": "pbakaus/impeccable"
+            }
+        },
+        "beads-marketplace": {
+            "source": {
+                "source": "github",
+                "repo": "steveyegge/beads"
+            }
+        },
+        "agent-browser": {
+            "source": {
+                "source": "github",
+                "repo": "vercel-labs/agent-browser"
+            }
+        },
+        "drawio": {
+            "source": {
+                "source": "github",
+                "repo": "jgraph/drawio-mcp"
+            }
+        }
+    },
+    "effortLevel": "medium",
+    "modelSettings": {
+        "claude-opus-5-5": {
+            "autoCompactWindow": "auto"
+        }
+    },
+    "autoMemoryEnabled": false,
+    "theme": "custom:desktop",
+    "switchModelsOnFlag": false,
+    "agentPushNotifEnabled": true,
+    "hasCompletedOnboarding": true,
+    "attribution": false
 }
