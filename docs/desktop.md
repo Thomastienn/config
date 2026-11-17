@@ -334,10 +334,8 @@ Sign in to Codex and reconnect account-backed apps/MCP servers on the new
 machine. If the OpenAI catalogue is unavailable while signed out, setup reports
 the Canva and Superpowers plugins as pending; install them through `/plugins`
 after signing in. Review plugin hooks in `/hooks`; setup does not transfer hook trust.
-Install the Playwright MCP browser extension in Brave, then pair it when prompted.
-Its optional extension token stays only in the local config. Custom pet assets,
-saved command approvals, conversations, memories and other runtime data require
-a separate private backup. Restart Codex when convenient to load changed settings.
+Custom pet assets, saved command approvals, conversations, memories and other
+runtime data require a separate private backup. Restart Codex when convenient to load changed settings.
 See the [official configuration precedence](https://learn.chatgpt.com/docs/config-file/config-basic#configuration-precedence).
 
 ## Claude Code

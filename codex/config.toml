@@ -46,13 +46,6 @@ url = "https://mcp.figma.com/mcp"
 [mcp_servers.openaiDeveloperDocs]
 url = "https://developers.openai.com/mcp"
 
-[mcp_servers.playwright]
-command = "npx"
-args = ["@playwright/mcp@latest", "--extension"]
-
-[mcp_servers.playwright.env]
-PLAYWRIGHT_MCP_EXECUTABLE_PATH = "/usr/bin/brave-browser"
-
 [plugins."superpowers@openai-curated"]
 enabled = true
 [plugins."canva@openai-curated"]
