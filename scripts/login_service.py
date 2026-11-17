@@ -213,23 +213,26 @@ def capture(device, indicator=None, root=ROOT):
             camera_register(fd, 0x1007, original & ~1)
             if camera_register(fd, 0x1007) != original & ~1:
                 raise RuntimeError("Camera indicator suppression did not verify; capture skipped")
-        with subprocess.Popen([
-            "/usr/bin/ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "v4l2",
-            "-input_format", "mjpeg", "-video_size", "640x480", "-framerate", "30", "-i", device,
-            "-frames:v", "1", "-c:v", "mjpeg", "-f", "image2pipe", "pipe:1"],
-                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as process:
-            try:
-                photo, _ = process.communicate(timeout=10)
-            except BaseException:
-                process.kill()
-                process.communicate()
-                raise
-            if (process.returncode or len(photo) > 1024 * 1024
-                    or not photo.startswith(b"\xff\xd8") or not photo.endswith(b"\xff\xd9")):
-                raise RuntimeError("Camera did not produce a complete JPEG")
-            if fd is not None and camera_register(fd, 0x1007) != original & ~1:
-                raise RuntimeError("Camera firmware changed GPIO direction during capture")
-            return photo
+        for attempt in range(2):
+            with subprocess.Popen([
+                "/usr/bin/ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-f", "v4l2",
+                "-input_format", "mjpeg", "-video_size", "640x480", "-framerate", "30", "-i", device,
+                "-frames:v", "1", "-c:v", "mjpeg", "-f", "image2pipe", "pipe:1"],
+                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL) as process:
+                try:
+                    photo, _ = process.communicate(timeout=10)
+                except BaseException:
+                    process.kill()
+                    process.communicate()
+                    raise
+                if process.returncode and not photo and not attempt:
+                    continue  # firmware sometimes stalls UVC stream setup right after the LED write
+                if (process.returncode or len(photo) > 1024 * 1024
+                        or not photo.startswith(b"\xff\xd8") or not photo.endswith(b"\xff\xd9")):
+                    raise RuntimeError("Camera did not produce a complete JPEG")
+                if fd is not None and camera_register(fd, 0x1007) != original & ~1:
+                    raise RuntimeError("Camera firmware changed GPIO direction during capture")
+                return photo
     finally:
         if fd is not None:
             os.close(fd)
