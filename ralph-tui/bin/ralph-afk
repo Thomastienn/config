@@ -41,8 +41,8 @@ make_gate() {
     ([.[] | select((gate | not) and .issue_type != "epic" and .status == "closed") | .closed_at] | max) > ([$g[].closed_at] | max // "")' > /dev/null || return 1
   gate="$(bd create --type epic --title 'Full-suite gate' --labels gate:backlog --silent)" &&
     bd create --type task --parent "$gate" --title 'Run the full test suites' --labels gate:backlog --silent \
-      --description "Run every full test suite the project's testing guide names. Fix failures the backlog's work caused. File any other failure as its own ticket." \
-      --acceptance '- [ ] Every full suite passes, or each remaining failure is fixed or filed as a ticket' > /dev/null &&
+      --description "Review and fix; do not file tickets for what you can fix. Run every full test suite the project's testing guide names and fix every failure, then rerun until all pass. Review the commits since the last gate (git log --grep 'Run the full test suites') for defects the suites miss and fix them. If one run cannot finish, record a checkpoint in the notes and leave this open. Mark it blocked only for a concrete external blocker." \
+      --acceptance $'- [ ] Every full suite passes\n- [ ] Defects found in the commits since the last gate are fixed' > /dev/null &&
     log "Out of ready work: made gate epic $gate for the full suites."
 }
 load_epics() {

@@ -30,7 +30,7 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
       jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
         dependency_count: (if $id == "TreeTutor-sh8" or ($deps | contains("add " + $id + " ")) then 1 else 0 end)}) | reverse' ;;
     # A made gate is open, so the next check must not make another.
-    create) echo "$*" >> "${cwd}/creates"; echo '[{"labels":["gate:backlog"],"status":"open"}]' > "${cwd}/all.json"; echo TreeTutor-gate ;;
+    create) echo "$3" >> "${cwd}/creates"; echo '[{"labels":["gate:backlog"],"status":"open"}]' > "${cwd}/all.json"; echo TreeTutor-gate ;;
     dep) echo "$*" >> "${cwd}/deps" ;;
     show) cat "${cwd}/show-$2.json" ;;
     # Adopting a blocker makes it the epic's one ready task.
