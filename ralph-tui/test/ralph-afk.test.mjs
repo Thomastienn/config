@@ -21,13 +21,16 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
   bin('bd', `case "$1" in
     ready) if [[ " $* " == *" --type epic "* ]]; then jq -R . "${cwd}/epics" | jq -s 'map({id: .})'; exit; fi
       jq -n --argjson n "$(cat ${epicWork('--parent')} 2>/dev/null || echo 0)" '[range($n)]' ;;
-    list) if [[ " $* " == *" --parent "* && $* == *open,in_progress,blocked* ]]; then cat "${cwd}/children.json" 2>/dev/null || echo '[]'; exit; fi
+    list) if [[ " $* " == *" --all "* ]]; then cat "${cwd}/all.json" 2>/dev/null || echo '[]'; exit; fi
+      if [[ " $* " == *" --parent "* && $* == *open,in_progress,blocked* ]]; then cat "${cwd}/children.json" 2>/dev/null || echo '[]'; exit; fi
       if [[ " $* " == *" --status closed "* ]]; then cat "${cwd}/closed.json" 2>/dev/null || echo '[]'; exit; fi
       if [[ $* == *closed,blocked* ]]; then jq -n --argjson n "$(cat ${epicWork('--parent')}.done 2>/dev/null || echo 0)" '[range($n)]'; exit; fi
       [[ " $* " == *" --type epic "* ]] || { echo '[]'; exit; }
       # Newest first, so the script must sort; sh8 is already ordered, and so is any epic given a dependency.
       jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
         dependency_count: (if $id == "TreeTutor-sh8" or ($deps | contains("add " + $id + " ")) then 1 else 0 end)}) | reverse' ;;
+    # A made gate is open, so the next check must not make another.
+    create) echo "$*" >> "${cwd}/creates"; echo '[{"labels":["gate:backlog"],"status":"open"}]' > "${cwd}/all.json"; echo TreeTutor-gate ;;
     dep) echo "$*" >> "${cwd}/deps" ;;
     show) cat "${cwd}/show-$2.json" ;;
     # Adopting a blocker makes it the epic's one ready task.
@@ -207,5 +210,18 @@ test('a finished task Ralph left uncommitted is committed, even past a failing h
     const log = execFileSync('git', ['-C', f.cwd, 'log', '--format=%s'], { encoding: 'utf8' }).trim();
     assert.equal(log, ralphCommits ? 'task: by Ralph' : 'task: TreeTutor-7t3.1 Fix it');
     assert.equal(execFileSync('git', ['-C', f.cwd, 'status', '--porcelain', '--', 'work.txt'], { encoding: 'utf8' }), '', 'The task edit must be committed');
+  }
+});
+
+test('out of ready work, a gate epic is made once, only if a task closed after the last gate', () => {
+  const gate = { labels: ['gate:backlog'], status: 'closed', closed_at: '2026-01-02' };
+  const task = closed_at => ({ issue_type: 'task', status: 'closed', closed_at });
+  for (const [all, made] of [[[gate, task('2026-01-03')], true], [[task('2026-01-01'), gate], false], [[], false]]) {
+    const f = fixture({ 'TreeTutor-7t3': 0 });
+    writeFileSync(join(f.cwd, 'all.json'), JSON.stringify(all));
+    const result = f.run();
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.equal(f.read('creates').length, made ? 2 : 0, JSON.stringify(all));
+    assert.match(result.stdout, /No ready work/);
   }
 });

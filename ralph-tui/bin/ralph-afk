@@ -28,7 +28,22 @@ chain_epics() {
   while IFS=$'\t' read -r id deps; do
     if [[ -n "$previous" && "$deps" == 0 ]] && bd dep add "$id" "$previous" > /dev/null; then log "Epic $id now waits for $previous."; fi
     previous="$id"
-  done < <(bd list --type epic --status open,in_progress,blocked --json --limit 0 | jq -r 'sort_by(.created_at)[] | [.id, .dependency_count] | @tsv')
+  done < <(bd list --type epic --status open,in_progress,blocked --json --limit 0 |
+    jq -r 'map(select((.labels // []) | index("gate:backlog") | not)) | sort_by(.created_at)[] | [.id, .dependency_count] | @tsv')
+}
+# The full suites run once, when every epic is out of ready work, in a gate epic made here.
+# Due only when a task closed after the last gate closed and no gate is still open,
+# so a finished or blocked gate never makes another.
+make_gate() {
+  local gate
+  bd list --all --json --limit 0 | jq -e 'def gate: (.labels // []) | index("gate:backlog");
+    map(select(gate)) as $g | ($g | all(.status == "closed")) and
+    ([.[] | select((gate | not) and .issue_type != "epic" and .status == "closed") | .closed_at] | max) > ([$g[].closed_at] | max // "")' > /dev/null || return 1
+  gate="$(bd create --type epic --title 'Full-suite gate' --labels gate:backlog --silent)" &&
+    bd create --type task --parent "$gate" --title 'Run the full test suites' --labels gate:backlog --silent \
+      --description "Run every full test suite the project's testing guide names. Fix failures the backlog's work caused. File any other failure as its own ticket." \
+      --acceptance '- [ ] Every full suite passes, or each remaining failure is fixed or filed as a ticket' > /dev/null &&
+    log "Out of ready work: made gate epic $gate for the full suites."
 }
 load_epics() {
   epics=("${given[@]}")
@@ -138,6 +153,8 @@ while :; do
     epic=''
   done
   if [[ -z "$epic" ]]; then
+    # Only without given epics: a gate outside the given list would never run.
+    if (( ! ${#given[@]} )) && make_gate; then continue; fi
     log "No ready work under ${epics[*]:-any epic}. Stopping."
     exit 0
   fi
