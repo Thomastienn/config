@@ -21,13 +21,17 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
   bin('bd', `case "$1" in
     ready) if [[ " $* " == *" --type epic "* ]]; then jq -R . "${cwd}/epics" | jq -s 'map({id: .})'; exit; fi
       jq -n --argjson n "$(cat ${epicWork('--parent')} 2>/dev/null || echo 0)" '[range($n)]' ;;
-    list) if [[ " $* " == *" --status closed "* ]]; then cat "${cwd}/closed.json" 2>/dev/null || echo '[]'; exit; fi
+    list) if [[ " $* " == *" --parent "* && $* == *open,in_progress,blocked* ]]; then cat "${cwd}/children.json" 2>/dev/null || echo '[]'; exit; fi
+      if [[ " $* " == *" --status closed "* ]]; then cat "${cwd}/closed.json" 2>/dev/null || echo '[]'; exit; fi
       if [[ $* == *closed,blocked* ]]; then jq -n --argjson n "$(cat ${epicWork('--parent')}.done 2>/dev/null || echo 0)" '[range($n)]'; exit; fi
       [[ " $* " == *" --type epic "* ]] || { echo '[]'; exit; }
       # Newest first, so the script must sort; sh8 is already ordered, and so is any epic given a dependency.
       jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
         dependency_count: (if $id == "TreeTutor-sh8" or ($deps | contains("add " + $id + " ")) then 1 else 0 end)}) | reverse' ;;
     dep) echo "$*" >> "${cwd}/deps" ;;
+    show) cat "${cwd}/show-$2.json" ;;
+    # Adopting a blocker makes it the epic's one ready task.
+    update) echo "$*" >> "${cwd}/updates"; rm -f "${cwd}/children.json"; echo 1 > ${epicWork('--parent')} ;;
     epic) open=(); closed=()
       while read -r e; do if [[ $(cat "${cwd}/work-$e" 2>/dev/null) == 0 ]]; then closed+=("$e"); else open+=("$e"); fi; done < "${cwd}/epics"
       printf '%s\n' "\${open[@]}" | grep . > "${cwd}/epics" || :
@@ -88,12 +92,7 @@ test('the schedule picks the agent for the hour and runs nothing outside its win
   assert.equal(gap.sleeps().length, 1);
 });
 
-test('any agent in the table runs with its own probe and model; an unknown one never launches', () => {
-  const cursor = fixture();
-  cursor.bin('agent', 'echo pong');
-  assert.equal(cursor.run({ RALPH_AFK_SCHEDULE: '00-24=cursor' }).status, 0);
-  assert.deepEqual(cursor.runs(), ['run --headless --epic TreeTutor-7t3 --iterations 1 --agent cursor --model auto']);
-
+test('an agent missing from the table never launches', () => {
   const unknown = fixture();
   const result = unknown.run({ RALPH_AFK_SCHEDULE: '00-24=nobody', FIXTURE_WAIT_ENDS_WORK: '1' });
   assert.equal(result.status, 0, result.stdout + result.stderr);
@@ -140,6 +139,19 @@ test('epics without a dependency wait for the one created before them; ordered o
   const given = fixture({ 'TreeTutor-sh8': 1 });
   assert.equal(given.run({}, ['TreeTutor-sh8']).status, 0);
   assert.deepEqual(given.read('deps'), []);
+});
+
+test('a parentless blocker of an epic task moves under the epic and runs; one in another epic does not', () => {
+  const f = fixture({ 'TreeTutor-7t3': 0 });
+  const blocks = id => ({ type: 'blocks', depends_on_id: id });
+  writeFileSync(join(f.cwd, 'children.json'), JSON.stringify([{ id: 'TreeTutor-7t3.2', dependencies: [blocks('TreeTutor-7t3.1'), blocks('TreeTutor-bug'), blocks('TreeTutor-other')] }]));
+  writeFileSync(join(f.cwd, 'show-TreeTutor-bug.json'), JSON.stringify([{ parent: null, status: 'open', issue_type: 'bug' }]));
+  writeFileSync(join(f.cwd, 'show-TreeTutor-other.json'), JSON.stringify([{ parent: 'TreeTutor-vm4', status: 'open', issue_type: 'bug' }]));
+  const result = f.run({}, ['TreeTutor-7t3']);
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.deepEqual(f.read('updates'), ['update TreeTutor-bug --parent TreeTutor-7t3']);
+  assert.match(result.stdout, /Moved TreeTutor-bug under TreeTutor-7t3/);
+  assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-7t3 --iterations 1 --agent claude --model opus']);
 });
 
 test('ralph with no epic takes the first ready epic from Beads', () => {

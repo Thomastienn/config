@@ -75,6 +75,17 @@ usable() {
 }
 
 count() { bd "$@" --parent "$epic" --json --limit 0 | jq length; }
+# Ralph only sees the epic's children, so a parentless blocker (a bug filed mid-task) would
+# hold the epic forever. Move it under the epic so Ralph can work it.
+# shortcut: a blocker that belongs to another epic is left alone; adopt those too if it ever deadlocks.
+adopt_blockers() {
+  local id
+  for id in $(bd list --parent "$epic" --status open,in_progress,blocked --json --limit 0 |
+      jq -r --arg epic "$epic" '[.[].dependencies[]? | select(.type == "blocks") | .depends_on_id | select(startswith($epic + ".") | not)] | unique[]'); do
+    bd show "$id" --json | jq -e '(.[0] // .) | .parent == null and .status != "closed" and .issue_type != "epic"' > /dev/null || continue
+    if bd update "$id" --parent "$epic" > /dev/null; then log "Moved $id under $epic: it blocks work there."; fi
+  done
+}
 closed() { bd list --parent "$epic" --status closed --json --limit 0; }
 # Ralph 0.12.0 headless never reports a failed auto-commit, so a closed task's edits can stay
 # uncommitted. Commit them here in Ralph's message format; a hook that rejects it is skipped.
@@ -122,6 +133,7 @@ while :; do
   epic=''
   for e in "${epics[@]}"; do
     epic="$e"
+    adopt_blockers
     (( $(count ready) + $(count list --status in_progress) == 0 )) || break
     epic=''
   done

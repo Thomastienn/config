@@ -102,7 +102,9 @@ resumes the unfinished task and its pending edits through `beads-resume`.
 Each cycle first runs `bd epic close-eligible`, which closes every epic whose
 children are all closed and so unblocks the epics that depend on it. With no
 arguments it then chains unordered epics as above and takes the oldest ready epic that has a ready or in-progress
-issue. It stops when none has one; blocked issues do not count.
+issue. It stops when none has one; blocked issues do not count. Before
+counting, it moves any open issue with no parent that blocks one of the epic's
+children (such as a bug filed mid-task) under that epic, so Ralph can work it.
 
 `RALPH_AFK_SCHEDULE` is a space-separated list of `FROM-TO=agents` windows in
 local hours, with agents tried in order. The default is `00-24=claude,codex`.
