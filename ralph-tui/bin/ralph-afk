@@ -39,8 +39,15 @@ make_gate() {
   bd list --all --json --limit 0 | jq -e 'def gate: (.labels // []) | index("gate:backlog");
     map(select(gate)) as $g | ($g | all(.status == "closed")) and
     ([.[] | select((gate | not) and .issue_type != "epic" and .status == "closed") | .closed_at] | max) > ([$g[].closed_at] | max // "")' > /dev/null || return 1
-  gate="$(bd create --type epic --title 'Full-suite gate' --labels gate:backlog --silent)" &&
-    bd create --type task --parent "$gate" --title 'Run the full test suites' --labels gate:backlog --silent \
+  # bd cannot change a database's issue_prefix, so honour config.yaml's issue-prefix with --force and an explicit ID.
+  local prefix suffix id=()
+  prefix="$(sed -n 's/^issue-prefix: *"\{0,1\}\([^"]*\)"\{0,1\} *$/\1/p' .beads/config.yaml 2>/dev/null)"
+  if [[ -n "$prefix" ]]; then
+    while suffix="$(tr -dc a-z0-9 < /dev/urandom | head -c 3)"; bd show "$prefix-$suffix" > /dev/null 2>&1; do :; done
+    id=(--force --id "$prefix-$suffix")
+  fi
+  gate="$(bd create "${id[@]}" --type epic --title 'Full-suite gate' --labels gate:backlog --silent)" &&
+    bd create --force --type task --parent "$gate" --title 'Run the full test suites' --labels gate:backlog --silent \
       --description "Review and fix; do not file tickets for what you can fix. Run every full test suite the project's testing guide names and fix every failure, then rerun until all pass. Review the commits since the last gate (git log --grep 'Run the full test suites') for defects the suites miss and fix them. If one run cannot finish, record a checkpoint in the notes and leave this open. Mark it blocked only for a concrete external blocker." \
       --acceptance $'- [ ] Every full suite passes\n- [ ] Defects found in the commits since the last gate are fixed' > /dev/null &&
     log "Out of ready work: made gate epic $gate for the full suites."
