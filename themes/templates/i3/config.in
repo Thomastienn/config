@@ -133,7 +133,7 @@ exec_always --no-startup-id ~/.config/polybar/shapes/launch.sh
 exec --no-startup-id aw-qt
 exec --no-startup-id copyq
 exec --no-startup-id /usr/bin/handy
-exec --no-startup-id systemctl --user start 9router.service
+exec --no-startup-id systemctl --user start omniroute.service
 
 # ================================================================
 # APPLICATION SHORTCUTS

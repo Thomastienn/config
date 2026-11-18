@@ -253,10 +253,13 @@ def services():
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text(text)
     timer = HOME / ".config/systemd/user/thomas-theme-calendar.timer"
-    obsolete = [timer.parent / "timers.target.wants" / timer.name, timer]
+    # 9router.service was replaced by omniroute.service.
+    router = timer.parent / "9router.service"
+    obsolete = [timer.parent / "timers.target.wants" / timer.name, timer, router]
     if any(path.exists() or path.is_symlink() for path in obsolete):
-        if output(["systemctl", "--user", "show", timer.name, "-p", "ActiveState", "--value"]) == "active":
-            run(["systemctl", "--user", "stop", timer.name])
+        for unit in [timer.name, router.name]:
+            if output(["systemctl", "--user", "show", unit, "-p", "ActiveState", "--value"]) == "active":
+                run(["systemctl", "--user", "stop", unit])
         for path in obsolete:
             if path.exists() or path.is_symlink():
                 backup(path)
@@ -266,8 +269,8 @@ def services():
         run(["systemctl", "--user", "import-environment", *environment])
     if os.environ.get("DISPLAY") and power.FILES[0][1].is_file():
         run(["systemctl", "--user", "start", "thomas-battery-mode.service"])
-    if choices()["extras"] and shutil.which("9router"):
-        run(["systemctl", "--user", "start", "9router.service"])
+    if choices()["extras"] and shutil.which("omniroute"):
+        run(["systemctl", "--user", "start", "omniroute.service"])
     if shutil.which("recollq") and shutil.which("recollindex"):
         run(["systemctl", "--user", "enable", "thomas-pdf-index.timer"])
         if not (Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}")) /
@@ -322,7 +325,7 @@ def check():
         gaps.extend("link: " + path for path in link(source, target, apply=False))
     for command in (["i3", "picom", "eww", "dunst", "dunstctl", "kitty", "tmux", "task", "zoxide",
                      "copyq", "tesseract", "xidlehook", "xidlehook-client", "xss-lock", "betterlockscreen", "boomer", "aw-qt", "recollq", "brave-browser", "sqlcipher", "fuser"]
-                    + (["9router"] if choices()["extras"] else [])):
+                    + (["omniroute"] if choices()["extras"] else [])):
         if not shutil.which(command):
             gaps.append("command: " + command)
     for command, revision in [("picom", "v12.5"), ("dunst", "1.13"), ("eww", "fddb4a09")]:
@@ -366,6 +369,8 @@ def check():
     if any(path.exists() or path.is_symlink() for path in
            [timer, timer.parent / "timers.target.wants" / timer.name]):
         gaps.append("service: obsolete theme calendar timer; rerun setup.sh apply --configs-only")
+    if (timer.parent / "9router.service").is_symlink():
+        gaps.append("service: obsolete 9router service; rerun setup.sh apply --configs-only")
     gaps.extend(login_tracking.check())
     data = json.loads((ROOT / "desktop/settings.json").read_text())
     for schema, values in theme.gsettings(theme.load()[0]).items():

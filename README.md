@@ -34,16 +34,16 @@ extensions and hardware drivers separately. First Firefox launch creates its
 profile; rerun config-only setup afterward to apply its styles. AI sign-in and
 Ollama model downloads stay local.
 
-Development/AI tools include 9Router 0.5.112. Its user service starts at i3 login
+Development/AI tools include OmniRoute 3.8.53. Its user service starts at i3 login
 and listens only on `127.0.0.1:20128`; open `http://127.0.0.1:20128/dashboard`.
-Setup also starts it immediately when installed. The service runs the bundled
-server directly, avoiding the interactive launcher's process cleanup and update
-checks. Provider sign-in, passwords and API keys stay in private `~/.9router/`;
-configure them locally on each machine. Keep cloud/tunnels disabled for local use.
-API keys are optional in the app: enable them if untrusted local clients are a concern.
-Use `systemctl --user stop 9router.service` to stop it until next login or setup
-application. Running `9router` manually uses upstream's launcher defaults instead
-of these service settings.
+Setup also starts it immediately when installed. The service runs
+`omniroute serve --no-open --no-tray`. Provider sign-in, passwords and API keys
+stay in private `~/.omniroute/`; configure them locally on each machine. Keep
+cloud/tunnels disabled for local use. API keys are optional in the app: enable
+them if untrusted local clients are a concern. Use
+`systemctl --user stop omniroute.service` to stop it until next login or setup
+application. Running `omniroute` manually binds all interfaces unless
+`OMNIROUTE_SERVER_HOST=127.0.0.1` is set.
 
 ## Use and update
 
