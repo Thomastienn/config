@@ -66,6 +66,7 @@ done
 log() { echo "[ralph-afk $(date '+%F %T')] $*"; }
 
 # Two supervisors would take over each other's Ralph forever.
+mkdir -p .ralph-tui
 exec 9>.ralph-tui/afk.lock
 flock -n 9 || { echo 'ralph-afk is already running in this checkout.' >&2; exit 1; }
 
