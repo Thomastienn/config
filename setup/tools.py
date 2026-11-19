@@ -35,8 +35,11 @@ def checkout(name, spec, cache):
 def clone(name, path):
     """Clone one of my working repositories once; after that it is updated with git pull."""
     if not path.exists():
+        spec = json.loads((ROOT / "sources.json").read_text())[name]
         path.parent.mkdir(parents=True, exist_ok=True)
-        run(["git", "clone", json.loads((ROOT / "sources.json").read_text())[name]["url"], path])
+        run(["git", "clone", spec["url"], path])
+        # Anonymous HTTPS clone works on a fresh machine; pushes still use the SSH key.
+        run(["git", "-C", path, "remote", "set-url", "--push", "origin", spec["push"]])
 
 
 def install(home, cache, link, nvim=True):

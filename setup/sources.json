@@ -10,7 +10,7 @@
   "tmux-continuum": {"url": "https://github.com/tmux-plugins/tmux-continuum.git", "rev": "0698e8f4b17d6454c71bf5212895ec055c578da0"},
   "boomer": {"url": "https://github.com/tsoding/boomer.git", "rev": "97189f7ef07859a86420ef11258ca29527774d9c"},
   "nvim": {"url": "https://github.com/Thomastienn/astronvimconfig.git", "rev": "47a98370567ac0828251516ac926c2acdfa780b1"},
-  "ralph-afk": {"url": "git@github.com:Thomastienn/ralph-afk.git", "kind": "repo"},
+  "ralph-afk": {"url": "https://github.com/Thomastienn/ralph-afk.git", "push": "git@github.com:Thomastienn/ralph-afk.git", "kind": "repo"},
   "codex-caveman": {"url": "https://github.com/JuliusBrussee/caveman.git", "rev": "HEAD", "kind": "skills", "skills": ["caveman", "cavecrew", "caveman-commit", "caveman-compress", "caveman-help", "caveman-review", "caveman-stats"]},
   "codex-find-skills": {"url": "https://github.com/vercel-labs/skills.git", "rev": "HEAD", "kind": "skills", "skills": ["find-skills"]},
   "codex-humanizer": {"url": "https://github.com/blader/humanizer.git", "rev": "HEAD", "kind": "skills", "skills": ["humanizer"]},
