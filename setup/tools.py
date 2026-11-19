@@ -32,6 +32,13 @@ def checkout(name, spec, cache):
     return path
 
 
+def clone(name, path):
+    """Clone one of my working repositories once; after that it is updated with git pull."""
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        run(["git", "clone", json.loads((ROOT / "sources.json").read_text())[name]["url"], path])
+
+
 def install(home, cache, link, nvim=True):
     prefix = home / ".local"
     binaries = prefix / "bin"
@@ -43,7 +50,7 @@ def install(home, cache, link, nvim=True):
                "blesh": prefix / "share/blesh/ble.sh", "i3lock-color": binaries / "i3lock",
                "betterlockscreen": binaries / "betterlockscreen", "boomer": binaries / "boomer"}
     for name, spec in specs.items():
-        if spec.get("kind") in ("skills", "hermes", "claude"):
+        if spec.get("kind") in ("skills", "hermes", "claude", "repo"):
             continue  # Optional assistant tools/skills are installed with --extras.
         if name == "nvim":
             if not nvim:

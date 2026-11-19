@@ -28,6 +28,7 @@ REPO = ROOT.parent
 HOME = Path.home()
 STATE = HOME / ".local/state/thomas-config"
 CACHE = HOME / ".cache/thomas-config"
+RALPH = HOME / "scripts/ralph-afk"
 BACKUP = STATE / "backups" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
 
 sys.path.insert(0, str(REPO / "scripts"))
@@ -114,6 +115,9 @@ def configured_links():
         if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/", "ralph-tui/")):
             continue
         yield REPO / source, HOME / target
+    if choices()["extras"] and (RALPH / "bin").is_dir():
+        for name in ("ralph", "ralph-afk"):
+            yield RALPH / "bin" / name, HOME / ".local/bin" / name
     activitywatch = HOME / ".local/opt/activitywatch/aw-qt"
     if activitywatch.is_file():
         yield activitywatch, HOME / ".local/bin/aw-qt"
@@ -445,6 +449,7 @@ def main():
             run([python, "-m", "pip", "install", "-r", ROOT / "neovim-requirements.txt"])
         if selected["extras"]:
             run(["npm", "install", "-g", *lines("npm-extra.txt")])
+            tools.clone("ralph-afk", RALPH)
             run(["cargo", "install", "--locked", "code-minimap", "--version", "0.6.8"])
             run(["sudo", "systemctl", "enable", "--now", "libvirtd"])
             run(["sudo", "usermod", "-aG", "libvirt", pwd.getpwuid(os.getuid()).pw_name])

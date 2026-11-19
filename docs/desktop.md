@@ -88,7 +88,7 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `codex/` | Portable Codex preferences and global instructions |
 | `claude/` | Portable Claude Code settings, instructions, status line and hooks |
-| `ralph-tui/` | Ralph TUI defaults, Beads tracker plugin, prompt, and the `ralph` / `ralph-afk` runners |
+| `ralph-tui/` | Ralph TUI defaults, Beads tracker plugin and prompt |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
@@ -377,9 +377,12 @@ includes pending edits after a task completes, without a separate startup commit
 prompt uses `br`. `git/ignore` keeps Ralph runtime files out of every repository.
 Ralph, Bun, `bd` and `bv` are installed separately.
 
-`bin/ralph` and `bin/ralph-afk` are linked into `~/.local/bin`: a headless
-launcher with safe takeover, and an unattended supervisor that moves between
-agents when one runs out of usage. See [ralph.md](ralph.md).
+The `ralph` and `ralph-afk` runners live in their own repository,
+[ralph-afk](https://github.com/Thomastienn/ralph-afk). Setup clones it once into
+`~/scripts/ralph-afk` (extras only) and links its `bin/ralph` and
+`bin/ralph-afk` into `~/.local/bin`: a headless launcher with safe takeover, and
+an unattended supervisor that moves between agents when one runs out of usage.
+Update it with `git -C ~/scripts/ralph-afk pull`.
 
 ## Hermes
 
