@@ -308,16 +308,23 @@ eww -c ~/thomas_config/eww reload
 ## Git secret scan
 
 `git/gitconfig` sets `core.hooksPath` to `git/hooks/`, so every repository on
-this machine scans for credentials before it commits or pushes. The hooks live
-only in your Git config; repositories and their other clones are unaffected.
+this machine runs `git/secret-scan` before it commits or pushes. Only your Git
+config points there; other clones of a repository are unaffected.
 
 - `pre-commit`: `gitleaks` checks the staged changes.
 - `pre-push`: `gitleaks` and `trufflehog` check the commits the remote does not
   have yet, which also catches commits made with `--no-verify`.
 
-Findings print redacted. Bypass one false positive with `--no-verify`. Each
-repository's own `.git/hooks/` (git-lfs, pre-commit) still runs after the scan.
-A repository that sets its own `core.hooksPath` (Husky) skips the scan.
+Findings print redacted. Bypass one false positive with `--no-verify`. After
+the scan, the repository's own `.git/hooks/pre-commit` or `pre-push` still runs
+(git-lfs, pre-commit); its other `.git/hooks/` do not.
+
+A repository that sets its own `core.hooksPath` (Beads, Husky) skips the global
+hooks. Add the scan line from `git/hooks/pre-commit` near the top of that
+repository's `pre-commit` and `pre-push`: it does nothing on machines without
+`~/thomas_config`, and Beads keeps it outside its markers. `bd init` copies it in
+automatically, plus two `.backup` copies that can be deleted. Check a
+repository with `git config --show-origin core.hooksPath`.
 
 ## Codex
 

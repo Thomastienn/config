@@ -1,1 +1,4 @@
-dispatch
+#!/bin/sh
+# Secret scan from ~/thomas_config (git/secret-scan); does nothing where that checkout is missing.
+# One line on purpose: Beads copies existing hooks into its own and must not split this.
+if [ -x "$HOME/thomas_config/git/secret-scan" ]; then _scan="$(mktemp)" || exit 1; cat >"$_scan"; "$HOME/thomas_config/git/secret-scan" "$0" "$@" <"$_scan"; _scan_rc=$?; exec <"$_scan"; rm -f "$_scan"; [ "$_scan_rc" -eq 0 ] || exit "$_scan_rc"; fi
