@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Global Git hooks (core.hooksPath in git/gitconfig). Refuse commits and pushes
+# that contain credentials, then run the repository's own hook, which
+# core.hooksPath would otherwise skip (git-lfs, pre-commit, ...).
+set -euo pipefail
+
+hook="$(basename -- "$0")"
+
+need() {
+  command -v "$1" >/dev/null && return
+  echo "Secret scan needs $1 (brew install $1). Bypass once with --no-verify." >&2
+  exit 1
+}
+
+case "$hook" in
+  pre-commit)
+    need gitleaks
+    gitleaks git --pre-commit --staged --redact --no-banner --log-level warn -v .
+    ;;
+  pre-push)
+    need gitleaks
+    need trufflehog
+    input="$(mktemp)"
+    trap 'rm -f -- "$input"' EXIT
+    cat >"$input"
+    # Scan only commits the pushed-to remote does not have; a URL remote matches
+    # no tracking refs, so everything reachable is scanned.
+    while read -r _ local_sha _ _; do
+      [[ $local_sha =~ ^0+$ ]] && continue  # branch deletion
+      [[ -n "$(git rev-list -n 1 "$local_sha" --not --remotes="$1")" ]] || continue
+      gitleaks git --redact --no-banner --log-level warn -v --log-opts="$local_sha --not --remotes=$1" .
+      # Any boundary commit is on the remote, so base..local covers every new commit.
+      base="$(git rev-list --boundary "$local_sha" --not --remotes="$1" | sed -n 's/^-//p' | head -n 1)"
+      trufflehog git "file://$PWD" --no-update --fail --log-level=-1 --branch "$local_sha" ${base:+--since-commit "$base"} \
+        2> >(grep -v -e 'TruffleHog\. Unearth' -e '^$' >&2)  # drop the banner, keep errors
+    done <"$input"
+    ;;
+esac
+
+repo_hook="$(git rev-parse --git-common-dir)/hooks/$hook"
+[[ -x $repo_hook ]] || exit 0
+if [[ $hook == pre-push ]]; then
+  "$repo_hook" "$@" <"$input"
+else
+  exec "$repo_hook" "$@"
+fi

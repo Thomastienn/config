@@ -89,6 +89,7 @@ file back to its original path. Do not delete an entire config directory.
 | `codex/` | Portable Codex preferences and global instructions |
 | `claude/` | Portable Claude Code settings, instructions, status line and hooks |
 | `ralph-tui/` | Ralph TUI defaults, Beads tracker plugin and prompt |
+| `git/` | Global Git config, ignore list and secret-scan hooks |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
 
@@ -303,6 +304,20 @@ and restart Polybar:
 eww -c ~/thomas_config/eww reload
 ~/.config/polybar/shapes/launch.sh
 ```
+
+## Git secret scan
+
+`git/gitconfig` sets `core.hooksPath` to `git/hooks/`, so every repository on
+this machine scans for credentials before it commits or pushes. The hooks live
+only in your Git config; repositories and their other clones are unaffected.
+
+- `pre-commit`: `gitleaks` checks the staged changes.
+- `pre-push`: `gitleaks` and `trufflehog` check the commits the remote does not
+  have yet, which also catches commits made with `--no-verify`.
+
+Findings print redacted. Bypass one false positive with `--no-verify`. Each
+repository's own `.git/hooks/` (git-lfs, pre-commit) still runs after the scan.
+A repository that sets its own `core.hooksPath` (Husky) skips the scan.
 
 ## Codex
 

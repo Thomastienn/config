@@ -1,6 +1,9 @@
 [user]
 	name = Thomastienn
 	email = thomastien123@gmail.com
+[core]
+	# Secret scan before every commit and push; see git/hooks/dispatch.
+	hooksPath = ~/thomas_config/git/hooks
 [includeIf "gitdir:~/ucalgary/SENG*"]
     path = ~/thomas_config/git/gitconfig-gitlab
 [includeIf "gitdir:~/ucalgary/CPSC*/"]
