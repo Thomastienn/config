@@ -6,9 +6,16 @@ here="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
 root="$(git rev-parse --show-toplevel)"
 cd -- "$root"
 
-usage='Usage: ralph-afk [-a agent,agent] [epic...]'
+# Two supervisors would take over each other's Ralph forever.
+mkdir -p .ralph-tui
+exec 9>.ralph-tui/afk.lock
+flock -n 9 || { echo 'ralph-afk is already running in this checkout.' >&2; exit 1; }
+# --pr [N]: N workers open one PR per task and one reviewer merges them. The lock stays held.
+if [[ "${1-}" == --pr ]]; then shift; exec node "$here/ralph-pr.mjs" "$@"; fi
+
+usage='Usage: ralph-afk [-a agent,agent] [epic...] | ralph-afk --pr [workers]'
 # -a limits this run to agents from the agents table.
-mapfile -t known < <(awk -F'|' '!/^[[:space:]]*#/ && NF > 2 { print $1 }' "$here/../agents")
+mapfile -t known < <(awk -F'|' '!/^[[:space:]]*#/ && $1 == "ralph" && NF > 4 { print $2 }' "$here/../agents")
 only=()
 while getopts a: opt; do
   [[ $opt == a ]] || { echo "$usage" >&2; exit 2; }
@@ -21,16 +28,6 @@ done
 # Epics are worked in the order given; the default is every ready epic, oldest first.
 # Blocking dependencies between epics set the release order. Re-read before every task.
 given=("$@")
-# Epics nobody ordered run one after another: each open epic without a dependency waits
-# for the open epic created just before it. Add or change dependencies to reorder.
-chain_epics() {
-  local previous='' id deps
-  while IFS=$'\t' read -r id deps; do
-    if [[ -n "$previous" && "$deps" == 0 ]] && bd dep add "$id" "$previous" > /dev/null; then log "Epic $id now waits for $previous."; fi
-    previous="$id"
-  done < <(bd list --type epic --status open,in_progress,blocked --json --limit 0 |
-    jq -r 'map(select((.labels // []) | index("gate:backlog") | not)) | sort_by(.created_at)[] | [.id, .dependency_count] | @tsv')
-}
 # The full suites run once, when every epic is out of ready work, in a gate epic made here.
 # Due only when a task closed after the last gate closed and no gate is still open,
 # so a finished or blocked gate never makes another.
@@ -65,11 +62,6 @@ for agent in "${only[@]}"; do
 done
 log() { echo "[ralph-afk $(date '+%F %T')] $*"; }
 
-# Two supervisors would take over each other's Ralph forever.
-mkdir -p .ralph-tui
-exec 9>.ralph-tui/afk.lock
-flock -n 9 || { echo 'ralph-afk is already running in this checkout.' >&2; exit 1; }
-
 agents_now() {
   local hour=$((10#$(date +%H))) window hours list agent
   for window in $schedule; do
@@ -88,7 +80,7 @@ agents_now() {
 # usage-limit errors, and matching its log would also match text the agent prints.
 usable() {
   local probe reply
-  probe="$(awk -F'|' -v agent="$1" '$1 == agent { sub(/^[^|]*[|][^|]*[|]/, ""); print; exit }' "$here/../agents")"
+  probe="$(awk -F'|' -v agent="$1" '$1 == "ralph" && $2 == agent { sub(/^([^|]*[|]){4}/, ""); print; exit }' "$here/../agents")"
   if [[ -z "$probe" ]]; then
     echo "Unknown agent in RALPH_AFK_SCHEDULE: $1 (add it to $(readlink -f -- "$here/../agents"))" >&2
     return 1
@@ -150,7 +142,6 @@ while :; do
   # A finished epic closes here, which unblocks the epics that depend on it.
   closed="$(bd epic close-eligible --json | jq -r '.closed | join(" ")')" || closed=''
   [[ -z "$closed" ]] || log "Closed finished epics: $closed"
-  (( ${#given[@]} )) || chain_epics
   load_epics
   # First epic that still has ready or unfinished work: a later phase starts when the earlier ones are out of work.
   epic=''

@@ -36,7 +36,7 @@ done
 if [[ -n "$agent" ]] && ! "$model_given"; then
   var="RALPH_${agent^^}_MODEL"
   var="${var//-/_}"
-  model="${!var:-$(awk -F'|' -v agent="$agent" '$1 == agent { print $2; exit }' "$here/../agents")}"
+  model="${!var:-$(awk -F'|' -v agent="$agent" '$1 == "ralph" && $2 == agent { print $3; exit }' "$here/../agents")}"
   [[ -z "$model" ]] || args+=(--model "$model")
 fi
 if "$takeover" && [[ " ${args[*]} " != *" --help "* && " ${args[*]} " != *" -h "* ]]; then

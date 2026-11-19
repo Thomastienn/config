@@ -25,10 +25,7 @@ function fixture(work = { 'TreeTutor-7t3': 1 }) {
       if [[ " $* " == *" --parent "* && $* == *open,in_progress,blocked* ]]; then cat "${cwd}/children.json" 2>/dev/null || echo '[]'; exit; fi
       if [[ " $* " == *" --status closed "* ]]; then cat "${cwd}/closed.json" 2>/dev/null || echo '[]'; exit; fi
       if [[ $* == *closed,blocked* ]]; then jq -n --argjson n "$(cat ${epicWork('--parent')}.done 2>/dev/null || echo 0)" '[range($n)]'; exit; fi
-      [[ " $* " == *" --type epic "* ]] || { echo '[]'; exit; }
-      # Newest first, so the script must sort; sh8 is already ordered, and so is any epic given a dependency.
-      jq -R . "${cwd}/epics" | jq -s --rawfile deps <(cat "${cwd}/deps" 2>/dev/null) 'to_entries | map(.value as $id | {id: $id, created_at: "2026-01-0\\(.key + 1)",
-        dependency_count: (if $id == "TreeTutor-sh8" or ($deps | contains("add " + $id + " ")) then 1 else 0 end)}) | reverse' ;;
+      echo '[]' ;;
     # A made gate is open, so the next check must not make another.
     create) echo "$3" >> "${cwd}/creates"; echo '[{"labels":["gate:backlog"],"status":"open"}]' > "${cwd}/all.json"; echo TreeTutor-gate ;;
     dep) echo "$*" >> "${cwd}/deps" ;;
@@ -68,7 +65,7 @@ test('a limited Claude hands the task to Codex, which keeps the next task after 
   const result = f.run({ FIXTURE_LIMITED: 'claude', RALPH_AFK_WAIT: '7' });
   assert.equal(result.status, 0, result.stdout + result.stderr);
   // One task per run, and no switch back to Claude while Codex still answers.
-  const codex = 'run --headless --epic TreeTutor-7t3 --iterations 1 --agent codex --model gpt-6.1-sol';
+  const codex = 'run --headless --epic TreeTutor-7t3 --iterations 1 --agent codex --model gpt-6.2-sol';
   assert.deepEqual(f.runs(), [codex, codex]);
   assert.match(result.stdout, /No ready work/);
 });
@@ -107,7 +104,7 @@ test('-a limits the run to those agents; typos and unscheduled agents are refuse
   const f = fixture({ 'TreeTutor-sh8': 1 });
   const result = f.run({}, ['-a', 'codex', 'TreeTutor-sh8']);
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-sh8 --iterations 1 --agent codex --model gpt-6.1-sol']);
+  assert.deepEqual(f.runs(), ['run --headless --epic TreeTutor-sh8 --iterations 1 --agent codex --model gpt-6.2-sol']);
   assert.ok(!f.read('probes').includes('claude'));
 
   const unscheduled = fixture();
@@ -132,16 +129,12 @@ test('when an epic runs out of work it closes and the next ready epic starts', (
   assert.match(result.stdout, /Closed finished epics: TreeTutor-sh8\n/);
 });
 
-test('epics without a dependency wait for the one created before them; ordered ones are left alone', () => {
+test('epics nobody ordered are not chained: a later ready epic runs while an earlier one has no work', () => {
   const f = fixture({ 'TreeTutor-vm4': 1 });
   const result = f.run();
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.deepEqual(f.read('deps'), ['dep add TreeTutor-vm4 TreeTutor-7t3']);
-  assert.match(result.stdout, /Epic TreeTutor-vm4 now waits for TreeTutor-7t3/);
-
-  const given = fixture({ 'TreeTutor-sh8': 1 });
-  assert.equal(given.run({}, ['TreeTutor-sh8']).status, 0);
-  assert.deepEqual(given.read('deps'), []);
+  assert.deepEqual(f.read('deps'), []);
+  assert.deepEqual(f.runs().map(run => run.split(' ')[3]), ['TreeTutor-vm4']);
 });
 
 test('a parentless blocker of an epic task moves under the epic and runs; one in another epic does not', () => {
