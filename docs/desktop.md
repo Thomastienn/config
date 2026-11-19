@@ -88,7 +88,6 @@ file back to its original path. Do not delete an entire config directory.
 | `setup/desktop/` | GTK files and allowlisted GSettings/CopyQ preferences |
 | `codex/` | Portable Codex preferences and global instructions |
 | `claude/` | Portable Claude Code settings, instructions, status line and hooks |
-| `ralph-tui/` | Ralph TUI defaults, Beads tracker plugin and prompt |
 | `git/` | Global Git config, ignore list and secret-scan hooks |
 | `scripts/` | Runtime desktop helpers |
 | `docs/productivity.md` | PDF search, command alerts, audio, and AFK usage |
@@ -384,27 +383,14 @@ completed work. Sign in with `claude` afterwards, authenticate Figma through
 
 ## Ralph TUI
 
-`ralph-tui/` links individual files into `~/.config/ralph-tui/` (extras only);
-Ralph's `sessions.json` and other state stay local. `config.toml` sets global
-defaults: the `beads-resume` tracker, engine auto-commit (the Codex sandbox keeps
-`.git` read-only) and `fullAuto = false` (Codex CLI 0.167 rejects `--full-auto`).
-A project's `.ralph-tui/config.toml` overrides them.
-
-`plugins/trackers/beads-resume.js` wraps Ralph's `beads-bv` tracker. It reopens
-and retries unfinished tasks, including tasks left `in_progress` by a run that
-hit its iteration limit or crashed. Uncommitted changes do not block startup;
-a sole unfinished task is retried first when ready. Auto-commit's `git add -A`
-includes pending edits after a task completes, without a separate startup commit.
-`templates/beads.hbs` is the default `bd` prompt; Ralph's built-in beads-bv
-prompt uses `br`. `git/ignore` keeps Ralph runtime files out of every repository.
-Ralph, Bun, `bd` and `bv` are installed separately.
-
-The `ralph` and `ralph-afk` runners live in their own repository,
+The Ralph runners and Ralph's own defaults live in their own repository,
 [ralph-afk](https://github.com/Thomastienn/ralph-afk). Setup clones it once into
-`~/scripts/ralph-afk` (extras only) and links its `bin/ralph` and
-`bin/ralph-afk` into `~/.local/bin`: a headless launcher with safe takeover, and
-an unattended supervisor that moves between agents when one runs out of usage.
-Update it with `git -C ~/scripts/ralph-afk pull`.
+`~/scripts/ralph-afk` (extras only). It links `bin/ralph` and `bin/ralph-afk`
+into `~/.local/bin`, and the files under `ralph-tui/` (global `config.toml`, the
+`beads-resume` tracker and its `beads.hbs` prompt) into `~/.config/ralph-tui/`.
+Ralph's `sessions.json` and other state stay local. `git/ignore` keeps Ralph
+runtime files out of every repository. Ralph, Bun, `bd` and `bv` are installed
+separately. Update the repository with `git -C ~/scripts/ralph-afk pull`.
 
 ## Hermes
 

@@ -112,12 +112,14 @@ def link(source, target, apply=True):
 def configured_links():
     yield REPO, HOME / "thomas_config"
     for source, target in json.loads((ROOT / "links.json").read_text()).items():
-        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/", "ralph-tui/")):
+        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/")):
             continue
         yield REPO / source, HOME / target
     if choices()["extras"] and (RALPH / "bin").is_dir():
         for name in ("ralph", "ralph-afk"):
             yield RALPH / "bin" / name, HOME / ".local/bin" / name
+        for name in ("config.toml", "plugins/trackers/beads-resume.js", "templates/beads.hbs"):
+            yield RALPH / "ralph-tui" / name, HOME / ".config/ralph-tui" / name
     activitywatch = HOME / ".local/opt/activitywatch/aw-qt"
     if activitywatch.is_file():
         yield activitywatch, HOME / ".local/bin/aw-qt"
