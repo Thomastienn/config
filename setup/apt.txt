@@ -70,6 +70,7 @@ ripgrep
 rofi
 rsync
 suckless-tools
+systemd-zram-generator # Compressed RAM swap before the disk swapfile
 tlp
 unzip
 util-linux # Serialize Eww panel actions (flock)

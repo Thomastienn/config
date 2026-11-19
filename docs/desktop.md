@@ -546,6 +546,19 @@ Hybrid selection persists across reboots independently of the manual Battery
 Saver toggle. Older saver snapshots remain restorable; new limits take effect
 on the next activation.
 
+## Memory: zram swap
+
+Setup installs `systemd-zram-generator` and creates a compressed swap device in
+RAM (`/dev/zram0`, zstd, up to 8 GiB uncompressed). It has swap priority 100,
+so the kernel uses it before the disk swapfile, which stays as overflow.
+`/etc/sysctl.d/99-thomas-zram.conf` sets `vm.swappiness = 180` and
+`vm.page-cluster = 0`, because swapping to RAM is cheaper than dropping file
+cache. Check it with `swapon --show` or `zramctl`.
+
+`./setup.sh apply --configs-only` turns it on live once the package is
+installed. Setup never turns off a running zram device. A size or algorithm
+change takes effect after reboot.
+
 ## Remaining machine-specific steps
 
 - Launch Firefox once to create a default profile, then rerun `apply --configs-only`

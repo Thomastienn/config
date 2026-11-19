@@ -21,6 +21,7 @@ import claude
 import codex
 import hermes
 import login_tracking
+import zram
 
 ROOT = Path(__file__).resolve().parent
 REPO = ROOT.parent
@@ -317,7 +318,7 @@ def packages(extras):
 
 
 def check():
-    gaps = power.check()
+    gaps = power.check() + zram.check()
     if choices()["extras"]:
         gaps += codex.configuration(HOME) + hermes.configuration(HOME)
     gaps += theme.check() + theme.bridge(check=True)
@@ -462,6 +463,7 @@ def main():
             codex.install(HOME, run)
             claude.install(HOME, CACHE, run)
         power.install(run)
+        zram.install(run)
         if args.graphics:
             graphics.configure(args.graphics, run)
         settings()
