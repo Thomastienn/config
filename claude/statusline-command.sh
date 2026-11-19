@@ -1,6 +1,6 @@
 #!/bin/bash
 # Status line (active desktop theme palette, Nerd Font icons, │ separators):
-#   model · token budget · prompt cache · folder · git branch and diff · cost and time · 5h and weekly usage
+#   model · token budget · 5h and weekly usage · prompt cache · folder · git branch and diff · cost and time
 input=$(cat)
 cwd=$(echo "$input" | jq -r '.workspace.current_dir // .cwd // empty')
 [ -z "$cwd" ] && cwd=$(pwd)
@@ -73,6 +73,19 @@ if [ -n "$used" ]; then
   soft "$(hue "$colour" "$i_ctx $full")$(hue "$c_line" "$empty") $(hue "$colour" "$tok")"
 fi
 
+# Usage limits with reset times: 5h as a clock time, weekly as day and time.
+limits=""
+if [ -n "$five" ]; then
+  limits+="$(hue "$(level "$five")" "$i_five") 5h $(hue "$(level "$five")" "$bold${five}%$reset")"
+  [ -n "$five_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$five_reset" +%H:%M)")"
+fi
+if [ -n "$week" ]; then
+  [ -n "$limits" ] && limits+="   "
+  limits+="$(hue "$(level "$week")" "$i_week") 7d $(hue "$(level "$week")" "$bold${week}%$reset")"
+  [ -n "$week_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$week_reset" '+%a %H:%M')")"
+fi
+[ -n "$limits" ] && soft "$limits"
+
 # Prompt cache: time left since the last API call; 1h TTL when the last cache write used it, else 5m.
 transcript=$(echo "$input" | jq -r '.transcript_path // empty')
 if [ -f "$transcript" ]; then
@@ -108,18 +121,5 @@ if [ -n "$ms" ]; then
   session+="  $(hue "$c_sea" "$i_time")  $t"
 fi
 [ -n "$session" ] && soft "$session"
-
-# Usage limits with reset times: 5h as a clock time, weekly as day and time.
-limits=""
-if [ -n "$five" ]; then
-  limits+="$(hue "$(level "$five")" "$i_five") 5h $(hue "$(level "$five")" "$bold${five}%$reset")"
-  [ -n "$five_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$five_reset" +%H:%M)")"
-fi
-if [ -n "$week" ]; then
-  [ -n "$limits" ] && limits+="   "
-  limits+="$(hue "$(level "$week")" "$i_week") 7d $(hue "$(level "$week")" "$bold${week}%$reset")"
-  [ -n "$week_reset" ] && limits+=" $(hue "$c_muted" "$i_reset $(date -d "@$week_reset" '+%a %H:%M')")"
-fi
-[ -n "$limits" ] && soft "$limits"
 
 printf '%s\n' "${out%  │  *}"
