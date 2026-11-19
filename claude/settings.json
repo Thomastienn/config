@@ -32,7 +32,7 @@
     ],
     "defaultMode": "auto"
   },
-  "model": "opus",
+  "model": "sonnet",
   "disableClaudeAiConnectors": true,
   "skillOverrides": {},
   "disableBundledSkills": true,
@@ -182,8 +182,12 @@
   "theme": "custom:desktop",
   "switchModelsOnFlag": false,
   "agentPushNotifEnabled": true,
-  "hasCompletedOnboarding": true,
   "autoMode": {
+    "allow": [
+      "$defaults",
+      "Bash(bd:*) in /home/thomas/CodeBase/Rabbithole",
+      "Bash(trash:*) in /home/thomas/CodeBase/Rabbithole"
+    ],
     "environment": [
       "### Org-wide",
       "**Organization**: None configured",
@@ -209,11 +213,7 @@
       "**Primary use of Claude Code**: software development (local learning workspace app — Rabbithole)",
       "**Trusted repo**: /home/thomas/CodeBase/Rabbithole (origin: github.com:Thomastienn/Rabbithole.git), private visibility",
       "**Org-specific CLIs**: None configured — personal/hobby tooling observed (bd, npx, trash, astryx, agent-browser, sqlite3) are routine dev CLIs, not org-specific"
-    ],
-    "allow": [
-      "$defaults",
-      "Bash(bd:*) in /home/thomas/CodeBase/Rabbithole",
-      "Bash(trash:*) in /home/thomas/CodeBase/Rabbithole"
     ]
-  }
+  },
+  "hasCompletedOnboarding": true
 }
