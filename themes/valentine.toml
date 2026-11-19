@@ -1,33 +1,33 @@
-# Valentine: Wine, rose pink, soft blush.
+# Valentine: Red rose and warm cream.
 # Apply with: theme apply themes/valentine.toml
 name = "Valentine Rose"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1C191B"
-surface = "#2F282C"
-text = "#F2E6DE"
-muted = "#B7A9AA"
-primary = "#D8A2B4"
-secondary = "#D4AEC3"
+background = "#1C1919"
+surface = "#2F2928"
+text = "#F2E0DE"
+muted = "#B7AAA9"
+primary = "#D95F6B"
+secondary = "#EFDCCB"
 warning = "#DFC18A"
 error = "#DCA0A9"
-border = "#594A50"
-separator = "#776169"
-selection = "#48363F"
-urgent_background = "#3B272E"
-pane_border = "#393034"
-gradient_start = "#35282E"
-gradient_end = "#33272E"
+border = "#594B4A"
+separator = "#776361"
+selection = "#46322F"
+urgent_background = "#3C2728"
+pane_border = "#393130"
+gradient_start = "#37272A"
+gradient_end = "#332C28"
 menu_text = "#FFFFFF"
-panel_separator = "#6E5E63"
-shade1 = "#282325"
-shade3 = "#362D31"
-shade4 = "#3B3236"
-shade5 = "#46383E"
-shade6 = "#4C3D43"
-shade7 = "#514248"
+panel_separator = "#6E5F5E"
+shade1 = "#282323"
+shade3 = "#362E2D"
+shade4 = "#3B3332"
+shade5 = "#463938"
+shade6 = "#4C3E3D"
+shade7 = "#514342"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -40,8 +40,8 @@ lock = "Lato"
 lock_clock = "Lato Light"
 
 [desktop]
-gtk2 = "Mint-Y-Dark-Pink"
-gtk3 = "Mint-Y-Dark-Pink"
+gtk2 = "Mint-Y-Dark-Red"
+gtk3 = "Mint-Y-Dark-Red"
 gtk2_icons = "Mint-Y-Blue"
 icons = "Papirus-Dark"
 cursor = "Bibata-Modern-Classic"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1C191B", "#E16C7D", "#9EB976", "#E9BF8B",
-  "#87B1C7", "#9B7DB3", "#87B1C7", "#F2E6DE",
-  "#594A50", "#EA828F", "#A4C672", "#F5C68B",
+  "#1C1919", "#E16C7D", "#9EB976", "#E9BF8B",
+  "#87B1C7", "#9B7DB3", "#87B1C7", "#F2E0DE",
+  "#594B4A", "#EA828F", "#A4C672", "#F5C68B",
   "#86C0DC", "#AF8ECC", "#86C0DC", "#F6F0E8",
 ]
 bat = "Monokai Extended"

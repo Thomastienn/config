@@ -1,4 +1,4 @@
-# Vu Lan: White rose and muted rose pink.
+# Vu Lan: White rose and red rose.
 # Apply with: theme apply themes/vu-lan.toml
 name = "Vu Lan Rose"
 mode = "dark"
@@ -10,7 +10,7 @@ surface = "#2B292F"
 text = "#EFE8DD"
 muted = "#B3ACA3"
 primary = "#E7E2D9"
-secondary = "#DBA1AA"
+secondary = "#D35E66"
 warning = "#DFC18A"
 error = "#DDA1A8"
 border = "#524E50"

@@ -1,33 +1,33 @@
-# Easter: Lavender and primrose yellow.
+# Easter: Daffodil yellow and spring sky.
 # Apply with: theme apply themes/easter.toml
 name = "Easter Primrose"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1A1A1D"
-surface = "#292A30"
-text = "#EFE7E2"
-muted = "#B1AAB4"
-primary = "#BAB2DA"
-secondary = "#DDC38D"
+background = "#1A1B1D"
+surface = "#292C30"
+text = "#E2E7EF"
+muted = "#AAAEB4"
+primary = "#E5C96B"
+secondary = "#9CC4DE"
 warning = "#DCC38A"
 error = "#DBA0AB"
-border = "#4E4E5B"
-separator = "#676579"
-selection = "#393B4A"
+border = "#4E535B"
+separator = "#656D79"
+selection = "#323D4A"
 urgent_background = "#382834"
-pane_border = "#32323A"
-gradient_start = "#2A2B38"
-gradient_end = "#2B2A33"
+pane_border = "#32353A"
+gradient_start = "#302D22"
+gradient_end = "#232D37"
 menu_text = "#FFFFFF"
-panel_separator = "#62616F"
-shade1 = "#242429"
-shade3 = "#2F2F37"
-shade4 = "#33343D"
-shade5 = "#3A3B49"
-shade6 = "#40404E"
-shade7 = "#454553"
+panel_separator = "#61676F"
+shade1 = "#242629"
+shade3 = "#2F3237"
+shade4 = "#33373D"
+shade5 = "#3A4049"
+shade6 = "#40464E"
+shade7 = "#454B53"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -40,8 +40,8 @@ lock = "Lato"
 lock_clock = "Lato Light"
 
 [desktop]
-gtk2 = "Mint-Y-Dark-Purple"
-gtk3 = "Mint-Y-Dark-Purple"
+gtk2 = "Mint-Y-Dark-Sand"
+gtk3 = "Mint-Y-Dark-Sand"
 gtk2_icons = "Mint-Y-Blue"
 icons = "Papirus-Dark"
 cursor = "Bibata-Modern-Classic"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1A1A1D", "#DC7083", "#9EBA6E", "#E2C291",
-  "#87B2BF", "#947FB8", "#87B2BF", "#EFE7E2",
-  "#4E4E5B", "#E48696", "#A4C76A", "#EEC991",
+  "#1A1B1D", "#DC7083", "#9EBA6E", "#E2C291",
+  "#87B2BF", "#947FB8", "#87B2BF", "#E2E7EF",
+  "#4E535B", "#E48696", "#A4C76A", "#EEC991",
   "#86C1D4", "#A890D1", "#86C1D4", "#F6F0E8",
 ]
 bat = "Monokai Extended"

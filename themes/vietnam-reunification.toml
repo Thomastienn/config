@@ -1,4 +1,4 @@
-# Vietnam Reunification: Deep red, coral red, flag gold.
+# Vietnam Reunification: Flag red and star gold.
 # Apply with: theme apply themes/vietnam-reunification.toml
 name = "Vietnam Reunification"
 mode = "dark"
@@ -6,28 +6,28 @@ wallpaper = "wallpapers/hoppers.png"
 
 [colors]
 background = "#1D1A19"
-surface = "#302828"
-text = "#F1E6DD"
-muted = "#B7AAA6"
-primary = "#E2A69E"
-secondary = "#D7C48B"
+surface = "#302A28"
+text = "#F1E1DD"
+muted = "#B7A9A6"
+primary = "#DA5E4E"
+secondary = "#E5C35F"
 warning = "#DBC38A"
 error = "#DDA1A8"
-border = "#5B4B49"
-separator = "#79625F"
-selection = "#4B3631"
+border = "#5B4D49"
+separator = "#79645F"
+selection = "#4A3530"
 urgent_background = "#3C2729"
-pane_border = "#3A3030"
-gradient_start = "#372827"
-gradient_end = "#342823"
+pane_border = "#3A3230"
+gradient_start = "#382725"
+gradient_end = "#342C22"
 menu_text = "#FFFFFF"
-panel_separator = "#6F5E5C"
-shade1 = "#292323"
-shade3 = "#372E2D"
-shade4 = "#3C3231"
-shade5 = "#483837"
-shade6 = "#4D3D3C"
-shade7 = "#524241"
+panel_separator = "#6F605C"
+shade1 = "#292423"
+shade3 = "#372F2D"
+shade4 = "#3C3331"
+shade5 = "#483A37"
+shade6 = "#4D3F3C"
+shade7 = "#524441"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -51,8 +51,8 @@ wm = "Mint-Y"
 [terminal]
 ansi = [
   "#1D1A19", "#E16D78", "#9EBA6A", "#E9C088",
-  "#88B3BC", "#9C7EAF", "#88B3BC", "#F1E6DD",
-  "#5B4B49", "#EA838C", "#A4C766", "#F4C788",
+  "#88B3BC", "#9C7EAF", "#88B3BC", "#F1E1DD",
+  "#5B4D49", "#EA838C", "#A4C766", "#F4C788",
   "#88C1D0", "#AF8EC8", "#88C1D0", "#F6F0E8",
 ]
 bat = "Monokai Extended"

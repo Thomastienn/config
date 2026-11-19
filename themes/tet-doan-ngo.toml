@@ -1,33 +1,33 @@
-# Tet Doan Ngo: Plum purple and rice gold.
+# Tet Doan Ngo: Herb-leaf green and midday gold.
 # Apply with: theme apply themes/tet-doan-ngo.toml
 name = "Tet Doan Ngo"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1B1A1C"
-surface = "#2C292F"
-text = "#F0E7E1"
-muted = "#B4AAB1"
-primary = "#C3ADD3"
-secondary = "#D6C58D"
+background = "#1B1C1A"
+surface = "#2C2F29"
+text = "#EAF0E1"
+muted = "#B0B4AA"
+primary = "#A3C78A"
+secondary = "#E3BD6E"
 warning = "#DCC38A"
 error = "#DBA0AB"
-border = "#534C58"
-separator = "#6E6375"
-selection = "#433845"
-urgent_background = "#3A2731"
-pane_border = "#353138"
-gradient_start = "#312934"
-gradient_end = "#32282F"
+border = "#53584C"
+separator = "#6E7563"
+selection = "#363F2E"
+urgent_background = "#392929"
+pane_border = "#353831"
+gradient_start = "#283024"
+gradient_end = "#302C21"
 menu_text = "#FFFFFF"
-panel_separator = "#675F6C"
-shade1 = "#262328"
-shade3 = "#322E35"
-shade4 = "#38333B"
-shade5 = "#413945"
-shade6 = "#463E4B"
-shade7 = "#4B4350"
+panel_separator = "#676C5F"
+shade1 = "#262823"
+shade3 = "#32352E"
+shade4 = "#383B33"
+shade5 = "#404539"
+shade6 = "#464B3E"
+shade7 = "#4B5043"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -40,8 +40,8 @@ lock = "Lato"
 lock_clock = "Lato Light"
 
 [desktop]
-gtk2 = "Mint-Y-Dark-Purple"
-gtk3 = "Mint-Y-Dark-Purple"
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
 gtk2_icons = "Mint-Y-Blue"
 icons = "Papirus-Dark"
 cursor = "Bibata-Modern-Classic"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1B1A1C", "#DE6E81", "#9DBA6F", "#E4C190",
-  "#86B2BF", "#967FB7", "#86B2BF", "#F0E7E1",
-  "#534C58", "#E78495", "#A3C76A", "#F0C890",
+  "#1B1C1A", "#DE6E81", "#9DBA6F", "#E4C190",
+  "#86B2BF", "#967FB7", "#86B2BF", "#EAF0E1",
+  "#53584C", "#E78495", "#A3C76A", "#F0C890",
   "#85C1D4", "#AA8FD0", "#85C1D4", "#F6F0E8",
 ]
 bat = "Monokai Extended"

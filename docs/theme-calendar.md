@@ -25,7 +25,7 @@ Each of the 38 enabled holiday events has its own complete preset and distinct p
 Cozy Mint is used only as the fallback outside event windows. Event presets color
 the desktop and terminal, with matching installed Mint-Y GTK accents. They share
 Cozy Mint's calibration: a near-neutral dark background with a slight event tint,
-quiet muted text and soft pastel accents in the event's hues. Layout,
+quiet muted text and accents in the event's hues. Layout,
 fonts, icons, cursor and wallpaper stay unchanged. Edit the complete preset for
 further customization. Overlapping events still select just one winner.
 The normal theme engine renders templates into local generated state and reloads
@@ -108,42 +108,42 @@ points to a separate editable preset.
 | Event | Preset | Palette |
 | --- | --- | --- |
 | New Year | [new-year.toml](../themes/new-year.toml) | Midnight blue, champagne gold, ice blue |
-| Valentine | [valentine.toml](../themes/valentine.toml) | Wine, rose pink, soft blush |
+| Valentine | [valentine.toml](../themes/valentine.toml) | Red rose and warm cream |
 | International Women Day | [international-women-day.toml](../themes/international-women-day.toml) | Violet, lilac, gold |
 | Earth Day | [earth-day.toml](../themes/earth-day.toml) | Forest green, leaf green, river blue |
-| Vietnam Reunification | [vietnam-reunification.toml](../themes/vietnam-reunification.toml) | Deep red, coral red, flag gold |
+| Vietnam Reunification | [vietnam-reunification.toml](../themes/vietnam-reunification.toml) | Flag red and star gold |
 | International Labour Day | [international-labour-day.toml](../themes/international-labour-day.toml) | Iron brown, brick, brass |
 | Vietnam Children Day | [vietnam-children-day.toml](../themes/vietnam-children-day.toml) | Pool blue, sunshine yellow, aqua |
 | Canada Day | [canada-day.toml](../themes/canada-day.toml) | Maple red and warm white |
 | Vietnam War Invalids and Martyrs Day | [vietnam-martyrs-day.toml](../themes/vietnam-martyrs-day.toml) | Quiet earth, incense gold, muted red |
-| Vietnam National Day | [vietnam-national-day.toml](../themes/vietnam-national-day.toml) | Flag gold and red on dark ochre |
+| Vietnam National Day | [vietnam-national-day.toml](../themes/vietnam-national-day.toml) | Star gold and flag red on dark ochre |
 | Vietnam Women Day | [vietnam-women-day.toml](../themes/vietnam-women-day.toml) | Lotus pink and sage |
 | Halloween | [halloween.toml](../themes/halloween.toml) | Pumpkin orange and violet |
-| Remembrance Day | [remembrance.toml](../themes/remembrance.toml) | Poppy red and stone on charcoal wine |
+| Remembrance Day | [remembrance.toml](../themes/remembrance.toml) | Poppy red and khaki on charcoal |
 | Vietnam Teachers Day | [vietnam-teachers-day.toml](../themes/vietnam-teachers-day.toml) | Chalk green and ochre |
 | Vietnam Culture Day | [vietnam-culture-day.toml](../themes/vietnam-culture-day.toml) | Lacquer brown, antique gold, jade |
 | Christmas | [christmas.toml](../themes/christmas.toml) | Evergreen, holly red, warm white |
 | International Peace Day | [international-peace-day.toml](../themes/international-peace-day.toml) | Sky blue and olive white |
 | International Family Day | [international-family-day.toml](../themes/international-family-day.toml) | Warm terracotta and sage |
-| Vietnam Family Day | [vietnam-family-day.toml](../themes/vietnam-family-day.toml) | Lacquer plum and warm amber |
+| Vietnam Family Day | [vietnam-family-day.toml](../themes/vietnam-family-day.toml) | Rice-paddy green and lantern amber |
 | Mother Day | [mother-day.toml](../themes/mother-day.toml) | Carnation pink and lilac |
 | Father Day | [father-day.toml](../themes/father-day.toml) | Indigo and leather tan |
 | Canada Thanksgiving | [canada-thanksgiving.toml](../themes/canada-thanksgiving.toml) | Maple gold and harvest sage |
 | US Thanksgiving | [us-thanksgiving.toml](../themes/us-thanksgiving.toml) | Russet and corn gold |
-| Tet Nguyen Dan | [tet.toml](../themes/tet.toml) | Apricot gold and lucky red |
+| Tet Nguyen Dan | [tet.toml](../themes/tet.toml) | Apricot-blossom yellow and lucky red |
 | Hung Kings Commemoration | [hung-kings.toml](../themes/hung-kings.toml) | Bronze and temple green |
-| Tet Doan Ngo | [tet-doan-ngo.toml](../themes/tet-doan-ngo.toml) | Plum purple and rice gold |
-| Vu Lan | [vu-lan.toml](../themes/vu-lan.toml) | White rose and muted rose pink |
+| Tet Doan Ngo | [tet-doan-ngo.toml](../themes/tet-doan-ngo.toml) | Herb-leaf green and midday gold |
+| Vu Lan | [vu-lan.toml](../themes/vu-lan.toml) | White rose and red rose |
 | Mid Autumn | [mid-autumn.toml](../themes/mid-autumn.toml) | Moonlit navy, lantern amber, peach |
 | Vesak | [vesak.toml](../themes/vesak.toml) | Saffron gold and pale lotus |
 | St Patrick Day | [st-patrick-day.toml](../themes/st-patrick-day.toml) | Shamrock green and gold |
 | Good Friday | [good-friday.toml](../themes/good-friday.toml) | Quiet violet and stone |
-| Easter | [easter.toml](../themes/easter.toml) | Lavender and primrose yellow |
+| Easter | [easter.toml](../themes/easter.toml) | Daffodil yellow and spring sky |
 | Victoria Day | [victoria-day.toml](../themes/victoria-day.toml) | Royal plum and gold |
 | National Indigenous Peoples Day | [indigenous-peoples-day.toml](../themes/indigenous-peoples-day.toml) | Earth and summer sage; no borrowed sacred motifs |
 | Alberta Heritage Day | [alberta-heritage-day.toml](../themes/alberta-heritage-day.toml) | Prairie sky blue and wheat gold |
 | Canada Labour Day | [canada-labour-day.toml](../themes/canada-labour-day.toml) | Steel blue and copper |
 | National Day for Truth and Reconciliation | [truth-and-reconciliation.toml](../themes/truth-and-reconciliation.toml) | Orange and quiet linen |
-| Boxing Day | [boxing-day.toml](../themes/boxing-day.toml) | Ice blue and silver lilac |
+| Boxing Day | [boxing-day.toml](../themes/boxing-day.toml) | Ice blue and silver |
 | Birthday | [birthday.toml](../themes/birthday.toml) | Periwinkle and confetti pink |
 | Anniversary | [anniversary.toml](../themes/anniversary.toml) | Rose and champagne gold |

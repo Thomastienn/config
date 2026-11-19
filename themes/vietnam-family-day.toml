@@ -1,33 +1,33 @@
-# Vietnam Family Day: Lacquer plum and warm amber.
+# Vietnam Family Day: Rice-paddy green and lantern amber.
 # Apply with: theme apply themes/vietnam-family-day.toml
 name = "Vietnam Family Day"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1B1A1C"
-surface = "#2C292F"
-text = "#EFE7E1"
-muted = "#B4AAB1"
-primary = "#C2AED4"
-secondary = "#E3B88F"
+background = "#1C1C1A"
+surface = "#2F2D29"
+text = "#EFECE1"
+muted = "#B4B2AA"
+primary = "#ADC77E"
+secondary = "#E6B067"
 warning = "#DEC28A"
 error = "#DBA0AA"
-border = "#534C59"
-separator = "#6D6476"
-selection = "#433743"
-urgent_background = "#3A2731"
-pane_border = "#353138"
-gradient_start = "#302935"
-gradient_end = "#32272F"
+border = "#59564C"
+separator = "#767264"
+selection = "#3B3F2C"
+urgent_background = "#392929"
+pane_border = "#383631"
+gradient_start = "#2B3022"
+gradient_end = "#332B20"
 menu_text = "#FFFFFF"
-panel_separator = "#665F6D"
-shade1 = "#262328"
-shade3 = "#322E35"
-shade4 = "#37333B"
-shade5 = "#413946"
-shade6 = "#453E4B"
-shade7 = "#4B4350"
+panel_separator = "#6D6A5F"
+shade1 = "#282723"
+shade3 = "#35332E"
+shade4 = "#3B3933"
+shade5 = "#464339"
+shade6 = "#4B483E"
+shade7 = "#504D43"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -40,8 +40,8 @@ lock = "Lato"
 lock_clock = "Lato Light"
 
 [desktop]
-gtk2 = "Mint-Y-Dark-Purple"
-gtk3 = "Mint-Y-Dark-Purple"
+gtk2 = "Mint-Y-Dark"
+gtk3 = "Mint-Y-Dark"
 gtk2_icons = "Mint-Y-Blue"
 icons = "Papirus-Dark"
 cursor = "Bibata-Modern-Classic"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1B1A1C", "#DD6F81", "#A0B970", "#E4C28F",
-  "#89B2C1", "#957FB7", "#89B2C1", "#EFE7E1",
-  "#534C59", "#E68594", "#A6C76B", "#EFC991",
+  "#1C1C1A", "#DD6F81", "#A0B970", "#E4C28F",
+  "#89B2C1", "#957FB7", "#89B2C1", "#EFECE1",
+  "#59564C", "#E68594", "#A6C76B", "#EFC991",
   "#88C1D6", "#A98FD0", "#88C1D6", "#F6F0E8",
 ]
 bat = "Monokai Extended"

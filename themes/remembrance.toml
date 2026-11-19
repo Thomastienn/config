@@ -1,33 +1,33 @@
-# Remembrance Day: Poppy red and stone on charcoal wine.
+# Remembrance Day: Poppy red and khaki on charcoal.
 # Apply with: theme apply themes/remembrance.toml
 name = "Remembrance Day Poppy"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1C191B"
-surface = "#2F282B"
-text = "#F2E6DD"
-muted = "#B7AAA8"
-primary = "#DDA1A7"
-secondary = "#D5CCBD"
+background = "#1B1A1A"
+surface = "#2D2B2A"
+text = "#EBE6E4"
+muted = "#B2AFAD"
+primary = "#D9604F"
+secondary = "#BDB38E"
 warning = "#DDC28A"
 error = "#DDA1A8"
-border = "#5B4A4C"
-separator = "#786164"
-selection = "#46373D"
-urgent_background = "#3C272C"
-pane_border = "#393032"
-gradient_start = "#37282B"
-gradient_end = "#32282A"
+border = "#555250"
+separator = "#716B68"
+selection = "#45302C"
+urgent_background = "#3C2725"
+pane_border = "#363433"
+gradient_start = "#352725"
+gradient_end = "#2C2B26"
 menu_text = "#FFFFFF"
-panel_separator = "#6F5E60"
-shade1 = "#292325"
-shade3 = "#362D30"
-shade4 = "#3C3234"
-shade5 = "#48383B"
-shade6 = "#4D3D40"
-shade7 = "#524245"
+panel_separator = "#696664"
+shade1 = "#272625"
+shade3 = "#333130"
+shade4 = "#393635"
+shade5 = "#433F3D"
+shade6 = "#484442"
+shade7 = "#4D4947"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1C191B", "#E16D7A", "#9CBA73", "#E9C08A",
-  "#85B2C4", "#9B7EB0", "#85B2C4", "#F2E6DD",
-  "#5B4A4C", "#EA828D", "#A2C76F", "#F5C789",
+  "#1B1A1A", "#E16D7A", "#9CBA73", "#E9C08A",
+  "#85B2C4", "#9B7EB0", "#85B2C4", "#EBE6E4",
+  "#555250", "#EA828D", "#A2C76F", "#F5C789",
   "#83C1D8", "#AF8ECA", "#83C1D8", "#F6F0E8",
 ]
 bat = "Monokai Extended"

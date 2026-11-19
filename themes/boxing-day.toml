@@ -1,4 +1,4 @@
-# Boxing Day: Ice blue and silver lilac.
+# Boxing Day: Ice blue and silver.
 # Apply with: theme apply themes/boxing-day.toml
 name = "Boxing Day Winter"
 mode = "dark"
@@ -10,7 +10,7 @@ surface = "#252B2F"
 text = "#EBE8E0"
 muted = "#A5B0AF"
 primary = "#9DC7D8"
-secondary = "#BEBBD9"
+secondary = "#C5CDD3"
 warning = "#DDC28A"
 error = "#DBA0AA"
 border = "#44525A"
@@ -19,7 +19,7 @@ selection = "#2E3E4A"
 urgent_background = "#352936"
 pane_border = "#2C3439"
 gradient_start = "#212E36"
-gradient_end = "#232C35"
+gradient_end = "#262C31"
 menu_text = "#FFFFFF"
 panel_separator = "#56666D"
 shade1 = "#212529"

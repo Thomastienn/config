@@ -1,33 +1,33 @@
-# Tet Nguyen Dan: Apricot gold and lucky red.
+# Tet Nguyen Dan: Apricot-blossom yellow and lucky red.
 # Apply with: theme apply themes/tet.toml
 name = "Apricot Tet"
 mode = "dark"
 wallpaper = "wallpapers/hoppers.png"
 
 [colors]
-background = "#1D191A"
-surface = "#302829"
-text = "#EFE8DC"
-muted = "#B2ACA2"
-primary = "#DFC18A"
-secondary = "#E2A59F"
+background = "#1D1A19"
+surface = "#302A28"
+text = "#EFE1DC"
+muted = "#B2A6A2"
+primary = "#E8C468"
+secondary = "#DB5F52"
 warning = "#E0C08A"
 error = "#DFA2A4"
-border = "#594D43"
-separator = "#746556"
-selection = "#4B3637"
+border = "#594843"
+separator = "#745E56"
+selection = "#4B3632"
 urgent_background = "#3C2729"
-pane_border = "#3A302E"
-gradient_start = "#372825"
-gradient_end = "#352728"
+pane_border = "#3A312E"
+gradient_start = "#372A22"
+gradient_end = "#382725"
 menu_text = "#FFFFFF"
-panel_separator = "#6C6155"
-shade1 = "#292323"
-shade3 = "#372E2C"
-shade4 = "#3C3230"
-shade5 = "#483834"
-shade6 = "#4D3E38"
-shade7 = "#52433D"
+panel_separator = "#6C5B55"
+shade1 = "#292523"
+shade3 = "#372F2C"
+shade4 = "#3C3330"
+shade5 = "#483934"
+shade6 = "#4D3D38"
+shade7 = "#52423D"
 
 [fonts]
 ui = "ComicShannsMono Nerd Font"
@@ -50,9 +50,9 @@ wm = "Mint-Y"
 
 [terminal]
 ansi = [
-  "#1D191A", "#DF7072", "#A2B872", "#E5C283",
-  "#8BB0C2", "#9980A8", "#8BB0C2", "#EFE8DC",
-  "#594D43", "#E88585", "#A9C56E", "#F1C982",
+  "#1D1A19", "#DF7072", "#A2B872", "#E5C283",
+  "#8BB0C2", "#9980A8", "#8BB0C2", "#EFE1DC",
+  "#594843", "#E88585", "#A9C56E", "#F1C982",
   "#8ABFD8", "#AD91C2", "#8ABFD8", "#F6F0E8",
 ]
 bat = "Monokai Extended"
