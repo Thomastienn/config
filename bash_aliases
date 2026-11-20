@@ -1,5 +1,4 @@
 alias rm='trash'
-alias nnn='nnn -Pp'
 alias tmux-warp='WARP_IS_LOCAL_SHELL_SESSION=1 tmux'
 alias tw='taskwarrior-tui'
 alias python='python3'
@@ -51,4 +50,13 @@ solve(){
 mtest(){
 	cd ~/test
 	nvim
+}
+# Yazi file manager; quitting with q leaves the shell in the last directory.
+y(){
+	local tmp cwd
+	tmp="$(mktemp -t yazi-cwd.XXXXXX)"
+	yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
+	command rm -f -- "$tmp"
 }

@@ -234,11 +234,6 @@ export VISUAL=nvim
 export WARP_ENABLE_WAYLAND=1
 export BROWSER=brave-browser
 
-export NNN_TERMINAL=tmux
-export NNN_PLUG='p:preview-tui'
-export NNN_FIFO="/tmp/nnn.fifo"
-export NNN_PREVIEWIMGPROG="ueberzug"
-
 LS_COLORS=$LS_COLORS:'ow=1;34:' ; export LS_COLORS
 
 [ -s "$HOME/.nvm/nvm.sh" ] && \. "$HOME/.nvm/nvm.sh"  # This loads nvm

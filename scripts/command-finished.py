@@ -58,7 +58,7 @@ def main(status, elapsed, shell_pid, text):
     name = command_name(text)
     if elapsed < 30 or status == 130 or name in {
         "nvim", "vim", "vi", "nano", "emacs", "less", "more", "man", "ssh", "tmux",
-        "htop", "btop", "top", "nnn", "ranger", "bash", "zsh", "fish",
+        "htop", "btop", "top", "nnn", "ranger", "yazi", "y", "bash", "zsh", "fish",
     }:
         return
     pane = os.environ.get("TMUX_PANE", "")
