@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import subprocess
 import tempfile
 
 from codex import merge
@@ -59,6 +60,12 @@ def install(home, cache, run):
         brew = Path("/home/linuxbrew/.linuxbrew/bin/brew")
         run([brew, "bundle", "install", "--no-upgrade", f"--file={ROOT / 'setup/hermes.Brewfile'}"])
         print("Ollama installed. Start its server and pull qwen3.5:9b; see README.md.")
+    ocr_model = "qwen3-vl:4b-instruct"  # Screenshot text accurate mode (scripts/screenshot-text.py).
+    if subprocess.run(["ollama", "show", ocr_model], capture_output=True).returncode:
+        if subprocess.run(["ollama", "list"], capture_output=True).returncode == 0:
+            run(["ollama", "pull", ocr_model])
+        else:
+            print(f"Start Ollama, then run: ollama pull {ocr_model}")
 
     spec = json.loads((ROOT / "setup/sources.json").read_text())["hermes"]
     executable = home / ".local/bin/hermes"

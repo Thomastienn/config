@@ -141,6 +141,11 @@ def assets(home, cache):
                 for member in font_archive.getmembers():
                     if member.isfile() and (member.name.endswith(".otf") or Path(member.name).name.startswith("LICENSE")):
                         (destination / Path(member.name).name).write_bytes(font_archive.extractfile(member).read())
+        elif spec["kind"] == "tessdata":
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            if destination.exists():
+                destination.replace(destination.with_name(destination.name + ".backup"))
+            shutil.copy2(archive, destination)
         else:
             unpacked = cache / (spec["name"] + "-unpacked")
             run(["dpkg-deb", "-x", archive, unpacked])

@@ -226,6 +226,18 @@ root's accessibility bus. The helper always asks the session D-Bus for the
 correct bus and restores the property. Firefox opened while it was wrong has no
 accessibility until restarted.
 
+## Screenshot text
+
+`Super+Print` copies the text in a selected region to the clipboard using Tesseract
+with the `tessdata_best` English model (about 0.5 s). Setup installs the pinned model to
+`~/.local/share/tessdata`; the helper upscales the capture and inverts dark themes first.
+
+`Super+Shift+Print` is the accurate mode: it sends the capture to the local Ollama model
+`qwen3-vl:4b-instruct`, which handles syntax-coloured code, tiny text and table layout better.
+It takes about 1–3 s once loaded and about 7 s on first use. Ollama unloads it after
+5 idle minutes, which frees about 4.5 GB of GPU memory. Extras setup pulls the model when
+Ollama is running. Nothing leaves the machine.
+
 ## The line: windows, tmux, Rofi, prompt and lockscreen
 
 One visual language runs through the desktop, in every preset's colours. The

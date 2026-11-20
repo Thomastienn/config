@@ -162,6 +162,8 @@ bindsym $mod+Shift+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/s
 bindsym $mod+Ctrl+v exec --no-startup-id copyq toggle
 # shortcut: Screenshot to text
 bindsym $mod+Print exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/screenshot-text.py
+# shortcut: Screenshot to text, accurate (local AI model)
+bindsym $mod+Shift+Print exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/screenshot-text.py --accurate
 # shortcut: Find document
 bindsym $mod+Ctrl+p exec --no-startup-id /usr/bin/python3 $HOME/thomas_config/scripts/nemo-folder.py --documents
 # shortcut: Find keyboard shortcut
