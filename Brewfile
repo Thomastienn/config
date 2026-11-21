@@ -1,5 +1,6 @@
 # Desktop tools and build prerequisites.
 brew "eza"
+brew "fzf"  # newer than apt 0.44, which draws on stderr; yazi captures stderr, so z/Z pickers stay blank
 brew "gitleaks"
 brew "htop"
 brew "lazygit"
