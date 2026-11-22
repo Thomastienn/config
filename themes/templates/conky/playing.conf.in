@@ -1,0 +1,45 @@
+local card = dofile(os.getenv('HOME') .. '/thomas_config/conky/deck.lua').playing
+
+conky.config = {
+    -- The card between week and next 24 hours on the left; deck.lua places and sizes it from the screen.
+    alignment = card.alignment,
+    gap_x = card.x,
+    gap_y = card.y,
+    minimum_width = card.width,
+    maximum_width = card.width,
+    minimum_height = card.height,
+    -- playing.lua pads its own drawing, so the window is exactly the card.
+    border_inner_margin = 0,
+    border_outer_margin = 0,
+    border_width = 0,
+
+    own_window = true,
+    own_window_class = 'Conky',
+    own_window_type = 'override',
+    own_window_transparent = false,
+    own_window_colour = '{{hex.background}}',
+    own_window_argb_visual = true,
+    -- Keep muted labels readable over the bright wallpaper.
+    own_window_argb_value = 215,
+    own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
+
+    background = false,
+    double_buffer = true,
+    use_xft = true,
+    font = '{{fonts.ui}}:size=9',
+    default_color = '{{hex.text}}',
+    lua_load = os.getenv('HOME') .. '/thomas_config/conky/playing.lua',
+    lua_draw_hook_pre = 'backdrop',
+    lua_draw_hook_post = 'draw_playing',
+    use_spacer = 'none',
+    extra_newline = false,
+    -- Short, so the progress line keeps up with the track.
+    update_interval = 2,
+    draw_borders = false,
+    draw_graph_borders = false,
+    draw_outline = false,
+    draw_shades = false,
+}
+
+-- playing.lua draws the whole card and asks playerctl itself.
+conky.text = [[]]

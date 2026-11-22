@@ -1,14 +1,17 @@
+local card = dofile(os.getenv('HOME') .. '/thomas_config/conky/deck.lua').system
+
 conky.config = {
-    -- Position & Size
-    alignment = 'top_right',
-    gap_x = 28,
-    gap_y = 58,
-    minimum_width = 240,
-    maximum_width = 240,
-    -- Shared with calendar.conf so both side panels end on one line.
-    minimum_height = 630,
-    border_inner_margin = 12,
+    -- Position & Size: the top-right card; deck.lua places and sizes it from the screen.
+    alignment = card.alignment,
+    gap_x = card.x,
+    gap_y = card.y,
+    minimum_width = card.width,
+    maximum_width = card.width,
+    minimum_height = card.height,
+    -- gauges.lua pads its own drawing, so the window is exactly the card.
+    border_inner_margin = 0,
     border_outer_margin = 0,
+    border_width = 0,
 
     -- Window
     own_window = true,
@@ -17,7 +20,8 @@ conky.config = {
     own_window_transparent = false,
     own_window_colour = '{{hex.background}}',
     own_window_argb_visual = true,
-    own_window_argb_value = 180,
+    -- Keep muted labels readable over the bright wallpaper.
+    own_window_argb_value = 215,
     own_window_hints = 'undecorated,below,sticky,skip_taskbar,skip_pager',
 
     -- Rendering

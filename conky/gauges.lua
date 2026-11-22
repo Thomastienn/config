@@ -1,9 +1,10 @@
--- System panel, drawn entirely in Cairo; system.conf only polls telemetry.py.
+-- System card, drawn entirely in Cairo; system.conf only polls telemetry.py.
 local ui = dofile(os.getenv('HOME') .. '/thomas_config/conky/panel.lua')
 local c = ui.colors
 
--- 240 units of content inside 12 units of padding, as sized in system.conf.
-local WIDTH, LEFT, RIGHT = 266, 14, 252
+-- 408 units wide, as sized in deck.lua: meters in one column, network and processes in the other.
+local WIDTH, LEFT, MIDDLE, RIGHT = 408, 16, 194, 392
+local SECOND = MIDDLE + 20
 -- At one-second updates, 61 readings span one minute.
 local SLOTS = 61
 -- First interface that is up wins; the flag marks wireless.
@@ -31,32 +32,9 @@ local function record(name, reading)
     if #values > SLOTS then table.remove(values, 1) end
 end
 
-local function clock(context)
-    local width = ui.text(context, os.date('%H'), LEFT, 60, 54, c.primary, 0, true)
-    width = width + ui.text(context, ':', LEFT + width, 56, 54, c.separator, 0, true)
-    ui.text(context, os.date('%M'), LEFT + width, 60, 54, c.text, 0, true)
-    ui.text(context, os.date('%A'), RIGHT, 30, 11, c.primary, 1, true)
-    ui.text(context, tonumber(os.date('%d')) .. ' ' .. os.date('%B'), RIGHT, 45, 11, c.text, 1)
-    ui.text(context, os.date('%Y'), RIGHT, 59, 9, c.muted, 1)
-    -- The day so far, midnight to midnight.
-    local now = os.date('*t')
-    local tip = LEFT + (RIGHT - LEFT) * (now.hour * 3600 + now.min * 60 + now.sec) / 86400
-    cairo_set_line_width(context, 2)
-    ui.color(context, c.border, 0.6)
-    cairo_new_path(context)
-    cairo_move_to(context, LEFT, 78)
-    cairo_line_to(context, RIGHT, 78)
-    cairo_stroke(context)
-    ui.fade(context, tip, 78, LEFT, 78, c.primary)
-    ui.glow(context, tip, 78, 8, c.primary)
-    ui.color(context, c.text)
-    cairo_arc(context, tip, 78, 2.2, 0, 2*math.pi)
-    cairo_fill(context)
-end
-
 -- Three-quarter ring, open at the bottom where the label sits.
 local function gauge(context, x, y, value, color, reading, detail, label)
-    local radius, start, sweep = 32, 0.75*math.pi, 1.5*math.pi
+    local radius, start, sweep = 26, 0.75*math.pi, 1.5*math.pi
     cairo_set_line_width(context, 4)
     ui.color(context, c.border, 0.6)
     cairo_new_path(context)
@@ -80,13 +58,13 @@ local function gauge(context, x, y, value, color, reading, detail, label)
         cairo_fill(context)
     end
     ui.text(context, reading, x, y + 3, 15, c.text, 0.5, true)
-    ui.text(context, detail, x, y + 16, 8.5, c.muted, 0.5)
-    ui.text(context, label, x, y + radius + 4, 9, color, 0.5, true)
+    ui.text(context, detail, x, y + 15, 9, c.muted, 0.5)
+    ui.text(context, label, x, y + radius + 5, 10, color, 0.5, true)
 end
 
 -- Mirrored bars, newest on the right; empty slots stay as dots while the minute fills.
 local function waveform(context, values, y)
-    local step = (RIGHT - LEFT) / (SLOTS - 1)
+    local step = (MIDDLE - LEFT) / (SLOTS - 1)
     cairo_set_line_width(context, 2.2)
     for slot = 1, SLOTS do
         local value = values[slot - SLOTS + #values]
@@ -94,10 +72,7 @@ local function waveform(context, values, y)
         local half = value and 1 + 11 * math.sqrt(math.min(value, 100)/100) or 0
         if value then ui.color(context, c.primary, 0.35 + 0.65 * math.min(value, 100)/100)
         else ui.color(context, c.border, 0.6) end
-        cairo_new_path(context)
-        cairo_move_to(context, x, y - half)
-        cairo_line_to(context, x, y + half)
-        cairo_stroke(context)
+        ui.line(context, x, y - half, x, y + half)
     end
 end
 
@@ -126,8 +101,8 @@ local function area(context, values, baseline, height, color)
     if #values < 2 then return end
     local maximum = 1
     for _, value in ipairs(values) do maximum = math.max(maximum, value) end
-    local step = (RIGHT - LEFT) / (SLOTS - 1)
-    local first = LEFT + step * (SLOTS - #values)
+    local step = (RIGHT - SECOND) / (SLOTS - 1)
+    local first = SECOND + step * (SLOTS - #values)
     cairo_new_path(context)
     for index, value in ipairs(values) do
         cairo_line_to(context, first + step * (index - 1), baseline - height * value / (maximum * 1.15))
@@ -147,13 +122,18 @@ local function area(context, values, baseline, height, color)
 end
 
 local function network(context, y)
-    ui.section(context, 'Network', LEFT, y, RIGHT)
+    ui.section(context, 'Network', SECOND, y, RIGHT)
     if not interface then
-        ui.text(context, 'Offline', LEFT, y + 22, 11.5, c.muted)
+        ui.text(context, 'Offline', SECOND, y + 22, 11.5, c.muted)
         return
     end
     local name, wireless = interface[1], interface[2]
-    ui.text(context, wireless and parse('wireless_essid ' .. name) or 'Wired', LEFT, y + 22, 11.5, c.text)
+    -- A long network name stops short of the signal reading.
+    cairo_save(context)
+    cairo_rectangle(context, SECOND, y, RIGHT - SECOND - 52, 30)
+    cairo_clip(context)
+    ui.text(context, wireless and parse('wireless_essid ' .. name) or 'Wired', SECOND, y + 22, 11.5, c.text)
+    cairo_restore(context)
     if wireless then
         local quality = tonumber(parse('wireless_link_qual_perc ' .. name)) or 0
         for bar = 1, 4 do
@@ -161,48 +141,39 @@ local function network(context, y)
             ui.rounded(context, RIGHT - 20 + bar * 5 - 3, y + 22 - bar * 2.5, 3, bar * 2.5, 1)
             cairo_fill(context)
         end
-        ui.text(context, string.format('%.0f%%', quality), RIGHT - 24, y + 22, 9, c.muted, 1)
+        ui.text(context, string.format('%.0f%%', quality), RIGHT - 24, y + 22, 10, c.muted, 1)
     else
-        ui.text(context, 'Connected', RIGHT, y + 22, 9, c.muted, 1)
+        ui.text(context, 'Connected', RIGHT, y + 22, 10, c.muted, 1)
     end
-    local axis = y + 90
+    local axis = y + 78
     for _, flow in ipairs({{'Down', 'downspeed', 'download', c.primary, 1, 0},
                            {'Up', 'upspeed', 'upload', c.secondary, -1, 1}}) do
-        local edge = flow[6] == 0 and LEFT or RIGHT
-        local width = ui.text(context, flow[1], edge, y + 42, 9, c.muted, flow[6])
-        ui.text(context, parse(flow[2] .. ' ' .. name) .. '/s', edge + (width + 6) * flow[5], y + 42, 10,
+        local edge = flow[6] == 0 and SECOND or RIGHT
+        local width = ui.text(context, flow[1], edge, y + 40, 10, c.muted, flow[6])
+        ui.text(context, parse(flow[2] .. ' ' .. name) .. '/s', edge + (width + 6) * flow[5], y + 40, 10,
                 flow[4], flow[6], true)
-        area(context, histories[flow[3]], axis, 32 * flow[5], flow[4])
+        area(context, histories[flow[3]], axis, 24 * flow[5], flow[4])
     end
     cairo_set_line_width(context, 1)
     ui.color(context, c.border, 0.7)
-    cairo_new_path(context)
-    cairo_move_to(context, LEFT, axis)
-    cairo_line_to(context, RIGHT, axis)
-    cairo_stroke(context)
+    ui.line(context, SECOND, axis, RIGHT, axis)
 end
 
 local function processes(context, y)
-    ui.section(context, 'Processes', LEFT, y, RIGHT)
+    ui.section(context, 'Processes', SECOND, y, RIGHT)
     local busiest = math.max(1, tonumber(parse('top cpu 1')) or 0)
     cairo_set_line_width(context, 1.5)
     for index = 1, 5 do
-        local row = y + 1 + index * 21
+        local row = y + 1 + index * 18.5
         local usage = tonumber(parse('top cpu ' .. index)) or 0
-        ui.text(context, (parse('top name ' .. index):gsub('%s+$', '')), LEFT, row, 11,
+        ui.text(context, (parse('top name ' .. index):gsub('%s+$', '')), SECOND, row, 10.5,
                 index == 1 and c.text or c.muted)
-        ui.text(context, string.format('%.1f%%', usage), RIGHT, row, 11, c.text, 1, index == 1)
+        ui.text(context, string.format('%.1f%%', usage), RIGHT, row, 10.5, c.text, 1, index == 1)
         ui.color(context, c.border, 0.4)
-        cairo_new_path(context)
-        cairo_move_to(context, LEFT, row + 6)
-        cairo_line_to(context, RIGHT, row + 6)
-        cairo_stroke(context)
+        ui.line(context, SECOND, row + 5, RIGHT, row + 5)
         if usage > 0 then
             ui.color(context, c.primary, 1.1 - index * 0.15)
-            cairo_new_path(context)
-            cairo_move_to(context, LEFT, row + 6)
-            cairo_line_to(context, LEFT + (RIGHT - LEFT) * usage / busiest, row + 6)
-            cairo_stroke(context)
+            ui.line(context, SECOND, row + 5, SECOND + (RIGHT - SECOND) * usage / busiest, row + 5)
         end
     end
 end
@@ -228,38 +199,36 @@ function conky_gauges()
         end
     end
 
-    local context, surface, height = ui.open(WIDTH)
-    clock(context)
-
-    ui.section(context, 'System', LEFT, 106, RIGHT)
+    local context, surface = ui.open(WIDTH)
+    ui.section(context, 'System', LEFT, 28, MIDDLE)
     local ram = tonumber(parse('memperc'))
     local function percent(value) return value and string.format('%.0f%%', value) or '--' end
     local function degrees(value) return value and string.format('%.0f°C', value) or '--°C' end
-    gauge(context, 53, 156, histories.cpu[#histories.cpu], c.primary,
+    gauge(context, LEFT + 28, 76, histories.cpu[#histories.cpu], c.primary,
           percent(histories.cpu[#histories.cpu]), degrees(telemetry.cpu_temperature), 'CPU')
-    gauge(context, 133, 156, telemetry.gpu_usage, c.warning,
+    gauge(context, LEFT + 89, 76, telemetry.gpu_usage, c.warning,
           telemetry.sleeping and 'Sleep' or percent(telemetry.gpu_usage),
           degrees(telemetry.gpu_temperature), 'GPU')
-    gauge(context, 213, 156, ram, c.secondary, percent(ram), parse('mem'), 'RAM')
+    gauge(context, LEFT + 150, 76, ram, c.secondary, percent(ram), (parse('mem'):gsub('iB$', '')), 'RAM')
 
-    ui.text(context, 'CPU activity', LEFT, 218, 9, c.muted)
+    ui.text(context, 'CPU activity', LEFT, 136, 10, c.muted)
     local span = math.min(60, #histories.cpu - 1)
-    ui.text(context, span < 1 and 'live' or ('last ' .. span .. 's'), RIGHT, 218, 9, c.muted, 1)
-    waveform(context, histories.cpu, 238)
+    ui.text(context, span < 1 and 'live' or ('last ' .. span .. 's'), MIDDLE, 136, 10, c.muted, 1)
+    waveform(context, histories.cpu, 157)
 
     if conky_parse('${if_existing /sys/class/power_supply/BAT0}1${endif}') == '1' then
-        segments(context, LEFT, 110, 274, 'Storage', 'fs_used_perc /', c.secondary)
-        segments(context, RIGHT - 110, 110, 274, 'Battery', 'battery_percent', c.primary)
+        segments(context, LEFT, 82, 195, 'Storage', 'fs_used_perc /', c.secondary)
+        segments(context, MIDDLE - 82, 82, 195, 'Battery', 'battery_percent', c.primary)
     else
-        segments(context, LEFT, RIGHT - LEFT, 274, 'Storage', 'fs_used_perc /', c.secondary)
+        segments(context, LEFT, MIDDLE - LEFT, 195, 'Storage', 'fs_used_perc /', c.secondary)
     end
 
-    network(context, 316)
-    processes(context, 472)
-
     cairo_set_line_width(context, 1)
-    ui.fade(context, LEFT, height - 34, RIGHT, height - 34, c.separator)
-    ui.text(context, 'Uptime', LEFT, height - 17, 9, c.muted)
-    ui.text(context, parse('uptime_short'), RIGHT, height - 17, 9, c.text, 1)
+    ui.fade(context, LEFT, 229, MIDDLE, 229, c.separator)
+    ui.text(context, 'Uptime', LEFT, 247, 10, c.muted)
+    ui.text(context, parse('uptime_short'), MIDDLE, 247, 10, c.text, 1)
+
+    network(context, 28)
+    processes(context, 152)
     ui.close(context, surface)
 end

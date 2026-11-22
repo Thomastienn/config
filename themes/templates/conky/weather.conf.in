@@ -1,13 +1,17 @@
+local card = dofile(os.getenv('HOME') .. '/thomas_config/conky/deck.lua').weather
+
 conky.config = {
-    alignment = 'bottom_middle',
-    -- bottom_middle: negative gap_x shifts right, centering between the unequal side panels.
-    gap_x = -45,
-    gap_y = 38,
-    minimum_width = 440,
-    maximum_width = 440,
-    minimum_height = 146,
-    border_inner_margin = 12,
+    -- The top-left card; deck.lua places and sizes it from the screen.
+    alignment = card.alignment,
+    gap_x = card.x,
+    gap_y = card.y,
+    minimum_width = card.width,
+    maximum_width = card.width,
+    minimum_height = card.height,
+    -- weather.lua pads its own drawing, so the window is exactly the card.
+    border_inner_margin = 0,
     border_outer_margin = 0,
+    border_width = 0,
 
     own_window = true,
     own_window_class = 'Conky',
@@ -28,7 +32,7 @@ conky.config = {
     lua_load = os.getenv('HOME') .. '/thomas_config/conky/weather.lua',
     lua_draw_hook_pre = 'backdrop',
     lua_draw_hook_post = 'draw_weather',
-    -- Check quickly at startup; the first threaded result sets one-minute redraws.
+    -- The clock on this card moves every second.
     update_interval = 1,
     text_buffer_size = 4096,
     extra_newline = false,

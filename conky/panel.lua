@@ -11,15 +11,21 @@ function ui.color(context, color, alpha)
 end
 
 -- align: 0 left (default), 0.5 centered, 1 right. Returns the advance width.
-function ui.text(context, value, x, y, size, color, align, bold)
+function ui.text(context, value, x, y, size, color, align, bold, family)
     ui.color(context, color)
-    cairo_select_font_face(context, theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL,
+    cairo_select_font_face(context, family or theme.fonts.ui, CAIRO_FONT_SLANT_NORMAL,
                            bold and CAIRO_FONT_WEIGHT_BOLD or CAIRO_FONT_WEIGHT_NORMAL)
     cairo_set_font_size(context, size)
     cairo_text_extents(context, value, extents)
     cairo_move_to(context, x - (align or 0) * extents.x_advance, y)
     cairo_show_text(context, value)
     return extents.x_advance
+end
+
+-- Cairo's text API has no per-glyph fallback and the theme font lacks Vietnamese; Lato comes from setup/apt.txt.
+-- shortcut: Lato has no CJK either; choose a font per script when text needs one.
+function ui.family(text)
+    return text:find('[\196-\225\227-\237\240-\244]') and 'Lato' or nil
 end
 
 function ui.rounded(context, x, y, width, height, radius)
@@ -29,6 +35,13 @@ function ui.rounded(context, x, y, width, height, radius)
     cairo_arc(context, x + radius, y + height - radius, radius, math.pi/2, math.pi)
     cairo_arc(context, x + radius, y + radius, radius, math.pi, 3*math.pi/2)
     cairo_close_path(context)
+end
+
+function ui.line(context, x1, y1, x2, y2)
+    cairo_new_path(context)
+    cairo_move_to(context, x1, y1)
+    cairo_line_to(context, x2, y2)
+    cairo_stroke(context)
 end
 
 -- Line from (x1, y1) to (x2, y2) that fades out toward its end.

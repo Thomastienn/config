@@ -18,11 +18,11 @@ URL = "https://api.open-meteo.com/v1/forecast?" + urlencode({
     "latitude": 51.05011,
     "longitude": -114.08529,
     "current": "temperature_2m,apparent_temperature,weather_code",
-    "hourly": "temperature_2m,weather_code,precipitation_probability,is_day",
-    "daily": "sunrise,sunset",
+    "hourly": "temperature_2m,weather_code,precipitation_probability,is_day,wind_speed_10m",
+    "daily": "sunrise,sunset,weather_code,temperature_2m_max,temperature_2m_min",
     "timezone": "America/Edmonton",
     "timeformat": "unixtime",
-    "forecast_days": 2,
+    "forecast_days": 7,
 })
 
 
@@ -41,8 +41,9 @@ def validate(data):
     for key in ("temperature_2m", "apparent_temperature", "weather_code"):
         number(current[key])
     for section, fields in (("hourly", ("time", "temperature_2m", "weather_code",
-                                       "precipitation_probability", "is_day")),
-                            ("daily", ("sunrise", "sunset"))):
+                                       "precipitation_probability", "is_day", "wind_speed_10m")),
+                            ("daily", ("time", "sunrise", "sunset", "weather_code",
+                                      "temperature_2m_max", "temperature_2m_min"))):
         arrays = [data[section][field] for field in fields]
         if not all(isinstance(values, list) for values in arrays) or not arrays[0]:
             raise ValueError("Missing forecast")
@@ -72,23 +73,28 @@ def fetch():
     return data
 
 
-def load_weather(cache_dir, now):
-    cache_file = cache_dir / "weather.json"
-    cached = {}
+def read(cache_file):
     try:
         cached = json.loads(cache_file.read_text())
         validate(cached["data"])
         if not number(cached["updated"]) or cached["updated"] <= 0:
             raise ValueError("Invalid cache time")
+        return cached
     except (OSError, ValueError, KeyError, TypeError):
-        cached = {}
+        return {}
+
+
+def load_weather(cache_dir, now):
+    cache_file = cache_dir / "weather.json"
+    cached = read(cache_file)
     if cached and 0 <= now - cached["updated"] < REFRESH:
         return cached
 
     cache_dir.mkdir(parents=True, exist_ok=True)
     with (cache_dir / "refresh.lock").open("a+") as lock:
         try:
-            fcntl.flock(lock, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            # Two cards poll at once: with nothing cached, wait for the other one's request instead of showing none.
+            fcntl.flock(lock, fcntl.LOCK_EX | (fcntl.LOCK_NB if cached else 0))
         except BlockingIOError:
             return cached
         lock.seek(0)
@@ -97,7 +103,7 @@ def load_weather(cache_dir, now):
         except ValueError:
             attempted = 0
         if 0 <= now - attempted < REFRESH:
-            return cached
+            return cached or read(cache_file)
         # Record attempts before fetching so failures and restarts also respect the interval.
         lock.seek(0)
         lock.truncate()
@@ -122,9 +128,17 @@ def minutes(stamp):
     return local.hour * 60 + local.minute
 
 
+# Only validated numbers enter Conky's parsed output; API text never becomes commands.
+def call(function, values=()):
+    return "${lua " + " ".join([function, *("-" if value is None else str(value) for value in values)]) + "}"
+
+
+UNAVAILABLE = call("weather") + call("forecast") + call("hours") + call("rain") + call("wind")
+
+
 def render(cached, now):
     if not cached:
-        return "${lua weather}"
+        return UNAVAILABLE
     data, current = cached["data"], cached["data"]["current"]
     today = local_time(now).date()
     days = list(zip(data["daily"]["sunrise"], data["daily"]["sunset"]))
@@ -137,13 +151,20 @@ def render(cached, now):
               minutes(sunrise) if sunrise else None, minutes(sunset) if sunset else None]
     hourly = data["hourly"]
     forecasts = sorted(zip(*(hourly[field] for field in
-                            ("time", "temperature_2m", "weather_code", "precipitation_probability", "is_day"))))
-    forecasts = [row for row in forecasts if row[0] > now][:4]
-    for stamp, temperature, code, probability, is_day in forecasts:
+                            ("time", "temperature_2m", "weather_code", "precipitation_probability", "is_day",
+                             "wind_speed_10m"))))
+    forecasts = [row for row in forecasts if row[0] > now][:24]
+    for stamp, temperature, code, probability, is_day, _ in forecasts[:4]:
         values.extend((local_time(stamp).hour, temperature, code, probability, is_day))
     values.extend([None] * (30 - len(values)))
-    # Only validated numbers enter Conky's parsed output; API text never becomes commands.
-    return "${lua weather " + " ".join("-" if value is None else str(value) for value in values) + "}"
+    daily = data["daily"]
+    week = [(local_time(stamp).weekday(), high, low, code) for stamp, high, low, code in
+            zip(daily["time"], daily["temperature_2m_max"], daily["temperature_2m_min"], daily["weather_code"])
+            if stamp and local_time(stamp).date() >= today][:7]
+    # Separate calls: Conky pushes every argument on Lua's stack unchecked, which holds about 40.
+    return (call("weather", values) + call("forecast", [value for day in week for value in day])
+            + call("hours", [local_time(forecasts[0][0]).hour if forecasts else None, *(row[1] for row in forecasts)])
+            + call("rain", [row[3] for row in forecasts]) + call("wind", [row[5] for row in forecasts]))
 
 
 def main():
@@ -152,7 +173,7 @@ def main():
     try:
         print(render(load_weather(cache_dir, now), now))
     except (OSError, ValueError, KeyError, TypeError, OverflowError):
-        print("${lua weather}")
+        print(UNAVAILABLE)
 
 
 if __name__ == "__main__":
