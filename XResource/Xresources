@@ -4,7 +4,7 @@
 ! 175% → 168 DPI
 ! 200% → 192 DPI
 
-Xft.dpi: 144
+Xft.dpi: 120
 
 ! These might also be useful depending on your monitor and personal preference:
 Xft.autohint: 0
