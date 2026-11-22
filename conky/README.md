@@ -31,9 +31,9 @@ hairline edge, and headings with fading rules.
 - Agenda (`calendar.lua`, `calendar.conf`): Taskwarrior's twelve most urgent
   tasks beside four months. `tasks.py` feeds both once a minute. A task and its
   day carry the same mark: filled for today, outlined for a due date, red when
-  overdue. Tasks show days until due, or the date from two weeks out; past days
-  are dimmed. Tasks tagged `nocal` stay off the calendar, waiting tasks off the
-  list. Vietnamese task text falls back to Lato.
+  overdue. Tasks show days until due and the date; past days are dimmed. Tasks
+  tagged `nocal` stay off the calendar, waiting tasks off the list. Vietnamese
+  task text falls back to Lato.
 - System (`gauges.lua`, `system.conf`): three-quarter rings for CPU, NVIDIA GPU,
   and RAM with temperatures and used memory inside; a mirrored one-minute CPU
   waveform; segmented storage and battery bars (storage spans the column without

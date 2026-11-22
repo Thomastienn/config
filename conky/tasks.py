@@ -12,7 +12,7 @@ import sys
 
 
 # Rows and description characters that fit the task column calendar.lua draws.
-LIMIT, WIDTH = 12, 30
+LIMIT, WIDTH = 12, 23
 # The 31 week columns momentum.lua draws.
 DAYS = 31 * 7
 
@@ -25,8 +25,8 @@ def label(day, today):
     days = (day - today).days
     if days == 0:
         return "today"
-    # Days while that is easy to count (overdue included), the date once it is further out.
-    return f"{days}d" if days < 14 else f"{day.day} {day:%b}"
+    # Day padded so the days line up in a column in the monospace theme font.
+    return f"{days}d {day.day:>2} {day:%b}"
 
 
 def render(tasks, now):
