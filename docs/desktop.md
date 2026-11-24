@@ -351,8 +351,8 @@ Global `AGENTS.md` links directly from `codex/`. The whole `.codex`
 directory and its live config are deliberately kept local: Codex writes private
 and machine-specific state there.
 
-On a new machine, `./setup.sh apply --extras` also installs Codex, the skills CLI,
-and codebase-memory-mcp through `setup/npm-extra.txt`. It restores missing global
+On a new machine, `./setup.sh apply --extras` also installs Codex and the skills CLI
+through `setup/npm-extra.txt`. It restores missing global
 skills recorded in `setup/sources.json` and missing plugins from the configured
 marketplaces, downloading missing marketplace catalogues first. Existing
 skills/plugins are kept. Plugin npm dependencies are
@@ -377,8 +377,8 @@ See the [official configuration precedence](https://learn.chatgpt.com/docs/confi
 and preferences. `link`, `apply`, and `apply --configs-only` merge it into
 `~/.claude/settings.json`, backing up changes first; other local keys survive.
 Lists such as hook arrays are replaced, not appended. `claude/CLAUDE.md` holds
-Claude's own global instructions, separate from Codex; it, the status
-line and the two codebase-memory hooks link from `claude/`. Credentials, `~/.claude.json`,
+Claude's own global instructions, separate from Codex; it and the status
+line link from `claude/`. Credentials, `~/.claude.json`,
 sessions and plugin caches stay local.
 
 The settings turn off claude.ai sync: `disableClaudeAiConnectors` stops account
@@ -388,8 +388,7 @@ connectors (Gmail, Drive, Docs) loading as MCP servers, and
 `./setup.sh apply --extras` installs Claude Code through the official installer
 when `claude` is missing, copies the skills listed under `claude-code` in
 `setup/sources.json` into `~/.claude/skills` (replacing links into other agents'
-skill folders), registers codebase-memory-mcp as a
-user MCP server, and adds missing marketplaces and plugins. Repeat runs skip
+skill folders), and adds missing marketplaces and plugins. Repeat runs skip
 completed work. Sign in with `claude` afterwards, authenticate Figma through
 `/mcp`, and restart Claude Code to load changed settings.
 

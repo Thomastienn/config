@@ -1,4 +1,4 @@
-"""Install Claude Code, its skills, MCP server and plugins; settings.json is symlinked via links.json."""
+"""Install Claude Code, its skills and plugins; settings.json is symlinked via links.json."""
 
 import json
 from pathlib import Path
@@ -29,11 +29,6 @@ def install(home, cache, run):
                  "--full-depth", "--skill", name])
             if not (target / "SKILL.md").is_file():
                 raise RuntimeError(f"Claude skill was not installed: {name}")
-
-    state = home / ".claude.json"
-    servers = json.loads(state.read_text()).get("mcpServers", {}) if state.is_file() else {}
-    if "codebase-memory-mcp" not in servers and shutil.which("codebase-memory-mcp"):
-        run([command, "mcp", "add", "--scope", "user", "codebase-memory-mcp", "--", "codebase-memory-mcp"])
 
     settings = json.loads((ROOT / "settings.json").read_text())
     for name, item in settings["extraKnownMarketplaces"].items():

@@ -69,7 +69,7 @@ Strong success criteria let you loop independently. Weak criteria ("make it work
 # Reminder
 - Also, ALWAYS prefer 'trash' command instead of 'delete' when removing files, to avoid accidental loss.
 - ALWAYS prefer  unit tests over integration tests and integration prefer over E2E tests. E2E tests are too slow and costly (avoid it unless requested).
-- ALWAYS use cavemen, rtk and codebase-memory-mcp to reduce tokens
+- ALWAYS use cavemen and rtk to reduce tokens
 - ALWAYS use ponytail to make better decision
 - HIGHLY recommended use Matt Pocock skills for the workflow, read overall skill first then decide if the problem is suitable for it
 - ONLY use Beads for task tracking for personal project (Must use if it's a single person project init with `beads init`), if using beads, remind user to initialize ralph workflow with `ralph-tui init`.

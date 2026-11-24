@@ -5,8 +5,7 @@ existing Cozy Mint appearance and workflows unless a change is requested.
 
 - Do not use Beads (`bd`) here. Track work in the conversation, without
   task-tracking files.
-- Most files are shell/config: use `rg` for those, for literals, or when the
-  repository is not indexed; use codebase-memory-mcp for code.
+- Use `rg` to search code and config.
 - Keep `README.md` compact: i3 overview, core features, requirements, setup and
   update commands, basic usage. Feature guides, implementation details,
   troubleshooting, and manual steps go under `docs/`, linked from the README.
