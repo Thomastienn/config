@@ -85,8 +85,9 @@
     "impeccable@impeccable": true,
     "beads@beads-marketplace": false,
     "agent-browser@agent-browser": true,
-    "drawio@drawio": true,
-    "canva@claude-plugins-official": false
+    "canva@claude-plugins-official": false,
+    "computer-use-linux@computer-use-linux": true,
+    "understand-anything@understand-anything": false
   },
   "extraKnownMarketplaces": {
     "ponytail": {
@@ -123,6 +124,18 @@
       "source": {
         "source": "github",
         "repo": "jgraph/drawio-mcp"
+      }
+    },
+    "computer-use-linux": {
+      "source": {
+        "source": "github",
+        "repo": "agent-sh/computer-use-linux"
+      }
+    },
+    "understand-anything": {
+      "source": {
+        "source": "github",
+        "repo": "Egonex-AI/Understand-Anything"
       }
     }
   },
