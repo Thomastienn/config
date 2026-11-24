@@ -18,6 +18,7 @@
   "claude-code": {"kind": "claude", "installer_url": "https://claude.ai/install.sh", "skills": {
     "find-skills": "https://github.com/vercel-labs/skills.git",
     "humanizer": "https://github.com/blader/humanizer.git",
+    "rederive": "https://github.com/EricJujianZou/rederive.git",
     "security-audit": "https://github.com/cloudflare/security-audit-skill.git",
     "typst": "https://github.com/Thomastienn/typst-skill.git"}},
   "hermes": {

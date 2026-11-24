@@ -34,7 +34,9 @@
   },
   "model": "opus",
   "disableClaudeAiConnectors": true,
-  "skillOverrides": {},
+  "skillOverrides": {
+    "rederive": "user-invocable-only"
+  },
   "disableBundledSkills": true,
   "hooks": {
     "PreToolUse": [
