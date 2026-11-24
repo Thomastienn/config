@@ -48,7 +48,14 @@ def toml_text(data, path=()):
 def configuration(home, backup=None):
     path = home / ".codex/config.toml"
     current = tomllib.loads(path.read_text()) if path.exists() else {}
-    desired = merge(copy.deepcopy(current), tomllib.loads((ROOT / "config.toml").read_text()))
+    defaults = tomllib.loads((ROOT / "config.toml").read_text())
+    # trash-cli retries forever when the sandbox makes the home trash read-only.
+    trash = home / ".local/share/Trash"
+    roots = current.get("sandbox_workspace_write", {}).get("writable_roots", [])
+    defaults.setdefault("sandbox_workspace_write", {})["writable_roots"] = roots + [str(trash)] * (str(trash) not in roots)
+    if backup is not None:
+        trash.mkdir(parents=True, exist_ok=True, mode=0o700)
+    desired = merge(copy.deepcopy(current), defaults)
     if current == desired:
         return []
     if backup is not None:
