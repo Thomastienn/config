@@ -6,3 +6,5 @@ Type=simple
 ExecStart=/usr/bin/python3 %h/thomas_config/scripts/battery-mode.py run
 Restart=on-failure
 RestartSec=5
+# Conky panels restored by this service must survive its restart on i3 reload.
+KillMode=process

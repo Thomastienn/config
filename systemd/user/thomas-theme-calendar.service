@@ -4,4 +4,6 @@ Description=Apply the special-date desktop theme
 [Service]
 Type=oneshot
 UMask=0077
+# Conky panels restarted by theme.py must outlive this oneshot.
+KillMode=process
 ExecStart=/usr/bin/python3 %h/thomas_config/scripts/theme.py auto
