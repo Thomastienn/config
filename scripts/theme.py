@@ -169,7 +169,7 @@ def render(data, preset):
     result["palette.json"] = json.dumps(palette, indent=2) + "\n"
     colors = data["colors"]
     lua = ["return {", "  colors = {"]
-    for key, color in colors.items():
+    for key, color in {"accent": colors["secondary"], **colors}.items():
         lua.append(f'    {key} = {{{int(color[1:3], 16)}/255, {int(color[3:5], 16)}/255, {int(color[5:7], 16)}/255}},')
     lua += ["  },", "  fonts = { ui = " + json.dumps(data["fonts"]["ui"], ensure_ascii=False) + " },", "}"]
     result["palette.lua"] = "\n".join(lua) + "\n"
