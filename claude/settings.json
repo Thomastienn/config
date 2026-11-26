@@ -35,6 +35,7 @@
   "model": "opus",
   "disableClaudeAiConnectors": true,
   "skillOverrides": {
+    "last30days": "user-invocable-only",
     "rederive": "user-invocable-only"
   },
   "disableBundledSkills": true,
