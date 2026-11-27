@@ -20,6 +20,7 @@ import graphics
 import claude
 import codex
 import hermes
+import opencode
 import login_tracking
 import zram
 
@@ -112,7 +113,7 @@ def link(source, target, apply=True):
 def configured_links():
     yield REPO, HOME / "thomas_config"
     for source, target in json.loads((ROOT / "links.json").read_text()).items():
-        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/")):
+        if not choices()["extras"] and source.startswith(("claude/", "codex/", "hermes/", "opencode/")):
             continue
         yield REPO / source, HOME / target
     if choices()["extras"] and (RALPH / "bin").is_dir():
@@ -179,6 +180,7 @@ def apply_links():
     if choices()["extras"]:
         codex.configuration(HOME, backup)
         hermes.configuration(HOME, backup)
+        opencode.configuration(HOME, backup)
     if choices()["nvim"] and not any(target.name == "zz-desktop-theme.lua" for _, target in configured_links()):
         print("Pending: Neovim theme bridge needs the managed AstroNvim configuration.")
 
@@ -326,7 +328,7 @@ def packages(extras):
 def check():
     gaps = power.check() + zram.check()
     if choices()["extras"]:
-        gaps += codex.configuration(HOME) + hermes.configuration(HOME)
+        gaps += codex.configuration(HOME) + hermes.configuration(HOME) + opencode.configuration(HOME)
     gaps += theme.check() + theme.bridge(check=True)
     for source, target in [*configured_links(), *firefox_links()]:
         gaps.extend("link: " + path for path in link(source, target, apply=False))

@@ -18,6 +18,7 @@
   "claude/keybindings.json": ".claude/keybindings.json",
   "claude/settings.json": ".claude/settings.json",
   "claude/themes/desktop.json": ".claude/themes/desktop.json",
+  "opencode/themes/desktop.json": ".config/opencode/themes/desktop.json",
   "hermes/SOUL.md": ".hermes/SOUL.md",
   "XResource/Xresources": ".Xresources",
   "XResource/xinitrc": ".xinitrc",
