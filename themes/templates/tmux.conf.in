@@ -15,6 +15,10 @@ set-option -g set-clipboard on
 set-option -ga terminal-overrides ",xterm*:Tc"
 set-option -g allow-passthrough on
 
+# This desktop owns the display, so a phone SSH attach must not hide DISPLAY/XAUTHORITY (clipboard, image paste).
+# SSH_CONNECTION is left out too: bashrc sets it per prompt from the attached client.
+set-option -g update-environment "KRB5CCNAME SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID WINDOWID"
+
 # Copy bindings using xclip
 bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -selection clipboard -in"
 bind-key -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "xclip -selection clipboard -in"

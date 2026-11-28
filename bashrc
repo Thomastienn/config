@@ -126,7 +126,9 @@ prompt_update_host() {
         ssh=
         pid=$(tmux display-message -p '#{client_pid}' 2>/dev/null)
         [[ $pid ]] && mapfile -d '' env 2>/dev/null < "/proc/$pid/environ"
-        for e in "${env[@]}"; do [[ $e == SSH_CONNECTION=* ]] && ssh=1; done
+        for e in "${env[@]}"; do [[ $e == SSH_CONNECTION=* ]] && ssh=${e#*=}; done
+        # Commands started from this prompt (claude, git, ...) inherit the attached client's SSH state too.
+        if [[ $ssh ]]; then export SSH_CONNECTION=$ssh; else unset SSH_CONNECTION; fi
     fi
     prompt_host=
     # Expanded inside PS1, so \[ \] and \u@\h are written as their raw forms.
