@@ -6,6 +6,7 @@ com.heroicgameslauncher.hgl
 com.obsproject.Studio
 io.github.wh201906.serialtest
 net.sapples.LiveCaptions
+org.blender.Blender
 org.localsend.localsend_app
 org.prismlauncher.PrismLauncher
 org.vinegarhq.Sober

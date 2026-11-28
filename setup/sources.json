@@ -15,7 +15,8 @@
   "codex-find-skills": {"url": "https://github.com/vercel-labs/skills.git", "rev": "HEAD", "kind": "skills", "skills": ["find-skills"]},
   "codex-humanizer": {"url": "https://github.com/blader/humanizer.git", "rev": "HEAD", "kind": "skills", "skills": ["humanizer"]},
   "codex-impeccable": {"url": "https://github.com/pbakaus/impeccable.git", "rev": "HEAD", "kind": "skills", "skills": ["impeccable"]},
-  "claude-code": {"kind": "claude", "installer_url": "https://claude.ai/install.sh", "skills": {
+  "claude-code": {"kind": "claude", "installer_url": "https://claude.ai/install.sh", "mcp": {
+    "blender": {"url": "https://projects.blender.org/lab/blender_mcp.git", "rev": "dbbf836ad4b1025f14a2b3b504c43903f39e0b04"}}, "skills": {
     "find-skills": "https://github.com/vercel-labs/skills.git",
     "humanizer": "https://github.com/blader/humanizer.git",
     "last30days": "https://github.com/mvanhorn/last30days-skill.git",

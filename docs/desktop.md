@@ -390,7 +390,11 @@ connectors (Gmail, Drive, Docs) loading as MCP servers, and
 `./setup.sh apply --extras` installs Claude Code through the official installer
 when `claude` is missing, copies the skills listed under `claude-code` in
 `setup/sources.json` into `~/.claude/skills` (replacing links into other agents'
-skill folders), and adds missing marketplaces and plugins. Repeat runs skip
+skill folders), and adds missing marketplaces and plugins. It also installs
+Blender Lab's official MCP add-on (pinned in `setup/sources.json`) into Flathub
+Blender and registers the `blender` MCP server; the add-on listens on
+`localhost:9876` while Blender is open. The server runs model-written Python
+inside Blender without guards, so keep important files backed up. Repeat runs skip
 completed work. Sign in with `claude` afterwards, authenticate Figma through
 `/mcp`, and restart Claude Code to load changed settings.
 
