@@ -57,6 +57,19 @@ def command(action):
         raise RuntimeError("i3 window command failed.")
 
 
+def repair_accessibility_bus():
+    # Root GUI apps (e.g. pkexec gufw) point the X AT_SPI_BUS property at root's bus. Firefox
+    # started then has no accessibility, so the ChatGPT context shortcuts cannot find its prompt.
+    try:
+        address = subprocess.run(["dbus-send", "--session", "--print-reply=literal", "--dest=org.a11y.Bus",
+                                  "/org/a11y/bus", "org.a11y.Bus.GetAddress"],
+                                 capture_output=True, text=True, check=True, timeout=3).stdout.strip()
+        if address:
+            subprocess.run(["xprop", "-root", "-f", "AT_SPI_BUS", "8s", "-set", "AT_SPI_BUS", address], timeout=3)
+    except (OSError, subprocess.SubprocessError):
+        pass  # Without accessibility Firefox still opens; only the ChatGPT shortcuts need it.
+
+
 def main(show=False):
     runtime = Path(os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"))
     with (runtime / f"dropdown-browser-{os.getuid()}.lock").open("a") as lock:
@@ -73,6 +86,7 @@ def main(show=False):
                 command(f"[con_id={target}] {action}")
                 return window["window"]
 
+        repair_accessibility_bus()
         process = subprocess.Popen(["firefox"], start_new_session=True)
         for _ in range(100):
             time.sleep(0.1)
